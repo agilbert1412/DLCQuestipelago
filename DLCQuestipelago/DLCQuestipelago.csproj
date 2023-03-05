@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+    <AssemblyName>DLCQuestipelago</AssemblyName>
+    <Description>My first plugin</Description>
+    <Version>0.1.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\BepInEx\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Core">
+      <HintPath>..\..\BepInEx\BepInEx\core\BepInEx.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.NetLauncher.Common">
+      <HintPath>..\..\BepInEx\BepInEx.NetLauncher.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Core">
+      <HintPath>..\..\DLC Quest\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DLC">
+      <HintPath>..\..\DLC Quest\DLC.exe</HintPath>
+    </Reference>
+    <Reference Include="DLCDataTypes">
+      <HintPath>..\..\DLC Quest\DLCDataTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="DLCLib">
+      <HintPath>..\..\DLC Quest\DLCLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
