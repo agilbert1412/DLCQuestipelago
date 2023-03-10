@@ -1,0 +1,7 @@
+{
+    "HostUrl": "localhost",
+    "Port": 38281,
+    "SlotName": "Tester",
+    "DeathLink": false,
+    "Password": ""
+}

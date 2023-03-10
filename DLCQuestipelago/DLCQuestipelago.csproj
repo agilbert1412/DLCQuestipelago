@@ -7,10 +7,13 @@
     <Version>0.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+    <BaseOutputPath>bin\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="4.2.4" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
@@ -39,5 +42,57 @@
     <Reference Include="DLCLib">
       <HintPath>..\..\DLC Quest\DLCLib.dll</HintPath>
     </Reference>
+    <Reference Include="EasyStorage">
+      <HintPath>..\..\DLC Quest\EasyStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework">
+      <HintPath>..\..\net-core-injector-master\DLCQuest\Microsoft.Xna.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <HintPath>..\..\net-core-injector-master\RuntimePatcher\dist\Microsoft.Xna.Framework.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <HintPath>..\..\net-core-injector-master\RuntimePatcher\dist\Microsoft.Xna.Framework.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SpriteSheetRuntime">
+      <HintPath>..\..\DLC Quest\SpriteSheetRuntime.dll</HintPath>
+    </Reference>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="IdTables\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="IdTables\dlc_quest_item_table.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="IdTables\dlc_quest_location_table.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+	<PropertyGroup Label="UserMacros">
+		<GamePath>D:\Jeux\Archipelago\DLC Quest - Copy\</GamePath>
+		<PluginsPath>$(GamePath)BepInEx\plugins\DLCQuestipelago\</PluginsPath>
+		<BepInExLauncher>BepInEx.NetLauncher.exe</BepInExLauncher>
+	</PropertyGroup>
+
+	<Target Name="BeforeBuild">
+
+	</Target>
+	<Target Name="Copy mod to debug folder" AfterTargets="Build">
+		<Message Text="Copying the mod to the plugins folder $(OutputPath)$(ProjectName).dll -&gt; $(PluginsPath)" Importance="High" />
+		<Copy SourceFiles="$(OutputPath)$(ProjectName).dll" DestinationFolder="$(PluginsPath)" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)$(ProjectName).pdb" DestinationFolder="$(PluginsPath)" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)Newtonsoft.Json.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)Archipelago.MultiClient.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)websocket-sharp.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)SpriteSheetRuntime.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_item_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="true" />
+		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_location_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="true" />
+		<Message Text="Copied mod files" Importance="High" />
+	</Target>
+
 </Project>

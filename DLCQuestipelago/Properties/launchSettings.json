@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DLCQuestipelago": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Jeux\\Archipelago\\DLC Quest - Copy\\BepInEx.NetLauncher.exe",
+      "workingDirectory": "D:\\Jeux\\Archipelago\\DLC Quest - Copy"
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+    "items": {
+        "Movement Pack": {
+            "code": 120000,
+            "classification": "progression"
+        },
+        "Animation Pack": {
+            "code": 120001,
+            "classification": "filler"
+        },
+        "Audio Pack": {
+            "code": 120002,
+            "classification": "filler"
+        },
+        "Pause Menu Pack": {
+            "code": 120003,
+            "classification": "useful"
+        },
+        "Time is Money Pack": {
+            "code": 120004,
+            "classification": "progression"
+        },
+        "Double Jump Pack": {
+            "code": 120005,
+            "classification": "progression"
+        },
+        "Pet Pack": {
+            "code": 120006,
+            "classification": "filler"
+        },
+        "Sexy Outfits Pack": {
+            "code": 120007,
+            "classification": "filler"
+        },
+        "Top Hat Pack": {
+            "code": 120008,
+            "classification": "filler"
+        },
+        "Map Pack": {
+            "code": 120009,
+            "classification": "progression"
+        },
+        "Gun Pack": {
+            "code": 120010,
+            "classification": "progression"
+        },
+        "The Zombie Pack": {
+            "code": 120011,
+            "classification": "filler"
+        },
+        "Night Map Pack": {
+            "code": 120012,
+            "classification": "useful"
+        },
+        "Psychological Warfare Pack": {
+            "code": 120013,
+            "classification": "progression"
+        },
+        "Armor for your Horse Pack": {
+            "code": 120014,
+            "classification": "progression"
+        },
+        "Finish the Fight Pack": {
+            "code": 120015,
+            "classification": "progression"
+        }
+    }
+}
