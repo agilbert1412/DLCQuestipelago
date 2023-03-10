@@ -21,14 +21,7 @@ namespace DLCQuestipelago.Serialization
 
         static void Postfix(DLCSaveManager __instance, ref bool __result)
         {
-            if (!Directory.Exists(Persistency.SaveDirectory))
-            {
-                Directory.CreateDirectory(Persistency.SaveDirectory);
-            }
-
-            Plugin.Instance.OnSaving();
-            var serialized = JsonConvert.SerializeObject(Plugin.Instance.ArchipelagoState);
-            File.WriteAllText(Persistency.SaveFile, serialized);
+            Plugin.Instance.OnSaveAndQuit();
         }
     }
 }

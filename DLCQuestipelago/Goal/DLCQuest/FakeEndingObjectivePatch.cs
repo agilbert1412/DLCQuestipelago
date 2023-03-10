@@ -24,6 +24,11 @@ namespace DLCQuestipelago.Goal.DLCQuest
         // public static void OnFakeEndingCreditsComplete()
         static void Postfix()
         {
+            if (!Plugin.Instance.HasEnteredGame)
+            {
+                return;
+            }
+
             _objectivePersistence.CompleteDlcFakeEnding();
         }
     }

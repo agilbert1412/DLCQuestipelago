@@ -18,11 +18,6 @@ namespace DLCQuestipelago.Serialization
 
         static void Postfix(DLCSaveManager __instance)
         {
-            if (File.Exists(Persistency.SaveFile))
-            {
-                File.Delete(Persistency.SaveFile);
-            }
-            Plugin.Instance.ArchipelagoState = new ArchipelagoStateDto();
             Plugin.Instance.EnterGame();
         }
     }

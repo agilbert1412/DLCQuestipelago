@@ -21,6 +21,11 @@ namespace DLCQuestipelago.Goal.LFOD
         // public static void PerformFinalAttack()
         static void Postfix()
         {
+            if (!Plugin.Instance.HasEnteredGame)
+            {
+                return;
+            }
+
             _objectivePersistence.CompleteLfodTrueEnding();
         }
     }

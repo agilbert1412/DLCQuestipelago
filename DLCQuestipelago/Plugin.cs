@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BepInEx;
@@ -25,7 +26,6 @@ namespace DLCQuestipelago
         private Harmony _harmony;
         private ArchipelagoClient _archipelago;
         public ArchipelagoConnectionInfo APConnectionInfo { get; set; }
-        public ArchipelagoStateDto ArchipelagoState { get; set; }
         private LocationChecker _locationChecker;
         private ItemManager _itemManager;
         private ObjectivePersistence _objectivePersistence;
@@ -48,10 +48,9 @@ namespace DLCQuestipelago
             Log.LogInfo($"{PluginInfo.PLUGIN_NAME} is loaded!");
         }
 
-        public void OnSaving()
+        public void OnSaveAndQuit()
         {
-            ArchipelagoState.LocationsChecked = _locationChecker.GetAllLocationsAlreadyChecked();
-            ArchipelagoState.LocationsScouted = _archipelago.ScoutedLocations;
+            HasEnteredGame = false;
         }
 
         private void ConnectToArchipelago()
@@ -99,9 +98,8 @@ namespace DLCQuestipelago
 
         public void EnterGame()
         {
-            _archipelago.ScoutedLocations = ArchipelagoState.LocationsScouted;
             _itemManager = new ItemManager(_archipelago, new ReceivedItem[0]);
-            _locationChecker = new LocationChecker(Log, _archipelago, ArchipelagoState.LocationsChecked);
+            _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(_archipelago);
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();

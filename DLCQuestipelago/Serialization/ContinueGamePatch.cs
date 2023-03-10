@@ -27,15 +27,6 @@ namespace DLCQuestipelago.Serialization
                 return;
             }
             
-            if (File.Exists(Persistency.SaveFile))
-            {
-                var fileContent = File.ReadAllText(Persistency.SaveFile);
-                Plugin.Instance.ArchipelagoState = JsonConvert.DeserializeObject<ArchipelagoStateDto>(fileContent);
-            }
-            else
-            {
-                Plugin.Instance.ArchipelagoState = new ArchipelagoStateDto();
-            }
             Plugin.Instance.EnterGame();
         }
     }

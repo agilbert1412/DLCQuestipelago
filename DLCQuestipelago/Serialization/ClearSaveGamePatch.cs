@@ -21,10 +21,6 @@ namespace DLCQuestipelago.Serialization
 
         static void Postfix(DLCSaveManager __instance, ref bool __result)
         {
-            if (File.Exists(Persistency.SaveFile))
-            {
-                File.Delete(Persistency.SaveFile);
-            }
             Plugin.Instance.HasEnteredGame = false;
         }
     }
