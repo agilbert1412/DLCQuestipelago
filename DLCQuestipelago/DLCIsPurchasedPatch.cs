@@ -20,7 +20,13 @@ namespace DLCQuestipelago
         
         static bool Prefix(DLCManager __instance, string name, bool defaultIfNotFound, ref bool __result)
         {
-            __result = false;
+            __result = defaultIfNotFound;
+            __instance.Packs.TryGetValue(name, out var pack);
+            if (pack == null)
+            {
+                return false;
+
+            }
             if (Plugin.Instance.HasEnteredGame)
             {
                 __result = _itemParser.ReceivedDLCs.Contains(name);

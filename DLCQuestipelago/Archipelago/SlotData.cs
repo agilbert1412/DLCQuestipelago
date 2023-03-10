@@ -56,7 +56,25 @@ namespace DLCQuestipelago.Archipelago
 
         private bool GetSlotSetting(string key, bool defaultValue)
         {
-            return _slotDataFields.ContainsKey(key) && _slotDataFields[key] != null ? (bool)_slotDataFields[key] : GetSlotDefaultValue(key, defaultValue);
+            if (_slotDataFields.ContainsKey(key) && _slotDataFields[key] != null)
+            {
+                if (_slotDataFields[key] is bool boolValue)
+                {
+                    return boolValue;
+                }
+
+                if (_slotDataFields[key] is long longValue)
+                {
+                    return longValue != 0;
+                }
+
+                if (_slotDataFields[key] is int intValue)
+                {
+                    return intValue != 0;
+                }
+            }
+
+            return GetSlotDefaultValue(key, defaultValue);
         }
 
         private T GetSlotDefaultValue<T>(string key, T defaultValue)

@@ -54,6 +54,9 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics">
       <HintPath>..\..\net-core-injector-master\RuntimePatcher\dist\Microsoft.Xna.Framework.Graphics.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact">
+      <HintPath>..\..\net-core-injector-master\RuntimePatcher\dist\Microsoft.Xna.Framework.Xact.dll</HintPath>
+    </Reference>
     <Reference Include="SpriteSheetRuntime">
       <HintPath>..\..\DLC Quest\SpriteSheetRuntime.dll</HintPath>
     </Reference>
