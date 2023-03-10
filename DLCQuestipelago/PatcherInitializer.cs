@@ -18,6 +18,8 @@ namespace DLCQuestipelago
             DLCPackPurchasePatch.Initialize(log, locationChecker);
             DLCIsPurchasedPatch.Initialize(log, itemManager.ItemParser);
             CoinPickupPatch.Initialize(log);
+            GetPickaxePatch.Initialize(log, locationChecker);
+            GrooveGiveMattockPatch.Initialize(log, locationChecker);
             StoreScreenSetupEntriesPatch.Initialize(log, locationChecker, itemManager.ItemParser);
             TriggerUtilBossDoorPatch.Initialize(log, archipelago);
             InitializeDLCUnlockPatches(log);
@@ -32,6 +34,8 @@ namespace DLCQuestipelago
             TriggerUtilActivateNightForestPatch.Initialize(log);
             TriggerUtilGameEndingPatch.Initialize(log);
             ZoneOnEnterPatch.Initialize(log);
+            ExamineBanWallPatch.Initialize(log);
+            ComedianDLCPatch.Initialize(log);
         }
 
         private static void InitializeAllObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)

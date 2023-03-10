@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using DLCLib;
+using DLCLib.Campaigns;
+using DLCLib.Character;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 
@@ -32,6 +35,12 @@ namespace DLCQuestipelago.Items
                 if (unlockedDLC.Data.PurchaseEvent == null || unlockedDLC.Data.PurchaseEvent.Equals(string.Empty) || unlockedDLC.Data.IsBossDLC)
                     return;
                 typeof(DLCPurchaseEventUtil).InvokeMember(unlockedDLC.Data.PurchaseEvent, BindingFlags.InvokeMethod, (Binder)null, (object)null, new object[0]);
+                return;
+            }
+
+            if (item.ItemName == "Pickaxe" && CampaignManager.Instance.Campaign is LFODCampaign)
+            {
+                GrooveNPC.GiveMattock(true);
             }
 
             // Handle other items

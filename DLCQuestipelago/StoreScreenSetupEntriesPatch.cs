@@ -77,7 +77,8 @@ namespace DLCQuestipelago
                     (purchasedMode || pack.Data.IsBossDLC == showBossDLCOnly) &&
                     (availableMode || pack.State == DLCPackStateEnum.Purchased))*/
                 if (purchasedMode && _locationChecker.IsLocationChecked(pack.Data.DisplayName) ||
-                    (availableMode && _locationChecker.IsLocationMissing(pack.Data.DisplayName) && pack.State != DLCPackStateEnum.Locked))
+                    (availableMode && _locationChecker.IsLocationMissing(pack.Data.DisplayName) && pack.State != DLCPackStateEnum.Locked) ||
+                    (availableMode && pack.Data.IsBossDLC && pack.State != DLCPackStateEnum.Purchased))
                 {
                     var entry = new DLCPackMenuEntry(font, dlcSpriteSheet, pack, menuOrder);
                     entry.ParentScreen = storeScreen;

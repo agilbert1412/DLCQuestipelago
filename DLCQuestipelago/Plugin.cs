@@ -89,15 +89,12 @@ namespace DLCQuestipelago
         public void OnUpdateTicked()
         {
             _archipelago.APUpdate();
-        }
-
-        private void DebugMethod(string arg1, string[] arg2)
-        {
-
+            // TryShowNotification("player");
         }
 
         public void EnterGame()
         {
+            SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = false;
             _itemManager = new ItemManager(_archipelago, new ReceivedItem[0]);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(_archipelago);
@@ -108,6 +105,7 @@ namespace DLCQuestipelago
 
             PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
             HasEnteredGame = true;
+            SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = true;
         }
 
         private void OnItemReceived()
@@ -129,6 +127,20 @@ namespace DLCQuestipelago
                 Texture = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.Texture,
                 SourceRectangle =
                     SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.SourceRectangle((receivedDLCPack.Any() ? receivedDLCPack.First() : DLCManager.Instance.Packs.First()).Value.Data.IconName),
+                Tint = Color.White,
+                CueName = "toast_up"
+            });
+        }
+
+        private void TryShowNotification(string icon)
+        {
+            NotificationManager.Instance.AddNotification(new Notification()
+            {
+                Title = "Test Notification",
+                Description = $"Icon: {icon}",
+                Texture = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.Texture,
+                SourceRectangle =
+                    SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.SourceRectangle(icon),
                 Tint = Color.White,
                 CueName = "toast_up"
             });
