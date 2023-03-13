@@ -27,7 +27,8 @@ namespace DLCQuestipelago
                 return false;
 
             }
-            if (Plugin.Instance.HasEnteredGame)
+
+            if (Plugin.Instance.IsInGame)
             {
                 __result = _itemParser.ReceivedDLCs.Contains(name);
             }

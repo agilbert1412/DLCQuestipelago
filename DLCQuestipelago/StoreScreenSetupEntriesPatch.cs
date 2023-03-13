@@ -6,6 +6,7 @@ using DLCLib;
 using DLCLib.DLC;
 using DLCLib.HUD;
 using DLCLib.Screens;
+using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -77,8 +78,8 @@ namespace DLCQuestipelago
                     (purchasedMode || pack.Data.IsBossDLC == showBossDLCOnly) &&
                     (availableMode || pack.State == DLCPackStateEnum.Purchased))*/
                 if (purchasedMode && _locationChecker.IsLocationChecked(pack.Data.DisplayName) ||
-                    (availableMode && _locationChecker.IsLocationMissing(pack.Data.DisplayName) && pack.State != DLCPackStateEnum.Locked) ||
-                    (availableMode && pack.Data.IsBossDLC && pack.State != DLCPackStateEnum.Purchased))
+                    (availableMode && !showBossDLCOnly && _locationChecker.IsLocationMissing(pack.Data.DisplayName) && pack.State != DLCPackStateEnum.Locked) ||
+                    (availableMode && showBossDLCOnly && pack.State != DLCPackStateEnum.Purchased) && pack.State != DLCPackStateEnum.Locked)
                 {
                     var entry = new DLCPackMenuEntry(font, dlcSpriteSheet, pack, menuOrder);
                     entry.ParentScreen = storeScreen;

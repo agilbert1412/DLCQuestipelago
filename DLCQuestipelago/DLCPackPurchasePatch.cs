@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
 using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCQuestipelago.Locations;
@@ -21,18 +22,20 @@ namespace DLCQuestipelago
 
         static bool Prefix(DLCPack __instance)
         {
-            if (Plugin.Instance.HasEnteredGame)
+            if (_log == null || _locationChecker == null || __instance == null)
             {
-                _log.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
-                _locationChecker.AddCheckedLocation(__instance.Data.DisplayName);
+                return true; // run original logic
             }
+
+            _log.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
+            _locationChecker.AddCheckedLocation(__instance.Data.DisplayName);
 
             if (__instance.Data.IsBossDLC)
             {
-                typeof(DLCPurchaseEventUtil).InvokeMember(__instance.Data.PurchaseEvent, BindingFlags.InvokeMethod, null, null, new object[0]);
+                return true; // run original logic
             }
 
-            return false;
+            return false; // don't run original logic
         }
 
         static void Postfix(DLCPack __instance)

@@ -30,7 +30,7 @@ namespace DLCQuestipelago
         private ItemManager _itemManager;
         private ObjectivePersistence _objectivePersistence;
 
-        public bool HasEnteredGame { get; set; }
+        public bool IsInGame { get; private set; }
 
         public override void Load()
         {
@@ -42,15 +42,16 @@ namespace DLCQuestipelago
 
             _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
             ConnectToArchipelago();
-            HasEnteredGame = false;
+            IsInGame = false;
 
             CampaignSelectPatch.Initialize(Log, _archipelago);
             Log.LogInfo($"{PluginInfo.PLUGIN_NAME} is loaded!");
         }
 
-        public void OnSaveAndQuit()
+        public void SaveAndQuit()
         {
-            HasEnteredGame = false;
+            SaveGame();
+            ExitGame();
         }
 
         private void ConnectToArchipelago()
@@ -104,13 +105,36 @@ namespace DLCQuestipelago
             _itemManager.ReceiveAllNewItems();
 
             PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
-            HasEnteredGame = true;
+            IsInGame = true;
             SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = true;
+        }
+
+        public void SaveGame()
+        {
+            try
+            {
+                _locationChecker.VerifyNewLocationChecksWithArchipelago();
+                _locationChecker.SendAllLocationChecks();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Failed at properly syncing with archipelago when exiting game. Message: {ex.Message}");
+                return;
+            }
+        }
+
+        public void ExitGame()
+        {
+            _itemManager = null;
+            _locationChecker = null;
+            _objectivePersistence = null;
+
+            IsInGame = false;
         }
 
         private void OnItemReceived()
         {
-            if (!HasEnteredGame)
+            if (!IsInGame)
             {
                 return;
             }

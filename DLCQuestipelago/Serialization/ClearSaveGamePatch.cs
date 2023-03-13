@@ -21,7 +21,7 @@ namespace DLCQuestipelago.Serialization
 
         static void Postfix(DLCSaveManager __instance, ref bool __result)
         {
-            Plugin.Instance.HasEnteredGame = false;
+            Plugin.Instance.SaveAndQuit();
         }
     }
 }

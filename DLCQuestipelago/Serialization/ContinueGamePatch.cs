@@ -22,7 +22,7 @@ namespace DLCQuestipelago.Serialization
         // private void continueGameEntry_Selected(object sender, PlayerIndexEventArgs e)
         static void Postfix(MainMenuScreen __instance, object sender, PlayerIndexEventArgs e)
         {
-            if (Plugin.Instance.HasEnteredGame)
+            if (Plugin.Instance.IsInGame)
             {
                 return;
             }

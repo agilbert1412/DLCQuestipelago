@@ -478,7 +478,7 @@ namespace DLCQuestipelago.Archipelago
         private const int THRESHOLD_TO_RETRY_CONNECTION_IN_SECONDS = 15;
         public bool MakeSureConnected(int threshold = THRESHOLD_TO_RETRY_CONNECTION_IN_SECONDS)
         {
-            if (IsConnected)
+            if (IsConnected && _session != null && _session.Socket != null && _session.Socket.Connected)
             {
                 return true;
             }
