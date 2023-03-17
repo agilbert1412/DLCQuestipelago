@@ -1,17 +1,9 @@
 ﻿using BepInEx.Logging;
-using Core;
 using DLCLib;
-using DLCLib.Audio;
 using DLCLib.Campaigns;
-using DLCLib.Physics;
-using DLCLib.Screens;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
-using HUD;
-using Microsoft.Xna.Framework;
-using System.Reflection;
 
 namespace DLCQuestipelago
 {
@@ -37,7 +29,7 @@ namespace DLCQuestipelago
         }
 
         // public void AddCoin()
-        static void Postfix(Inventory __instance)
+        private static void Postfix(Inventory __instance)
         {
             if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
             {

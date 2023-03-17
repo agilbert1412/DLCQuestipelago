@@ -1,7 +1,5 @@
 ﻿using BepInEx.Logging;
-using DLCLib;
 using DLCLib.Conversation;
-using DLCLib.World.Props;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 
@@ -21,7 +19,7 @@ namespace DLCQuestipelago
         }
 
         //public static void GiveMattock()
-        static bool Prefix()
+        private static bool Prefix()
         {
             _locationChecker.AddCheckedLocation("Pickaxe");
             return false; // don't run original logic

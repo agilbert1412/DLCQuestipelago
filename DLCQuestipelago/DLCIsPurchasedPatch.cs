@@ -17,8 +17,8 @@ namespace DLCQuestipelago
             _log = log;
             _itemParser = itemParser;
         }
-        
-        static bool Prefix(DLCManager __instance, string name, bool defaultIfNotFound, ref bool __result)
+
+        private static bool Prefix(DLCManager __instance, string name, bool defaultIfNotFound, ref bool __result)
         {
             __result = defaultIfNotFound;
             __instance.Packs.TryGetValue(name, out var pack);

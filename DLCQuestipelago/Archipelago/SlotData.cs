@@ -1,7 +1,6 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using System;
 using System.Collections.Generic;
-using BepInEx.Logging;
-using DLCLib.World.Props;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -39,7 +38,6 @@ namespace DLCQuestipelago.Archipelago
             Campaign = GetSlotSetting(CAMPAIGN_KEY, Campaign.LiveFreemiumOrDie);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
             Seed = GetSlotSetting(SEED_KEY, "");
-            
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
         }
 

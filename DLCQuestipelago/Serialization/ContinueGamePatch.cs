@@ -1,10 +1,7 @@
-﻿using System.IO;
-using BepInEx.Logging;
-using DLCLib.Save;
+﻿using BepInEx.Logging;
 using DLCLib.Screens;
 using GameStateManagement;
 using HarmonyLib;
-using Newtonsoft.Json;
 
 namespace DLCQuestipelago.Serialization
 {
@@ -20,13 +17,13 @@ namespace DLCQuestipelago.Serialization
         }
 
         // private void continueGameEntry_Selected(object sender, PlayerIndexEventArgs e)
-        static void Postfix(MainMenuScreen __instance, object sender, PlayerIndexEventArgs e)
+        private static void Postfix(MainMenuScreen __instance, object sender, PlayerIndexEventArgs e)
         {
             if (Plugin.Instance.IsInGame)
             {
                 return;
             }
-            
+
             Plugin.Instance.EnterGame();
         }
     }

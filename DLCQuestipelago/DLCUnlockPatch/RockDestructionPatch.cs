@@ -1,9 +1,9 @@
-﻿using System.Reflection;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib;
 using DLCLib.World;
 using DLCLib.World.Props;
 using HarmonyLib;
+using System.Reflection;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {
@@ -19,7 +19,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         //protected override void OnDestruction()
-        static void Postfix(Rock __instance)
+        private static void Postfix(Rock __instance)
         {
             var addEventMethod = typeof(Scene).GetMethod("AddEvent", BindingFlags.NonPublic | BindingFlags.Instance);
             addEventMethod.Invoke(SceneManager.Instance.CurrentScene,

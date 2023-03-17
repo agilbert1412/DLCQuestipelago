@@ -1,11 +1,9 @@
 ﻿using BepInEx.Logging;
 using DLCLib;
-using DLCLib.Character;
 using DLCLib.DLC;
 using DLCLib.Scripts.LFOD;
 using DLCLib.World;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {
@@ -21,10 +19,13 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         // public static bool ExamineBanWall(TriggerVolume volume)
-        static void Postfix(TriggerVolume volume)
+        private static void Postfix(TriggerVolume volume)
         {
             if (!SceneManager.Instance.CurrentScene.EventList.Contains(FakeEnding.FAKE_ENDING_COMPLETE_STR))
+            {
                 return;
+            }
+
             DLCManager.Instance.UnlockPack("namechange");
         }
     }

@@ -1,7 +1,5 @@
 ﻿using BepInEx.Logging;
-using DLCLib;
 using DLCLib.World;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
@@ -26,7 +24,7 @@ namespace DLCQuestipelago
         }
 
         //private static void msgBox_AcceptedTakeCoins(object sender, PlayerIndexEventArgs e)
-        static bool Prefix(object sender, PlayerIndexEventArgs e)
+        private static bool Prefix(object sender, PlayerIndexEventArgs e)
         {
             return _archipelago.HasReceivedItem(SWORD_1, out _) &&
                    _archipelago.HasReceivedItem(SWORD_2, out _) &&

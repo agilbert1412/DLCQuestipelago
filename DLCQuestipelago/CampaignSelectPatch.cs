@@ -1,10 +1,7 @@
 ﻿using BepInEx.Logging;
-using DLCLib;
 using DLCLib.Screens;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago
 {
@@ -25,7 +22,7 @@ namespace DLCQuestipelago
         }
 
         // private void StartCampaign(string selectedCampaignName)
-        static bool Prefix(CampaignSelectScreen __instance, string selectedCampaignName)
+        private static bool Prefix(CampaignSelectScreen __instance, string selectedCampaignName)
         {
             if (_archipelago.SlotData.Campaign == Campaign.Basic && selectedCampaignName == LFOD_CAMPAIGN)
             {

@@ -17,7 +17,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         // public static void EndGame(TriggerVolume volume)
-        static void Postfix(TriggerVolume volume)
+        private static void Postfix(TriggerVolume volume)
         {
             DLCManager.Instance.UnlockPack("realending");
         }

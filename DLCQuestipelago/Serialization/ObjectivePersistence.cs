@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DLCQuestipelago.Archipelago;
+﻿using DLCQuestipelago.Archipelago;
 
 namespace DLCQuestipelago.Serialization
 {
@@ -56,7 +51,7 @@ namespace DLCQuestipelago.Serialization
                     return;
                 }
             }
-            
+
             _archipelago.ReportGoalCompletion();
             return;
         }

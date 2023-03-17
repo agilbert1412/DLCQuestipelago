@@ -1,11 +1,7 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib.Character;
-using DLCLib.DLC;
-using DLCLib.World;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
+using System.Reflection;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {
@@ -21,7 +17,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         // public override bool Activate()
-        static void Postfix(ComedianNPC __instance, ref bool __result)
+        private static void Postfix(ComedianNPC __instance, ref bool __result)
         {
             if (!__instance.IsAlive)
             {

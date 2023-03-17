@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DLCQuestipelago.Locations
 {

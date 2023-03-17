@@ -1,9 +1,8 @@
-﻿using System.Reflection;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib;
 using DLCLib.World;
-using DLCLib.World.Props;
 using HarmonyLib;
+using System.Reflection;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {
@@ -19,7 +18,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         //public static bool ExamineRocks(TriggerVolume volume)
-        static void Postfix(TriggerVolume volume)
+        private static void Postfix(TriggerVolume volume)
         {
             var addEventMethod = typeof(Scene).GetMethod("AddEvent", BindingFlags.NonPublic | BindingFlags.Instance);
             addEventMethod.Invoke(SceneManager.Instance.CurrentScene,

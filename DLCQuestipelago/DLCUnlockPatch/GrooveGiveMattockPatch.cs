@@ -1,10 +1,7 @@
-﻿using System.Reflection;
-using Awardments;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
-using DLCLib.World;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 
@@ -24,9 +21,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         //public override bool Activate()
-        static bool Prefix(GrooveNPC __instance, ref bool __result)
+        private static bool Prefix(GrooveNPC __instance, ref bool __result)
         {
-            Scene currentScene = SceneManager.Instance.CurrentScene;
+            var currentScene = SceneManager.Instance.CurrentScene;
             if (currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR) && _locationChecker.IsLocationMissing("Pickaxe"))
             {
                 __instance.SetCurrentConversation("givemattock");

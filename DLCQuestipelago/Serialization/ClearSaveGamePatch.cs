@@ -1,10 +1,6 @@
-﻿using System.IO;
-using System.Reflection;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib.Save;
-using EasyStorage;
 using HarmonyLib;
-using Newtonsoft.Json;
 
 namespace DLCQuestipelago.Serialization
 {
@@ -19,7 +15,7 @@ namespace DLCQuestipelago.Serialization
             _log = log;
         }
 
-        static void Postfix(DLCSaveManager __instance, ref bool __result)
+        private static void Postfix(DLCSaveManager __instance, ref bool __result)
         {
             Plugin.Instance.ExitGame();
         }

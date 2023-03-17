@@ -3,17 +3,10 @@ using DLCLib;
 using DLCLib.Campaigns;
 using DLCLib.DLC;
 using DLCLib.HUD;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Locations;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLCQuestipelago.Items
 {
@@ -40,7 +33,7 @@ namespace DLCQuestipelago.Items
         }
 
         //public override void OnPickup(Player player)
-        static bool Prefix(Inventory __instance, ref int __result)
+        private static bool Prefix(Inventory __instance, ref int __result)
         {
             if (!Plugin.Instance.IsInGame || _archipelago == null)
             {

@@ -19,7 +19,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         // public bool Activate()
-        static void Postfix(Grindstone __instance, ref bool __result)
+        private static void Postfix(Grindstone __instance, ref bool __result)
         {
             grindCount++;
             if (grindCount >= 9)

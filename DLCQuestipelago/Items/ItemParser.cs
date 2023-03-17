@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using DLCLib;
-using DLCLib.Campaigns;
+﻿using DLCLib.Campaigns;
 using DLCLib.Character;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace DLCQuestipelago.Items
 {
@@ -36,7 +35,7 @@ namespace DLCQuestipelago.Items
                 {
                     return;
                 }
-                typeof(DLCPurchaseEventUtil).InvokeMember(unlockedDLC.Data.PurchaseEvent, BindingFlags.InvokeMethod, (Binder)null, (object)null, new object[0]);
+                typeof(DLCPurchaseEventUtil).InvokeMember(unlockedDLC.Data.PurchaseEvent, BindingFlags.InvokeMethod, null, null, new object[0]);
                 return;
             }
 

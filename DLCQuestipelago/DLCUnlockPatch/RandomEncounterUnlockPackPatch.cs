@@ -17,7 +17,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         // public static void StartRandomEncounterConversation()
-        static void Postfix()
+        private static void Postfix()
         {
             DLCManager.Instance.UnlockPack("psychological");
         }

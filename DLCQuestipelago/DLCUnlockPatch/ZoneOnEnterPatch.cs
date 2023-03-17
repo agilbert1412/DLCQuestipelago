@@ -1,9 +1,7 @@
 ﻿using BepInEx.Logging;
-using DLCLib.Character;
 using DLCLib.DLC;
 using DLCLib.World;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {
@@ -19,7 +17,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         }
 
         // public void OnEnter(bool isFirstZone)
-        static void Postfix(Zone __instance, bool isFirstZone)
+        private static void Postfix(Zone __instance, bool isFirstZone)
         {
             if (!isFirstZone)
             {

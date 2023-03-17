@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using DLCQuestipelago.Archipelago;
+﻿using DLCQuestipelago.Archipelago;
+using System.Collections.Generic;
 
 namespace DLCQuestipelago.Serialization
 {

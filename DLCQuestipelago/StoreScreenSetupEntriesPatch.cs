@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.HUD;
 using DLCLib.Screens;
-using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -14,6 +11,8 @@ using HUD;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteSheetRuntime;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace DLCQuestipelago
 {
@@ -31,7 +30,7 @@ namespace DLCQuestipelago
             _locationChecker = locationChecker;
             _itemParser = itemParser;
         }
-        
+
         public static bool Prefix(StoreScreen __instance)
         {
             var dlcSpriteSheet = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet;

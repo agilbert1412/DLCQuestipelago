@@ -19,7 +19,7 @@ namespace DLCQuestipelago.Goal.LFOD
         }
 
         // public static void PerformFinalAttack()
-        static void Postfix()
+        private static void Postfix()
         {
             if (_objectivePersistence == null)
             {

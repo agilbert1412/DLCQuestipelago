@@ -1,13 +1,8 @@
-﻿using System.ComponentModel;
-using System.Reflection;
-using BepInEx.Logging;
-using DLCLib;
+﻿using BepInEx.Logging;
 using DLCLib.DLC;
-using DLCLib.Screens;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
-using HUD;
 
 namespace DLCQuestipelago
 {
@@ -24,7 +19,7 @@ namespace DLCQuestipelago
             _locationChecker = locationChecker;
         }
 
-        static bool Prefix(DLCPack __instance)
+        private static bool Prefix(DLCPack __instance)
         {
             if (_log == null || _locationChecker == null || __instance == null)
             {
@@ -44,7 +39,7 @@ namespace DLCQuestipelago
             return false; // don't run original logic
         }
 
-        static void Postfix(DLCPack __instance)
+        private static void Postfix(DLCPack __instance)
         {
             InventoryCoinsGetPatch.UpdateCoinsUI();
         }

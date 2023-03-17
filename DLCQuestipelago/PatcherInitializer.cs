@@ -1,8 +1,6 @@
 ﻿using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.DLCUnlockPatch;
-using DLCQuestipelago.Goal.DLCQuest;
-using DLCQuestipelago.Goal.LFOD;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.Serialization;

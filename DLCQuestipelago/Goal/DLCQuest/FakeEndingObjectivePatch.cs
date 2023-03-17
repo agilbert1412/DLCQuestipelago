@@ -1,8 +1,5 @@
 ﻿using BepInEx.Logging;
-using DLCLib.DLC;
 using DLCLib.Scripts;
-using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Locations;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
 
@@ -22,7 +19,7 @@ namespace DLCQuestipelago.Goal.DLCQuest
         }
 
         // public static void OnFakeEndingCreditsComplete()
-        static void Postfix()
+        private static void Postfix()
         {
             if (_objectivePersistence == null)
             {

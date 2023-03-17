@@ -1,5 +1,4 @@
-﻿using System.IO;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib.Save;
 using HarmonyLib;
 
@@ -16,7 +15,7 @@ namespace DLCQuestipelago.Serialization
             _log = log;
         }
 
-        static void Postfix(DLCSaveManager __instance)
+        private static void Postfix(DLCSaveManager __instance)
         {
             Plugin.Instance.EnterGame();
         }

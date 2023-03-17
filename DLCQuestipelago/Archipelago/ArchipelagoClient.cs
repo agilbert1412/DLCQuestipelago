@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using Archipelago.MultiClient.Net;
+﻿using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using BepInEx.Logging;
-using DLCLib;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -205,7 +202,7 @@ namespace DLCQuestipelago.Archipelago
             {
                 return;
             }
-            
+
             _itemReceivedFunction();
         }
 
@@ -215,8 +212,8 @@ namespace DLCQuestipelago.Archipelago
             {
                 return;
             }
-            try 
-            { 
+            try
+            {
                 _session.Locations.CompleteLocationChecks(locationIds);
             }
             catch (Exception ex)
@@ -582,7 +579,7 @@ namespace DLCQuestipelago.Archipelago
             _console.LogMessage("Reconnection attempt successful!");
             return IsConnected;
         }
-        
+
         public void APUpdate()
         {
             MakeSureConnected(60);

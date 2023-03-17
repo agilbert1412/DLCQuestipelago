@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.NetLauncher.Common;
 using DLCLib;
 using DLCLib.DLC;
@@ -14,6 +10,10 @@ using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Notifications;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DLCQuestipelago
 {
@@ -83,7 +83,11 @@ namespace DLCQuestipelago
         {
             var jsonString = File.ReadAllText(Persistency.ConnectionFile);
             var connectionInfo = JsonConvert.DeserializeObject<ArchipelagoConnectionInfo>(jsonString);
-            if (connectionInfo == null) return;
+            if (connectionInfo == null)
+            {
+                return;
+            }
+
             APConnectionInfo = connectionInfo;
         }
 
@@ -105,7 +109,7 @@ namespace DLCQuestipelago
             _itemManager.ReceiveAllNewItems();
 
             PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
-            
+
             IsInGame = true;
             SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = true;
             InventoryCoinsGetPatch.UpdateCoinsUI();

@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DLCQuestipelago.Archipelago;
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using DLCLib;
-using DLCLib.Campaigns;
-using DLCLib.DLC;
-using DLCLib.HUD;
-using DLCQuestipelago.Archipelago;
 
 namespace DLCQuestipelago.Items
 {
