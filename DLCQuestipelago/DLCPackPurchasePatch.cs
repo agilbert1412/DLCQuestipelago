@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 using BepInEx.Logging;
+using DLCLib;
 using DLCLib.DLC;
+using DLCLib.Screens;
+using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
+using HUD;
 
 namespace DLCQuestipelago
 {
@@ -28,6 +32,8 @@ namespace DLCQuestipelago
             }
 
             _log.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
+            var stateProperty = typeof(DLCPack).GetProperty("State");
+            stateProperty.SetValue(__instance, DLCPackStateEnum.Purchased);
             _locationChecker.AddCheckedLocation(__instance.Data.DisplayName);
 
             if (__instance.Data.IsBossDLC)
@@ -40,7 +46,7 @@ namespace DLCQuestipelago
 
         static void Postfix(DLCPack __instance)
         {
-
+            InventoryCoinsGetPatch.UpdateCoinsUI();
         }
     }
 }

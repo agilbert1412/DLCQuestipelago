@@ -25,7 +25,6 @@ namespace DLCQuestipelago
             if (pack == null)
             {
                 return false;
-
             }
 
             if (Plugin.Instance.IsInGame)

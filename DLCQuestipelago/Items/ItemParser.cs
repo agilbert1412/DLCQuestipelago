@@ -33,7 +33,9 @@ namespace DLCQuestipelago.Items
             {
                 ReceivedDLCs.Add(unlockedDLC.Data.Name);
                 if (unlockedDLC.Data.PurchaseEvent == null || unlockedDLC.Data.PurchaseEvent.Equals(string.Empty) || unlockedDLC.Data.IsBossDLC)
+                {
                     return;
+                }
                 typeof(DLCPurchaseEventUtil).InvokeMember(unlockedDLC.Data.PurchaseEvent, BindingFlags.InvokeMethod, (Binder)null, (object)null, new object[0]);
                 return;
             }

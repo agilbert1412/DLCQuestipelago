@@ -105,8 +105,10 @@ namespace DLCQuestipelago
             _itemManager.ReceiveAllNewItems();
 
             PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
+            
             IsInGame = true;
             SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = true;
+            InventoryCoinsGetPatch.UpdateCoinsUI();
         }
 
         public void SaveGame()
@@ -144,16 +146,19 @@ namespace DLCQuestipelago
             _itemManager.ReceiveAllNewItems();
 
             var receivedDLCPack = DLCManager.Instance.Packs.Where(x => x.Value.Data.DisplayName == lastReceivedItem);
+            var icon = (receivedDLCPack.Any() ? receivedDLCPack.First() : DLCManager.Instance.Packs.First()).Value.Data.IconName;
             NotificationManager.Instance.AddNotification(new Notification()
             {
                 Title = "New Archipelago Item Received!",
                 Description = lastReceivedItem,
                 Texture = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.Texture,
                 SourceRectangle =
-                    SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.SourceRectangle((receivedDLCPack.Any() ? receivedDLCPack.First() : DLCManager.Instance.Packs.First()).Value.Data.IconName),
+                    SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.SourceRectangle(icon),
                 Tint = Color.White,
                 CueName = "toast_up"
             });
+
+            InventoryCoinsGetPatch.UpdateCoinsUI();
         }
 
         private void TryShowNotification(string icon)

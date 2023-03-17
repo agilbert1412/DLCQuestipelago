@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
@@ -8,7 +9,9 @@ using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using BepInEx.Logging;
+using DLCLib;
 using HarmonyLib;
+using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -104,6 +107,10 @@ namespace DLCQuestipelago.Archipelago
 
         private void InitializeAfterConnection()
         {
+            if (_session == null)
+            {
+                return;
+            }
             _session.Items.ItemReceived += OnItemReceived;
             _session.MessageLog.OnMessageReceived += OnMessageReceived;
             _session.Socket.ErrorReceived += SessionErrorReceived;
@@ -122,7 +129,14 @@ namespace DLCQuestipelago.Archipelago
                 return;
             }
 
-            _session.Socket.SendPacket(new SyncPacket());
+            try
+            {
+                _session.Socket.SendPacket(new SyncPacket());
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+            }
         }
 
         private void InitializeDeathLink()
@@ -169,13 +183,20 @@ namespace DLCQuestipelago.Archipelago
             {
                 return;
             }
-
-            var packet = new SayPacket()
+            try
             {
-                Text = text
-            };
 
-            _session.Socket.SendPacket(packet);
+                var packet = new SayPacket()
+                {
+                    Text = text
+                };
+
+                _session.Socket.SendPacket(packet);
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+            }
         }
 
         private void OnItemReceived(ReceivedItemsHelper receivedItemsHelper)
@@ -194,16 +215,22 @@ namespace DLCQuestipelago.Archipelago
             {
                 return;
             }
-
-            _session.Locations.CompleteLocationChecks(locationIds);
+            try 
+            { 
+                _session.Locations.CompleteLocationChecks(locationIds);
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+            }
         }
 
-        public string GetPlayerName(int playerId)
+        private string GetPlayerName(int playerId)
         {
             return _session.Players.GetPlayerName(playerId) ?? "Archipelago";
         }
 
-        public string GetPlayerAlias(string playerName)
+        private string GetPlayerAlias(string playerName)
         {
             var player = _session.Players.AllPlayers.FirstOrDefault(x => x.Name == playerName);
             if (player == null)
@@ -221,37 +248,52 @@ namespace DLCQuestipelago.Archipelago
                 return new Dictionary<string, long>();
             }
 
-            var allLocationsCheckedIds = _session.Locations.AllLocationsChecked;
-            var allLocationsChecked = allLocationsCheckedIds.ToDictionary(GetLocationName, x => x);
-            return allLocationsChecked;
+            try
+            {
+                var allLocationsCheckedIds = _session.Locations.AllLocationsChecked;
+                var allLocationsChecked = allLocationsCheckedIds.ToDictionary(GetLocationName, x => x);
+                return allLocationsChecked;
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+                return new Dictionary<string, long>();
+            }
         }
 
         public List<ReceivedItem> GetAllReceivedItems()
         {
+            var allReceivedItems = new List<ReceivedItem>();
             if (!MakeSureConnected())
             {
-                return new List<ReceivedItem>();
+                return allReceivedItems;
             }
 
-            var allReceivedItems = new List<ReceivedItem>();
-            var apItems = _session.Items.AllItemsReceived.ToArray();
-            for (var itemIndex = 0; itemIndex < apItems.Length; itemIndex++)
+            try
             {
-                var apItem = apItems[itemIndex];
-                var itemName = GetItemName(apItem.Item);
-                var playerName = GetPlayerName(apItem.Player);
-                var locationName = GetLocationName(apItem.Location) ?? "Thin air";
+                var apItems = _session.Items.AllItemsReceived.ToArray();
+                for (var itemIndex = 0; itemIndex < apItems.Length; itemIndex++)
+                {
+                    var apItem = apItems[itemIndex];
+                    var itemName = GetItemName(apItem.Item);
+                    var playerName = GetPlayerName(apItem.Player);
+                    var locationName = GetLocationName(apItem.Location) ?? "Thin air";
 
-                var receivedItem = new ReceivedItem(locationName, itemName, playerName, apItem.Location, apItem.Item,
-                    apItem.Player, itemIndex);
+                    var receivedItem = new ReceivedItem(locationName, itemName, playerName, apItem.Location, apItem.Item,
+                        apItem.Player, itemIndex);
 
-                allReceivedItems.Add(receivedItem);
+                    allReceivedItems.Add(receivedItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
             }
 
             return allReceivedItems;
         }
 
-        public Dictionary<string, int> GetAllReceivedItemNamesAndCounts()
+        private Dictionary<string, int> GetAllReceivedItemNamesAndCounts()
         {
             if (!MakeSureConnected())
             {
@@ -271,15 +313,22 @@ namespace DLCQuestipelago.Archipelago
                 return false;
             }
 
-            foreach (var receivedItem in _session.Items.AllItemsReceived)
+            try
             {
-                if (GetItemName(receivedItem.Item) != itemName)
+                foreach (var receivedItem in _session.Items.AllItemsReceived)
                 {
-                    continue;
-                }
+                    if (GetItemName(receivedItem.Item) != itemName)
+                    {
+                        continue;
+                    }
 
-                sendingPlayer = _session.Players.GetPlayerName(receivedItem.Player);
-                return true;
+                    sendingPlayer = _session.Players.GetPlayerName(receivedItem.Player);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
             }
 
             return false;
@@ -292,10 +341,18 @@ namespace DLCQuestipelago.Archipelago
                 return 0;
             }
 
-            return _session.Items.AllItemsReceived.Count(x => GetItemName(x.Item) == itemName);
+            try
+            {
+                return _session.Items.AllItemsReceived.Count(x => GetItemName(x.Item) == itemName);
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+                return 0;
+            }
         }
 
-        public Hint[] GetHints()
+        private Hint[] GetHints()
         {
             if (!MakeSureConnected())
             {
@@ -311,13 +368,19 @@ namespace DLCQuestipelago.Archipelago
             {
                 return;
             }
-
-            var statusUpdatePacket = new StatusUpdatePacket();
-            statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
-            _session.Socket.SendPacket(statusUpdatePacket);
+            try
+            {
+                var statusUpdatePacket = new StatusUpdatePacket();
+                statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
+                _session.Socket.SendPacket(statusUpdatePacket);
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+            }
         }
 
-        public string GetLocationName(long locationId)
+        private string GetLocationName(long locationId)
         {
             if (!MakeSureConnected())
             {
@@ -335,12 +398,18 @@ namespace DLCQuestipelago.Archipelago
 
         public long GetLocationId(string locationName, string gameName = GAME_NAME)
         {
-            if (!MakeSureConnected())
+            var locationId = -1L;
+            if (MakeSureConnected())
             {
-                return -1;
+                try
+                {
+                    locationId = _session.Locations.GetLocationIdFromName(gameName, locationName);
+                }
+                catch (Exception ex)
+                {
+                    _console.LogError(ex.Message);
+                }
             }
-
-            var locationId = _session.Locations.GetLocationIdFromName(gameName, locationName);
             if (locationId <= 0)
             {
                 locationId = _localDataPackage.GetLocalLocationId(locationName);
@@ -349,7 +418,7 @@ namespace DLCQuestipelago.Archipelago
             return locationId;
         }
 
-        public string GetItemName(long itemId)
+        private string GetItemName(long itemId)
         {
             if (!MakeSureConnected())
             {
@@ -372,7 +441,14 @@ namespace DLCQuestipelago.Archipelago
                 return;
             }
 
-            _deathLinkService.SendDeathLink(new DeathLink(player, reason));
+            try
+            {
+                _deathLinkService.SendDeathLink(new DeathLink(player, reason));
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+            }
         }
 
         private void ReceiveDeathLink(DeathLink deathlink)
@@ -382,7 +458,7 @@ namespace DLCQuestipelago.Archipelago
             _console.LogInfo(deathLinkMessage);
         }
 
-        public ScoutedLocation ScoutSingleLocation(string locationName, bool createAsHint = false)
+        private ScoutedLocation ScoutSingleLocation(string locationName, bool createAsHint = false)
         {
             if (ScoutedLocations.ContainsKey(locationName))
             {
@@ -538,7 +614,14 @@ namespace DLCQuestipelago.Archipelago
                 return;
             }
 
-            _session.DataStorage[Scope.Game, key] = value;
+            try
+            {
+                _session.DataStorage[Scope.Game, key] = value;
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
+            }
         }
 
         public bool StringExistsInDataStorage(string key)
@@ -559,14 +642,22 @@ namespace DLCQuestipelago.Archipelago
                 return null;
             }
 
-            var value = _session.DataStorage[Scope.Game, key];
-            var stringValue = value.To<string>();
-            if (string.IsNullOrWhiteSpace(stringValue))
+            try
             {
+                var value = _session.DataStorage[Scope.Game, key];
+                var stringValue = value.To<string>();
+                if (string.IsNullOrWhiteSpace(stringValue))
+                {
+                    return null;
+                }
+
+                return stringValue;
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
                 return null;
             }
-
-            return stringValue;
         }
 
         public void RemoveStringFromDataStorage(string key)

@@ -1,6 +1,4 @@
 ﻿using BepInEx.Logging;
-using DLCLib;
-using DLCLib.World.Props;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 

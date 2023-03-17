@@ -8,6 +8,7 @@ namespace DLCQuestipelago.Archipelago
     public class SlotData
     {
         private const string COINSANITY_KEY = "coinsanity";
+        private const string COINSANITY_BUNDLE_KEY = "coinbundlerange";
         private const string ENDING_KEY = "ending_choice"; // any0 true1
         private const string CAMPAIGN_KEY = "campaign"; // basic0 live_freemium_or_die1 both2
         private const string DEATH_LINK_KEY = "death_link";
@@ -19,6 +20,7 @@ namespace DLCQuestipelago.Archipelago
 
         public string SlotName { get; private set; }
         public Coinsanity Coinsanity { get; private set; }
+        public int CoinBundleSize { get; private set; }
         public Ending Ending { get; private set; }
         public Campaign Campaign { get; private set; }
         public bool DeathLink { get; private set; }
@@ -31,11 +33,13 @@ namespace DLCQuestipelago.Archipelago
             _slotDataFields = slotDataFields;
             _console = console;
 
-            Coinsanity = GetSlotSetting(COINSANITY_KEY, Coinsanity.Disabled);
+            Coinsanity = GetSlotSetting(COINSANITY_KEY, Coinsanity.None);
+            CoinBundleSize = GetSlotSetting(COINSANITY_BUNDLE_KEY, 20);
             Ending = GetSlotSetting(ENDING_KEY, Ending.TrueEnding);
             Campaign = GetSlotSetting(CAMPAIGN_KEY, Campaign.LiveFreemiumOrDie);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
             Seed = GetSlotSetting(SEED_KEY, "");
+            
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
         }
 
@@ -86,7 +90,9 @@ namespace DLCQuestipelago.Archipelago
 
     public enum Coinsanity
     {
-        Disabled = 0,
+        None = 0,
+        Region = 1,
+        Coin = 2,
     }
 
     public enum Ending
