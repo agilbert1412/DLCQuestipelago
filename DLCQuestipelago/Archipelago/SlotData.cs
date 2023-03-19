@@ -8,8 +8,8 @@ namespace DLCQuestipelago.Archipelago
     {
         private const string COINSANITY_KEY = "coinsanity";
         private const string COINSANITY_BUNDLE_KEY = "coinbundlerange";
-        private const string ENDING_KEY = "ending_choice"; // any0 true1
-        private const string CAMPAIGN_KEY = "campaign"; // basic0 live_freemium_or_die1 both2
+        private const string ENDING_KEY = "ending_choice";
+        private const string CAMPAIGN_KEY = "campaign";
         private const string DEATH_LINK_KEY = "death_link";
         private const string SEED_KEY = "seed";
         private const string MULTIWORLD_VERSION_KEY = "client_version";

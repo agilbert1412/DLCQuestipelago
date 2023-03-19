@@ -12,8 +12,10 @@ using Newtonsoft.Json;
 using Notifications;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace DLCQuestipelago
 {
@@ -29,6 +31,7 @@ namespace DLCQuestipelago
         private LocationChecker _locationChecker;
         private ItemManager _itemManager;
         private ObjectivePersistence _objectivePersistence;
+        private ArchipelagoNotificationsHandler _notificationHandler;
 
         public bool IsInGame { get; private set; }
 
@@ -41,6 +44,7 @@ namespace DLCQuestipelago
             _harmony.PatchAll();
 
             _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
+            _notificationHandler = new ArchipelagoNotificationsHandler(Log, _archipelago);
             ConnectToArchipelago();
             IsInGame = false;
 
@@ -77,6 +81,7 @@ namespace DLCQuestipelago
 
             // _chatForwarder.ListenToChatMessages(_archipelago);
             Log.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");// Type !!help for client commands");
+            WritePersistentArchipelagoData();
         }
 
         private void ReadPersistentArchipelagoData()
@@ -91,6 +96,12 @@ namespace DLCQuestipelago
             APConnectionInfo = connectionInfo;
         }
 
+        private void WritePersistentArchipelagoData()
+        {
+            var jsonObject = JsonConvert.SerializeObject(APConnectionInfo);
+            File.WriteAllText(Persistency.ConnectionFile, jsonObject);
+        }
+
         public void OnUpdateTicked()
         {
             _archipelago.APUpdate();
@@ -99,7 +110,8 @@ namespace DLCQuestipelago
 
         public void EnterGame()
         {
-            SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = false;
+            var player = SceneManager.Instance.CurrentScene.Player;
+            player.AllowPerformZeldaItem = false;
             _itemManager = new ItemManager(_archipelago, new ReceivedItem[0]);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(_archipelago);
@@ -111,14 +123,20 @@ namespace DLCQuestipelago
             PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
 
             IsInGame = true;
-            SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem = true;
+            player.AllowPerformZeldaItem = true;
             InventoryCoinsGetPatch.UpdateCoinsUI();
+            player.RefreshAnimations();
         }
 
         public void SaveGame()
         {
             try
             {
+                if (_locationChecker == null)
+                {
+                    return;
+                }
+
                 _locationChecker.VerifyNewLocationChecksWithArchipelago();
                 _locationChecker.SendAllLocationChecks();
             }
@@ -149,18 +167,7 @@ namespace DLCQuestipelago
             Log.LogMessage($"Received Item: {lastReceivedItem}");
             _itemManager.ReceiveAllNewItems();
 
-            var receivedDLCPack = DLCManager.Instance.Packs.Where(x => x.Value.Data.DisplayName == lastReceivedItem);
-            var icon = (receivedDLCPack.Any() ? receivedDLCPack.First() : DLCManager.Instance.Packs.First()).Value.Data.IconName;
-            NotificationManager.Instance.AddNotification(new Notification()
-            {
-                Title = "New Archipelago Item Received!",
-                Description = lastReceivedItem,
-                Texture = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.Texture,
-                SourceRectangle =
-                    SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.SourceRectangle(icon),
-                Tint = Color.White,
-                CueName = "toast_up"
-            });
+            _notificationHandler.AddNotification(lastReceivedItem);
 
             InventoryCoinsGetPatch.UpdateCoinsUI();
         }

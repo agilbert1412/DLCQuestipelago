@@ -14,11 +14,11 @@ namespace DLCQuestipelago.Items
     [HarmonyPatch(nameof(Inventory.Coins), MethodType.Getter)]
     public static class InventoryCoinsGetPatch
     {
-        private const string BASIC_CAMPAIGN = "DLC Quest:";
-        private const string LFOD_CAMPAIGN = "Live Freemium or Die:";
-        private const string AP_COIN_BUNDLE = "Coin Bundle";
-        private const string BASIC_CAMPAIGN_COIN_NAME = $"{BASIC_CAMPAIGN} {AP_COIN_BUNDLE}";
-        private const string LFOD_CAMPAIGN_COIN_NAME = $"{LFOD_CAMPAIGN} {AP_COIN_BUNDLE}";
+        public const string BASIC_CAMPAIGN = "DLC Quest";
+        public const string LFOD_CAMPAIGN = "Live Freemium or Die";
+        public const string AP_COIN_BUNDLE = "Coin Bundle";
+        public const string BASIC_CAMPAIGN_COIN_NAME = $"{BASIC_CAMPAIGN}: {AP_COIN_BUNDLE}";
+        public const string LFOD_CAMPAIGN_COIN_NAME = $"{LFOD_CAMPAIGN}: {AP_COIN_BUNDLE}";
 
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;

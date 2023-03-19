@@ -47,16 +47,16 @@
       <HintPath>..\..\DLC Quest\EasyStorage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework">
-      <HintPath>..\..\XNA DLLs\Microsoft.Xna.Framework.dll</HintPath>
+      <HintPath>XNA\Microsoft.Xna.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Game">
-      <HintPath>..\..\XNA DLLs\Microsoft.Xna.Framework.Game.dll</HintPath>
+      <HintPath>XNA\Microsoft.Xna.Framework.Game.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Graphics">
-      <HintPath>..\..\XNA DLLs\Microsoft.Xna.Framework.Graphics.dll</HintPath>
+      <HintPath>XNA\Microsoft.Xna.Framework.Graphics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Xact">
-      <HintPath>..\..\XNA DLLs\Microsoft.Xna.Framework.Xact.dll</HintPath>
+      <HintPath>XNA\Microsoft.Xna.Framework.Xact.dll</HintPath>
     </Reference>
     <Reference Include="SpriteSheetRuntime">
       <HintPath>..\..\DLC Quest\SpriteSheetRuntime.dll</HintPath>
@@ -75,10 +75,22 @@
     <None Update="IdTables\dlc_quest_location_table.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="XNA\Microsoft.Xna.Framework.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XNA\Microsoft.Xna.Framework.Game.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XNA\Microsoft.Xna.Framework.Graphics.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XNA\Microsoft.Xna.Framework.Xact.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 	<PropertyGroup Label="UserMacros">
-		<GamePath>C:\Archipelago\DLC Quest Debug\</GamePath>
+		<GamePath>..\..\DLC Quest Debug\</GamePath>
 		<PluginsPath>$(GamePath)BepInEx\plugins\DLCQuestipelago\</PluginsPath>
 		<BepInExLauncher>BepInEx.NetLauncher.exe</BepInExLauncher>
 	</PropertyGroup>

@@ -5,6 +5,7 @@ using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using BepInEx.Logging;
+using DLCQuestipelago.Archipelago.Deathlink;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace DLCQuestipelago.Archipelago
         private ArchipelagoSession _session;
         private DeathLinkService _deathLinkService;
         private Harmony _harmony;
-        private DeathManager _deathManager;
         private ArchipelagoConnectionInfo _connectionInfo;
 
         private Action _itemReceivedFunction;
@@ -106,16 +106,19 @@ namespace DLCQuestipelago.Archipelago
         {
             if (_session == null)
             {
+                _console.LogError($"_session is null in InitializeAfterConnection(). This should NEVER happen");
+                DisconnectPermanently();
                 return;
             }
+
+            IsConnected = true;
+
             _session.Items.ItemReceived += OnItemReceived;
             _session.MessageLog.OnMessageReceived += OnMessageReceived;
             _session.Socket.ErrorReceived += SessionErrorReceived;
             _session.Socket.SocketClosed += SessionSocketClosed;
 
             InitializeDeathLink();
-
-            IsConnected = true;
             // MultiRandom = new Random(SlotData.Seed);
         }
 
@@ -138,12 +141,6 @@ namespace DLCQuestipelago.Archipelago
 
         private void InitializeDeathLink()
         {
-            if (_deathManager == null)
-            {
-                _deathManager = new DeathManager(_console, _harmony, this);
-                _deathManager.HookIntoDeathlinkEvents();
-            }
-
             _deathLinkService = _session.CreateDeathLinkService();
             if (SlotData.DeathLink)
             {
@@ -450,7 +447,7 @@ namespace DLCQuestipelago.Archipelago
 
         private void ReceiveDeathLink(DeathLink deathlink)
         {
-            DeathManager.ReceiveDeathLink();
+            DiePatch.ReceiveDeathLink();
             var deathLinkMessage = $"You have been killed by {deathlink.Source} ({deathlink.Cause})";
             _console.LogInfo(deathLinkMessage);
         }

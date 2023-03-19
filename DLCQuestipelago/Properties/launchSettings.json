@@ -2,8 +2,8 @@
   "profiles": {
     "DLCQuestipelago": {
       "commandName": "Executable",
-      "executablePath": "C:\\Archipelago\\DLC Quest Debug\\BepInEx.NetLauncher.exe",
-      "workingDirectory": "C:\\Archipelago\\DLC Quest Debug"
+      "executablePath": "..\\DLC Quest Debug\\BepInEx.NetLauncher.exe",
+      "workingDirectory": "..\\..\\DLC Quest Debug"
     }
   }
 }

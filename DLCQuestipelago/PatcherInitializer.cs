@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
+using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
@@ -21,6 +22,7 @@ namespace DLCQuestipelago
             GrooveGiveMattockPatch.Initialize(log, locationChecker);
             StoreScreenSetupEntriesPatch.Initialize(log, locationChecker, itemManager.ItemParser);
             TriggerUtilBossDoorPatch.Initialize(log, archipelago);
+            DiePatch.Initialize(log, archipelago);
             InitializeDLCUnlockPatches(log);
             InitializeAllObjectivePatches(log, objectivePersistence);
         }

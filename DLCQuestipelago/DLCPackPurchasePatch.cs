@@ -1,4 +1,5 @@
-﻿using BepInEx.Logging;
+﻿using System.Reflection;
+using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
@@ -21,19 +22,29 @@ namespace DLCQuestipelago
 
         private static bool Prefix(DLCPack __instance)
         {
-            if (_log == null || _locationChecker == null || __instance == null)
+            if (__instance == null)
             {
-                return true; // run original logic
+                return false; // don't run original logic
             }
 
-            _log.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
             var stateProperty = typeof(DLCPack).GetProperty("State");
             stateProperty.SetValue(__instance, DLCPackStateEnum.Purchased);
+
+            if (_locationChecker == null)
+            {
+                return false; // don't run original logic
+            }
+
+            _log?.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
             _locationChecker.AddCheckedLocation(__instance.Data.DisplayName);
 
             if (__instance.Data.IsBossDLC)
             {
-                return true; // run original logic
+                if (__instance.Data.PurchaseEvent != null && !__instance.Data.PurchaseEvent.Equals(string.Empty))
+                {
+                    typeof(DLCPurchaseEventUtil).InvokeMember(__instance.Data.PurchaseEvent, BindingFlags.InvokeMethod,
+                        (Binder)null, null, new object[0]);
+                }
             }
 
             return false; // don't run original logic
