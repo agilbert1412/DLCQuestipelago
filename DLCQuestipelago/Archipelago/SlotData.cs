@@ -10,6 +10,7 @@ namespace DLCQuestipelago.Archipelago
         private const string COINSANITY_BUNDLE_KEY = "coinbundlerange";
         private const string ENDING_KEY = "ending_choice";
         private const string CAMPAIGN_KEY = "campaign";
+        private const string ITEM_SHUFFLE_KEY = "item_shuffle";
         private const string DEATH_LINK_KEY = "death_link";
         private const string SEED_KEY = "seed";
         private const string MULTIWORLD_VERSION_KEY = "client_version";
@@ -22,6 +23,7 @@ namespace DLCQuestipelago.Archipelago
         public int CoinBundleSize { get; private set; }
         public Ending Ending { get; private set; }
         public Campaign Campaign { get; private set; }
+        public ItemShuffle ItemShuffle { get; private set; }
         public bool DeathLink { get; private set; }
         public string Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
@@ -36,6 +38,7 @@ namespace DLCQuestipelago.Archipelago
             CoinBundleSize = GetSlotSetting(COINSANITY_BUNDLE_KEY, 20);
             Ending = GetSlotSetting(ENDING_KEY, Ending.TrueEnding);
             Campaign = GetSlotSetting(CAMPAIGN_KEY, Campaign.LiveFreemiumOrDie);
+            ItemShuffle = GetSlotSetting(ITEM_SHUFFLE_KEY, ItemShuffle.Shuffled);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
             Seed = GetSlotSetting(SEED_KEY, "");
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
@@ -104,5 +107,11 @@ namespace DLCQuestipelago.Archipelago
         Basic = 0,
         LiveFreemiumOrDie = 1,
         Both = 2,
+    }
+
+    public enum ItemShuffle
+    {
+        Disabled = 0,
+        Shuffled = 1,
     }
 }

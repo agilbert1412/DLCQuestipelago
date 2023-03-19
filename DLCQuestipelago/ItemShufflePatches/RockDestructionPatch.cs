@@ -5,7 +5,7 @@ using DLCLib.World.Props;
 using HarmonyLib;
 using System.Reflection;
 
-namespace DLCQuestipelago.DLCUnlockPatch
+namespace DLCQuestipelago.ItemShufflePatches
 {
     [HarmonyPatch(typeof(Rock))]
     [HarmonyPatch("OnDestruction")]

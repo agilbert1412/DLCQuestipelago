@@ -1,9 +1,12 @@
 ﻿using BepInEx.Logging;
+using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.Items;
+using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
+using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
 
 namespace DLCQuestipelago
@@ -18,18 +21,31 @@ namespace DLCQuestipelago
             DLCIsPurchasedPatch.Initialize(log, itemManager.ItemParser);
             CoinPickupPatch.Initialize(log, archipelago, locationChecker);
             InventoryCoinsGetPatch.Initialize(log, archipelago);
-            GetPickaxePatch.Initialize(log, locationChecker);
             GrooveGiveMattockPatch.Initialize(log, locationChecker);
             StoreScreenSetupEntriesPatch.Initialize(log, locationChecker, itemManager.ItemParser);
             TriggerUtilBossDoorPatch.Initialize(log, archipelago);
             DiePatch.Initialize(log, archipelago);
-            InitializeDLCUnlockPatches(log);
+            InitializeItemShufflePatches(log, archipelago, locationChecker);
+            InitializeDLCUnlockPatches(log, locationChecker);
             InitializeAllObjectivePatches(log, objectivePersistence);
+            InitializeNameChangePatches(log, archipelago);
         }
 
-        private static void InitializeDLCUnlockPatches(ManualLogSource log)
+        private static void InitializeItemShufflePatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            GrindstoneUnlockPackPatch.Initialize(log);
+            CompleteFetchQuestPatch.Initialize(log, archipelago, locationChecker);
+            FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker);
+            GetPickaxePatch.Initialize(log, archipelago, locationChecker);
+            GrantGunPatch.Initialize(log, archipelago, locationChecker);
+            GrantSwordPatch.Initialize(log, archipelago, locationChecker);
+            GrantWoodenSwordPatch.Initialize(log, archipelago, locationChecker);
+            PickupBoxOfSuppliesPatch.Initialize(log, archipelago, locationChecker);
+            RockDestructionPatch.Initialize(log);
+        }
+
+        private static void InitializeDLCUnlockPatches(ManualLogSource log, LocationChecker locationChecker)
+        {
+            GrindstoneUnlockPackPatch.Initialize(log, locationChecker);
             RandomEncounterUnlockPackPatch.Initialize(log);
             TriggerUtilActivateForestPatch.Initialize(log);
             TriggerUtilActivateNightForestPatch.Initialize(log);
@@ -56,6 +72,12 @@ namespace DLCQuestipelago
         {
             Goal.LFOD.FakeEndingObjectivePatch.Initialize(log, objectivePersistence);
             Goal.LFOD.TrueEndingObjectivePatch.Initialize(log, objectivePersistence);
+        }
+
+        private static void InitializeNameChangePatches(ManualLogSource log, ArchipelagoClient archipelago)
+        {
+            PlayerToSlotNamePatch.Initialize(log, archipelago);
+            PurchaseNameChangePatch.Initialize(log, archipelago);
         }
     }
 }

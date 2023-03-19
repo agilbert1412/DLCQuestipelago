@@ -224,15 +224,23 @@ namespace DLCQuestipelago.Archipelago
             return _session.Players.GetPlayerName(playerId) ?? "Archipelago";
         }
 
-        private string GetPlayerAlias(string playerName)
+        public string GetPlayerAlias(string playerName)
         {
-            var player = _session.Players.AllPlayers.FirstOrDefault(x => x.Name == playerName);
-            if (player == null)
+            try
             {
+                var player = _session.Players.AllPlayers.FirstOrDefault(x => x.Name == playerName);
+                if (player == null || player.Alias == playerName)
+                {
+                    return null;
+                }
+
+                return player.Alias.Substring(0, player.Alias.Length - playerName.Length - 3);
+            }
+            catch (Exception ex)
+            {
+                _console.LogError(ex.Message);
                 return null;
             }
-
-            return player.Alias;
         }
 
         public Dictionary<string, long> GetAllCheckedLocations()
