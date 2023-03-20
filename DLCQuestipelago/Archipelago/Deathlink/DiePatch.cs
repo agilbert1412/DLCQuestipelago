@@ -55,7 +55,7 @@ namespace DLCQuestipelago.Archipelago.Deathlink
             var killerString = killer.ToString();
             var killerType = killer.GetType().Name;
 
-            _archipelago.SendDeathLink(_archipelago.SlotData.SlotName, killerString);
+            _archipelago.SendDeathLinkAsync(_archipelago.SlotData.SlotName, killerType);
 
             return true; // run original logic
         }

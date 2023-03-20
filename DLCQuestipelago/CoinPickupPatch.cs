@@ -42,7 +42,7 @@ namespace DLCQuestipelago
             {
                 var location = $"{campaignLocation} {__instance.TotalCoinsCollected} {COIN_LOCATION_NAME}";
                 _log.LogDebug($"Checking Coin Bundle Location: {location}");
-                _locationChecker.RememberCheckedLocation(location);
+                _locationChecker.AddCheckedLocation(location);
             }
         }
     }

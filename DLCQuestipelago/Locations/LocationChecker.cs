@@ -70,7 +70,7 @@ namespace DLCQuestipelago.Locations
 
             allCheckedLocations = allCheckedLocations.Distinct().Where(x => x > -1).ToList();
 
-            _archipelago.ReportCheckedLocations(allCheckedLocations.ToArray());
+            _archipelago.ReportCheckedLocationsAsync(allCheckedLocations.ToArray());
         }
 
         public void VerifyNewLocationChecksWithArchipelago()

@@ -10,6 +10,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -201,6 +202,11 @@ namespace DLCQuestipelago.Archipelago
             }
 
             _itemReceivedFunction();
+        }
+
+        public void ReportCheckedLocationsAsync(long[] locationIds)
+        {
+            Task.Run(() => ReportCheckedLocations(locationIds));
         }
 
         public void ReportCheckedLocations(long[] locationIds)
@@ -436,6 +442,11 @@ namespace DLCQuestipelago.Archipelago
             return itemName;
         }
 
+        public void SendDeathLinkAsync(string player, string reason = "Unknown cause")
+        {
+            Task.Run(() => SendDeathLink(player, reason));
+        }
+
         public void SendDeathLink(string player, string reason = "Unknown cause")
         {
             if (!MakeSureConnected())
@@ -556,7 +567,7 @@ namespace DLCQuestipelago.Archipelago
         private const int THRESHOLD_TO_RETRY_CONNECTION_IN_SECONDS = 15;
         public bool MakeSureConnected(int threshold = THRESHOLD_TO_RETRY_CONNECTION_IN_SECONDS)
         {
-            if (IsConnected && _session != null && _session.Socket != null && _session.Socket.Connected)
+            if (IsConnected)
             {
                 return true;
             }
