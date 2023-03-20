@@ -33,7 +33,7 @@ namespace DLCQuestipelago.Locations
             return !IsLocationChecked(locationName);
         }
 
-        public void AddCheckedLocation(string locationName)
+        public void RememberCheckedLocation(string locationName)
         {
             if (_checkedLocations.ContainsKey(locationName))
             {
@@ -48,6 +48,11 @@ namespace DLCQuestipelago.Locations
             }
 
             _checkedLocations.Add(locationName, locationId);
+        }
+
+        public void AddCheckedLocation(string locationName)
+        {
+            RememberCheckedLocation(locationName);
             SendAllLocationChecks();
         }
 

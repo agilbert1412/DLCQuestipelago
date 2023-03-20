@@ -18,7 +18,7 @@ namespace DLCQuestipelago
         // protected override void Update(GameTime gameTime)
         private static void Postfix(DLCGame.DLCGame __instance, GameTime gameTime)
         {
-            Plugin.Instance.OnUpdateTicked();
+            Plugin.Instance.OnUpdateTicked(gameTime);
         }
     }
 }

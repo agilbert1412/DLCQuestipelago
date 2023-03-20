@@ -211,7 +211,7 @@ namespace DLCQuestipelago.Archipelago
             }
             try
             {
-                _session.Locations.CompleteLocationChecks(locationIds);
+                _session.Locations.CompleteLocationChecksAsync(locationIds);
             }
             catch (Exception ex)
             {
@@ -403,14 +403,14 @@ namespace DLCQuestipelago.Archipelago
             var locationId = -1L;
             if (MakeSureConnected())
             {
-                try
-                {
-                    locationId = _session.Locations.GetLocationIdFromName(gameName, locationName);
-                }
-                catch (Exception ex)
-                {
-                    _console.LogError(ex.Message);
-                }
+                //try
+                //{
+                //    locationId = _session.Locations.GetLocationIdFromName(gameName, locationName);
+                //}
+                //catch (Exception ex)
+                //{
+                //    _console.LogError(ex.Message);
+                //}
             }
             if (locationId <= 0)
             {

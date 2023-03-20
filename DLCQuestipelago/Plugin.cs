@@ -102,9 +102,16 @@ namespace DLCQuestipelago
             File.WriteAllText(Persistency.ConnectionFile, jsonObject);
         }
 
-        public void OnUpdateTicked()
+        private TimeSpan _lastTimeSentChecks;
+        public void OnUpdateTicked(GameTime gameTime)
         {
             _archipelago.APUpdate();
+            _lastTimeSentChecks += gameTime.ElapsedGameTime;
+            if (_lastTimeSentChecks.Seconds >= 5 && IsInGame && _locationChecker != null)
+            {
+                _locationChecker.SendAllLocationChecks();
+                _lastTimeSentChecks = TimeSpan.Zero;
+            }
             // TryShowNotification("player");
         }
 

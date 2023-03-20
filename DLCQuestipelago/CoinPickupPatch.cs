@@ -40,9 +40,9 @@ namespace DLCQuestipelago
             var bundleSize = _archipelago.SlotData.CoinBundleSize;
             for (var i = bundleSize; i <= __instance.TotalCoinsCollected; i += bundleSize)
             {
-                var location = $"{campaignLocation} {i} {COIN_LOCATION_NAME}";
+                var location = $"{campaignLocation} {__instance.TotalCoinsCollected} {COIN_LOCATION_NAME}";
                 _log.LogDebug($"Checking Coin Bundle Location: {location}");
-                _locationChecker.AddCheckedLocation(location);
+                _locationChecker.RememberCheckedLocation(location);
             }
         }
     }
