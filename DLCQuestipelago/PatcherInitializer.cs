@@ -34,13 +34,15 @@ namespace DLCQuestipelago
         private static void InitializeItemShufflePatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             CompleteFetchQuestPatch.Initialize(log, archipelago, locationChecker);
-            FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker);
             GetPickaxePatch.Initialize(log, archipelago, locationChecker);
             GrantGunPatch.Initialize(log, archipelago, locationChecker);
             GrantSwordPatch.Initialize(log, archipelago, locationChecker);
             GrantWoodenSwordPatch.Initialize(log, archipelago, locationChecker);
             PickupBoxOfSuppliesPatch.Initialize(log, archipelago, locationChecker);
             RockDestructionPatch.Initialize(log);
+            MiddleAgeNpcActivatePatch.Initialize(log, archipelago, locationChecker);
+            GrooveNpcActivatePatch.Initialize(log, archipelago, locationChecker);
+            FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker);
         }
 
         private static void InitializeDLCUnlockPatches(ManualLogSource log, LocationChecker locationChecker)
@@ -78,6 +80,16 @@ namespace DLCQuestipelago
         {
             PlayerToSlotNamePatch.Initialize(log, archipelago);
             PurchaseNameChangePatch.Initialize(log, archipelago);
+        }
+
+        private static void InitializeAllPersistencyPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        {
+            ClearSaveGamePatch.Initialize(log);
+            ContinueGamePatch.Initialize(log);
+            GetSaveFilenamePatch.Initialize(log, archipelago);
+            QuitToMainMenuPatch.Initialize(log);
+            SaveGameDataPatch.Initialize(log);
+            StartNewGamePatch.Initialize(log);
         }
     }
 }
