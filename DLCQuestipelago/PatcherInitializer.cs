@@ -26,7 +26,7 @@ namespace DLCQuestipelago
             TriggerUtilBossDoorPatch.Initialize(log, archipelago);
             DiePatch.Initialize(log, archipelago);
             InitializeItemShufflePatches(log, archipelago, locationChecker);
-            InitializeDLCUnlockPatches(log, locationChecker);
+            InitializeDLCUnlockPatches(log, archipelago, locationChecker);
             InitializeAllObjectivePatches(log, objectivePersistence);
             InitializeNameChangePatches(log, archipelago);
         }
@@ -40,14 +40,15 @@ namespace DLCQuestipelago
             GrantWoodenSwordPatch.Initialize(log, archipelago, locationChecker);
             PickupBoxOfSuppliesPatch.Initialize(log, archipelago, locationChecker);
             RockDestructionPatch.Initialize(log);
-            MiddleAgeNpcActivatePatch.Initialize(log, archipelago, locationChecker);
-            GrooveNpcActivatePatch.Initialize(log, archipelago, locationChecker);
-            FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker);
+            var conversationStarter = new ConversationStarter();
+            MiddleAgeNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
+            GrooveNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
+            FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
         }
 
-        private static void InitializeDLCUnlockPatches(ManualLogSource log, LocationChecker locationChecker)
+        private static void InitializeDLCUnlockPatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            GrindstoneUnlockPackPatch.Initialize(log, locationChecker);
+            GrindstoneUnlockPackPatch.Initialize(log, archipelago, locationChecker);
             RandomEncounterUnlockPackPatch.Initialize(log);
             TriggerUtilActivateForestPatch.Initialize(log);
             TriggerUtilActivateNightForestPatch.Initialize(log);

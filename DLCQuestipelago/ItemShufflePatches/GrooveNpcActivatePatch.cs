@@ -21,42 +21,41 @@ namespace DLCQuestipelago.ItemShufflePatches
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
+        private static ConversationStarter _conversationStarter;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
         {
             _log = log;
             _archipelago = archipelago;
             _locationChecker = locationChecker;
+            _conversationStarter = conversationStarter;
         }
 
         //public override bool Activate()
-        private static void Postfix(FetchNPC __instance, ref bool __result)
+        private static bool Prefix(FetchNPC __instance, ref bool __result)
         {
             if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
             {
-                return;
+                return true;
             }
 
             var hasCheckedPickaxeLocation = _locationChecker.IsLocationChecked("Pickaxe");
             Scene currentScene = Singleton<SceneManager>.Instance.CurrentScene;
-            if (currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR))
+            if (currentScene.Player.Inventory.HasBindle && !hasCheckedPickaxeLocation/*currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR)*/)
             {
-                if (hasCheckedPickaxeLocation)
-                {
-                    __instance.SetCurrentConversation("mattockcomplete");
-                }
-                else
-                {
-                    __instance.SetCurrentConversation("givemattock");
-                    // AwardmentUtil.AwardGoodPlayerAwardment();
-                }
+                __result = _conversationStarter.StartConversation(__instance, "givemattock");
             }
-            else if (currentScene.EventList.Contains(TriggerUtil.ROCKS_DISCOVERED_STR))
+            else if (!hasCheckedPickaxeLocation && currentScene.EventList.Contains(TriggerUtil.ROCKS_DISCOVERED_STR))
             {
-                __instance.SetCurrentConversation("fetchquest");
+                __result = _conversationStarter.StartConversation(__instance, "fetchquest");
+            }
+            else if (hasCheckedPickaxeLocation)
+            {
+                __result = _conversationStarter.StartConversation(__instance, "mattockcomplete");
+                // AwardmentUtil.AwardGoodPlayerAwardment();
             }
 
-            return;
+            return false;
         }
     }
 }

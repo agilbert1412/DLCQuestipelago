@@ -1,6 +1,8 @@
-﻿using BepInEx.Logging;
+﻿using System.Reflection;
+using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCLib.World.Props;
+using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 
@@ -11,13 +13,15 @@ namespace DLCQuestipelago.DLCUnlockPatch
     public static class GrindstoneUnlockPackPatch
     {
         private static ManualLogSource _log;
+        private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
         private static int grindCount;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _log = log;
             grindCount = 0;
+            _archipelago = archipelago;
             _locationChecker = locationChecker;
         }
 
@@ -27,6 +31,8 @@ namespace DLCQuestipelago.DLCUnlockPatch
             if (_locationChecker.IsLocationMissing("Sword"))
             {
                 __instance.Enable();
+                var IsCompleteField = typeof(Grindstone).GetProperty("IsComplete", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                IsCompleteField.SetValue(__instance, false);
             }
             return true;
         }

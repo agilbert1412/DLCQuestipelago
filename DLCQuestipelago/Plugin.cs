@@ -106,13 +106,21 @@ namespace DLCQuestipelago
         public void OnUpdateTicked(GameTime gameTime)
         {
             _archipelago.APUpdate();
-            /*_lastTimeSentChecks += gameTime.ElapsedGameTime;
-            if (_lastTimeSentChecks.Seconds >= 5 && IsInGame && _locationChecker != null)
+
+            if (!IsInGame)
             {
-                _locationChecker.SendAllLocationChecks();
-                _lastTimeSentChecks = TimeSpan.Zero;
-            }*/
-            // TryShowNotification("player");
+                return;
+            }
+
+            var random = new Random((int)gameTime.TotalGameTime.TotalMilliseconds);
+            if (random.NextDouble() < 0.001)
+            {
+                var trapIndex = random.Next(0, ItemParser.TrapItems.Length);
+                var trap = ItemParser.TrapItems[trapIndex];
+                Log.LogInfo($"Creating Trap Item: {trap}");
+                _itemManager.ItemParser.ProcessItem(trap);
+                SceneManager.Instance.CurrentScene.Update(gameTime);
+            }
         }
 
         public void EnterGame()

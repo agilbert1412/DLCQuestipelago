@@ -19,46 +19,48 @@ namespace DLCQuestipelago.ItemShufflePatches
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
+        private static ConversationStarter _conversationStarter;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
         {
             _log = log;
             _archipelago = archipelago;
             _locationChecker = locationChecker;
+            _conversationStarter = conversationStarter;
         }
 
         //public override bool Activate()
-        private static void Postfix(FetchNPC __instance, ref bool __result)
+        private static bool Prefix(FetchNPC __instance, ref bool __result)
         {
             if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
             {
-                return;
+                return true;
             }
 
             var hasCheckedSwordLocation = _locationChecker.IsLocationChecked("Wooden Sword");
 
             if (!Singleton<DLCManager>.Instance.IsUnlocked("coloredtext"))
             {
-                __instance.SetCurrentConversation("spawncoloredtextpack");
+                __result = _conversationStarter.StartConversation(__instance, "spawncoloredtextpack");
             }
             else if (!Singleton<DLCManager>.Instance.IsPurchased("coloredtext", false))
             {
-                __instance.SetCurrentConversation("buycoloredtextpack");
+                __result = _conversationStarter.StartConversation(__instance, "buycoloredtextpack");
             }
             else if (!hasCheckedSwordLocation)
             {
-                __instance.SetCurrentConversation("warnshepherd");
+                __result = _conversationStarter.StartConversation(__instance, "warnshepherd");
             }
             else if (!Singleton<SceneManager>.Instance.CurrentScene.EventList.Contains(ShepherdEncounter.SHEPHERD_ENCOUNTER_COMPLETE_STR))
             {
-                __instance.SetCurrentConversation("findandkillshepherd");
+                __result = _conversationStarter.StartConversation(__instance, "findandkillshepherd");
             }
             else
             {
-                __instance.SetCurrentConversation("aftershpeherddead");
+                __result = _conversationStarter.StartConversation(__instance, "aftershpeherddead");
             }
 
-            return;
+            return false;
         }
     }
 }
