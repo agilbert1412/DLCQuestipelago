@@ -15,8 +15,6 @@ namespace DLCQuestipelago.PlayerName
         private const int MAX_ALIAS_LENGTH = 16;
         private const string vanilla_name = "Player";
         private const string vanilla_name_changed = "xXx~P14y3R[69]SN1PA{117}~xXx";
-        public const string NAME_CHANGED_PREFIX = "xXx~";
-        public const string NAME_CHANGED_SUFFIX = "[69]4RCH1P374G0{117}~xXx";
         private static readonly string[] _decorators = new[] {"x", "X", "x~", "X~", "xx", "XX", "Xx", "xX", "xx~", "XX~", "Xx~", "xX~", "xXx", "XxX", "xXx~", "XxX~" };
 
         private static ManualLogSource _log;

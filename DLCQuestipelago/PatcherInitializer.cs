@@ -35,6 +35,7 @@ namespace DLCQuestipelago
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
             KillSheepPatch.Initialize(log, locationChecker);
+            InitializeAwardmentPatches(log, locationChecker);
         }
 
         private static void InitializeDualContentManagerPatches(ManualLogSource log, Harmony harmony)
@@ -110,6 +111,14 @@ namespace DLCQuestipelago
             QuitToMainMenuPatch.Initialize(log);
             SaveGameDataPatch.Initialize(log);
             StartNewGamePatch.Initialize(log);
+        }
+
+        private static void InitializeAwardmentPatches(ManualLogSource log, LocationChecker locationChecker)
+        {
+            IGetThatReferencePatch.Initialize(log, locationChecker);
+            NiceTryPatch.Initialize(log, locationChecker);
+            NotExactlyNoblePatch.Initialize(log, locationChecker);
+            StoryIsImportantPatch.Initialize(log, locationChecker);
         }
     }
 }

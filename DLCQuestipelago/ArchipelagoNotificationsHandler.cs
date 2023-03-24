@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
+using Core;
+using DLCDataTypes;
 using DLCLib;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
+using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -18,11 +23,32 @@ namespace DLCQuestipelago
     {
         private ManualLogSource _log;
         private ArchipelagoClient _archipelago;
+        private DLCDualContentManager _dualContentManager;
+        private DLCDualAssetManager _dualAssetManager;
+        private List<DLCPack> _dlcPacks;
 
         public ArchipelagoNotificationsHandler(ManualLogSource log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;
+            _dualContentManager = Plugin.DualContentManager;
+            _dualAssetManager = Plugin.DualAssetManager;
+            LoadAllDlcPacks();
+        }
+
+        private void LoadAllDlcPacks()
+        {
+            var dlcManifest = _dualContentManager.Load<List<string>>("manifest", ContentSource.DlcCampaign);
+            var lfodManifest = _dualContentManager.Load<List<string>>("manifest", ContentSource.LfodCampaign);
+            var path = Path.Combine("data", "dlc");
+            var allDlcManifest = dlcManifest.Union(lfodManifest).Where(file => Path.GetDirectoryName(file).Equals(path));
+            _dlcPacks = new List<DLCPack>();
+            foreach (string assetName in allDlcManifest)
+            {
+                var packData = _dualContentManager.Load<DLCPackData>(assetName);
+                var pack = new DLCPack(packData);
+                _dlcPacks.Add(pack);
+            }
         }
 
         public void AddNotification(string itemName)
@@ -79,20 +105,20 @@ namespace DLCQuestipelago
             AddNotification(description, texture, icon);
         }
 
-        private void AddDLCNotification(string dlcName)
+        private bool AddDLCNotification(string dlcName)
         {
-            var receivedDLCPack = DLCManager.Instance.Packs.Where(x => x.Value.Data.DisplayName == dlcName).ToArray();
+            var receivedDLCPack = _dlcPacks.Where(x => x.Data.DisplayName == dlcName).ToArray();
 
             if (!receivedDLCPack.Any())
             {
-                return;
+                return false;
             }
 
-            var spriteSheet = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet;
-            var texture = spriteSheet.Texture;
-            var icon = spriteSheet.SourceRectangle(receivedDLCPack.First().Value.Data.IconName);
+            var iconName = receivedDLCPack.First().Data.IconName;
+            _dualAssetManager.FindIcon(iconName, out var texture, out var rectangle);
 
-            AddNotification(dlcName, texture, icon);
+            AddNotification(dlcName, texture, rectangle);
+            return true;
         }
 
         private void AddNotification(string description, Texture2D texture, Rectangle icon)

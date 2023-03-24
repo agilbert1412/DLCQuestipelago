@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using BepInEx.Logging;
 using Core;
 using DLCLib;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using SpriteSheetRuntime;
 
 namespace DLCQuestipelago.DualContentManager
@@ -26,6 +28,9 @@ namespace DLCQuestipelago.DualContentManager
         public SpriteSheet LfodCampaignCharacterSpriteSheet;
         public SpriteSheet LfodCampaignDLCSpriteSheet;
 
+        private SpriteSheet[] _dlcSpriteSheets;
+        private SpriteSheet[] _allSpriteSheets;
+
         public DLCDualAssetManager(ManualLogSource console, DLCDualContentManager contentManager)
         {
             _console = console;
@@ -34,6 +39,13 @@ namespace DLCQuestipelago.DualContentManager
             LoadBaseSpriteSheets();
             LoadCampaignSpriteSheets(ContentSource.DlcCampaign, out DlcCampaignObjectSpriteSheet, out _, out DlcCampaignDLCSpriteSheet);
             LoadCampaignSpriteSheets(ContentSource.LfodCampaign, out LfodCampaignObjectSpriteSheet, out LfodCampaignCharacterSpriteSheet, out LfodCampaignDLCSpriteSheet);
+            _dlcSpriteSheets = new[] { DlcCampaignDLCSpriteSheet, LfodCampaignDLCSpriteSheet };
+            _allSpriteSheets = new[]
+            {
+                BaseCharacterSpriteSheet, BaseObjectSpriteSheet, DlcCampaignObjectSpriteSheet,
+                DlcCampaignDLCSpriteSheet, LfodCampaignObjectSpriteSheet, LfodCampaignCharacterSpriteSheet,
+                LfodCampaignDLCSpriteSheet,
+            };
         }
 
         private void LoadBaseSpriteSheets()
@@ -75,6 +87,21 @@ namespace DLCQuestipelago.DualContentManager
                 default:
                     return new SpriteSheet[0];
             }
+        }
+
+        public void FindIcon(string iconName, out Texture2D texture, out Rectangle rectangle)
+        {
+            foreach (var dlcSpriteSheet in _dlcSpriteSheets)
+            {
+                if (dlcSpriteSheet.Contains(iconName))
+                {
+                    texture = dlcSpriteSheet.Texture;
+                    rectangle = dlcSpriteSheet.SourceRectangle(iconName);
+                    return;
+                }
+            }
+
+            throw new Exception($"Could not find icon {iconName} in any of the sprite sheets.");
         }
     }
 }
