@@ -557,6 +557,18 @@ namespace DLCQuestipelago.Archipelago
             IsConnected = false;
         }
 
+        public void DisconnectTemporarily()
+        {
+            DisconnectAndCleanup();
+            _allowRetries = false;
+        }
+
+        public void ReconnectAfterTemporaryDisconnect()
+        {
+            _allowRetries = true;
+            MakeSureConnected(0);
+        }
+
         public void DisconnectPermanently()
         {
             DisconnectAndCleanup();
@@ -565,11 +577,19 @@ namespace DLCQuestipelago.Archipelago
 
         private DateTime _lastConnectFailure;
         private const int THRESHOLD_TO_RETRY_CONNECTION_IN_SECONDS = 15;
+        private bool _allowRetries = true;
         public bool MakeSureConnected(int threshold = THRESHOLD_TO_RETRY_CONNECTION_IN_SECONDS)
         {
             if (IsConnected)
             {
                 return true;
+            }
+
+            if (!_allowRetries)
+            {
+                _console.LogError("Reconnection attempt failed");
+                _lastConnectFailure = DateTime.Now;
+                return false;
             }
 
             if (_connectionInfo == null)

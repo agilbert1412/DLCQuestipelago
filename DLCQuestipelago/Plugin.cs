@@ -16,6 +16,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DLCQuestipelago.DualContentManager;
 
 namespace DLCQuestipelago
 {
@@ -24,6 +25,8 @@ namespace DLCQuestipelago
     {
         private const string CONNECT_SYNTAX = "Syntax: connect ip:port slot password";
         public static Plugin Instance;
+        public static DLCDualContentManager DualContentManager;
+        public static DLCDualAssetManager DualAssetManager;
 
         private Harmony _harmony;
         private ArchipelagoClient _archipelago;
@@ -106,7 +109,7 @@ namespace DLCQuestipelago
         public void OnUpdateTicked(GameTime gameTime)
         {
             _archipelago.APUpdate();
-
+            // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
             if (!IsInGame)
             {
                 return;
@@ -135,7 +138,7 @@ namespace DLCQuestipelago
             _locationChecker.SendAllLocationChecks();
             _itemManager.ReceiveAllNewItems();
 
-            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
+            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence, _harmony);
 
             IsInGame = true;
             player.AllowPerformZeldaItem = true;

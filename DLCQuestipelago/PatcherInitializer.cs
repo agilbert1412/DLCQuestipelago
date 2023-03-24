@@ -3,18 +3,22 @@ using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
+using DLCQuestipelago.DualContentManager;
+using DLCQuestipelago.FakeEndingBehavior;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
+using HarmonyLib;
 
 namespace DLCQuestipelago
 {
     public static class PatcherInitializer
     {
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence, Harmony harmony)
         {
+            InitializeDualContentManagerPatches(log, harmony);
             FrameUpdatePatch.Initialize(log);
             StatsScreenInvalidateAttemptPatch.Initialize(log, locationChecker, itemManager.ItemParser);
             DLCPackPurchasePatch.Initialize(log, locationChecker);
@@ -28,7 +32,15 @@ namespace DLCQuestipelago
             InitializeItemShufflePatches(log, archipelago, locationChecker);
             InitializeDLCUnlockPatches(log, archipelago, locationChecker);
             InitializeAllObjectivePatches(log, objectivePersistence);
+            InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
+            KillSheepPatch.Initialize(log, locationChecker);
+        }
+
+        private static void InitializeDualContentManagerPatches(ManualLogSource log, Harmony harmony)
+        {
+            DLCContentManagerInitializePatch.Initialize(log);
+            ConstructAnimationPatch.Initialize(log);
         }
 
         private static void InitializeItemShufflePatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
@@ -75,6 +87,13 @@ namespace DLCQuestipelago
         {
             Goal.LFOD.FakeEndingObjectivePatch.Initialize(log, objectivePersistence);
             Goal.LFOD.TrueEndingObjectivePatch.Initialize(log, objectivePersistence);
+        }
+
+        private static void InitializeFakeEndingDisconnectPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        {
+            FakeEndingDisconnectPatch.Initialize(log, archipelago);
+            FailedReconnectPatch.Initialize(log, archipelago);
+            SuccessReconnectPatch.Initialize(log, archipelago);
         }
 
         private static void InitializeNameChangePatches(ManualLogSource log, ArchipelagoClient archipelago)

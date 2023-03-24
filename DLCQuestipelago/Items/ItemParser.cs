@@ -14,6 +14,7 @@ using DLCLib.Character.LFOD;
 using DLCLib.Conversation;
 using DLCLib.Effects;
 using DLCLib.World.Props;
+using DLCQuestipelago.Items.Traps;
 
 namespace DLCQuestipelago.Items
 {
@@ -25,11 +26,13 @@ namespace DLCQuestipelago.Items
 
         public static readonly string[] TrapItems = new[] { ZOMBIE_SHEEP, TEMPORARY_SPIKE, LOADING_SCREEN };
 
+        private ArchipelagoClient _archipelago;
         public HashSet<string> ReceivedDLCs { get; }
 
-        public ItemParser()
+        public ItemParser(ArchipelagoClient archipelago)
         {
             ReceivedDLCs = new HashSet<string>();
+            _archipelago = archipelago;
         }
 
         private static Scene CurrentScene => SceneManager.Instance.CurrentScene;
@@ -135,7 +138,7 @@ namespace DLCQuestipelago.Items
             return false;
         }
 
-        private static bool TryHandleTrap(string itemName)
+        private bool TryHandleTrap(string itemName)
         {
             if (itemName == ZOMBIE_SHEEP)
             {
@@ -158,7 +161,7 @@ namespace DLCQuestipelago.Items
 
         private static void SpawnZombieSheepOnPlayer()
         {
-            var zombieSheep = new ZombieSheep();
+            var zombieSheep = new ZombieSheepTrap(Plugin.DualContentManager);
             zombieSheep.LoadContent();
             zombieSheep.Respawn(Player.Position);
             var addZombieSheepSpawningEffectMethod =
@@ -172,17 +175,18 @@ namespace DLCQuestipelago.Items
             var spikePosition = Player.Position;
             var spike = new TemporarySpike(spikePosition, Spike.DirectionEnum.Up, 5);
             spike.LoadContent();
-            CurrentScene.AddToScene(spike);
+            CurrentScene.Interpolators.Create(0.0f, 1f, 3f, null, (_) => CurrentScene.AddToScene(spike));
         }
 
-        private static void TriggerLoadingScreen()
+        private void TriggerLoadingScreen()
         {
             DLCAudioManager.Instance.AudioSystem.PauseMusic();
             CurrentScene.IsLoading = true;
             CurrentScene.IsPauseAllowed = false;
             CurrentScene.HUDManager.LoadingDisplay.Visible = true;
             CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(0.0f);
-            CurrentScene.Interpolators.Create(0.0f, 1f, 3f, step => CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(step.Value), FinishLoadingScreen);
+            var length = _archipelago.HasReceivedItem("Day One Patch Pack", out _) ? 2f : 5f;
+            CurrentScene.Interpolators.Create(0.0f, 1f, length, step => CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(step.Value), FinishLoadingScreen);
         }
 
         private static void FinishLoadingScreen(Interpolator interpolator)

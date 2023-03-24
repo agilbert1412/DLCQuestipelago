@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DLCLib;
+using DLCLib.Character;
 using DLCLib.Physics;
 using DLCLib.World.Props;
 using Microsoft.Xna.Framework;
 
-namespace DLCQuestipelago.Items
+namespace DLCQuestipelago.Items.Traps
 {
     internal class TemporarySpike : Spike
     {
@@ -16,16 +17,19 @@ namespace DLCQuestipelago.Items
         public TemporarySpike(Vector2 position, DirectionEnum direction, int maxKills) : base(position, direction)
         {
             RemainingKills = maxKills;
+            physicsObject.IgnoreGravity = false;
+            physicsObject.IsStatic = false;
         }
 
         public override bool OnCollision(PhysicsObject objA, PhysicsObject objB)
         {
-            if (objB.Entity is Player player)
+            if (objB.Entity is Player { IsAlive: true })
             {
-                if (player.IsAlive)
-                {
-                    RemainingKills -= 1;
-                }
+                RemainingKills -= 1;
+            }
+            else if (objB.Entity is Mob { IsAlive: true })
+            {
+                RemainingKills -= 1;
             }
 
             var collide = base.OnCollision(objA, objB);

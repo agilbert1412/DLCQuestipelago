@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Linq;
+using BepInEx.Logging;
 using DLCLib.HUD;
 using DLCLib.Render;
 using DLCQuestipelago.Archipelago;
@@ -10,10 +12,12 @@ namespace DLCQuestipelago.PlayerName
     [HarmonyPatch(nameof(DialogDisplay.AddDialog))]
     public static class PlayerToSlotNamePatch
     {
+        private const int MAX_ALIAS_LENGTH = 16;
         private const string vanilla_name = "Player";
         private const string vanilla_name_changed = "xXx~P14y3R[69]SN1PA{117}~xXx";
         public const string NAME_CHANGED_PREFIX = "xXx~";
         public const string NAME_CHANGED_SUFFIX = "[69]4RCH1P374G0{117}~xXx";
+        private static readonly string[] _decorators = new[] {"x", "X", "x~", "X~", "xx", "XX", "Xx", "xX", "xx~", "XX~", "Xx~", "xX~", "xXx", "XxX", "xXx~", "XxX~" };
 
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;
@@ -46,15 +50,6 @@ namespace DLCQuestipelago.PlayerName
 
             if (containsChangedName)
             {
-                if (!apName.StartsWith(NAME_CHANGED_PREFIX) || !apName.EndsWith(NAME_CHANGED_SUFFIX))
-                {
-                    apName = ChangeName(apName);
-                }
-                else
-                {
-                    apName = TurnLeet(apName);
-                }
-
                 return text.Replace(vanilla_name_changed, apName);
             }
 
@@ -68,21 +63,30 @@ namespace DLCQuestipelago.PlayerName
 
         public static string ChangeName(string name)
         {
-            return $"{NAME_CHANGED_PREFIX}{TurnLeet(name)}{NAME_CHANGED_SUFFIX}";
+            var validDecorators = _decorators.Where(x => (x.Length * 2) + name.Length <= MAX_ALIAS_LENGTH).OrderBy(x => x.Length).ToArray();
+            var chosenDecorator = "";
+            if (validDecorators.Any())
+            {
+                var longValidDecorators = validDecorators.Where(x => x.Length == validDecorators.Last().Length).ToArray();
+                var random = new Random(int.Parse(_archipelago.SlotData.Seed));
+                var chosenIndex = random.Next(0, longValidDecorators.Length);
+                chosenDecorator = longValidDecorators[chosenIndex];
+            }
+
+            var prefixDecorator = chosenDecorator;
+            var suffixDecorator = new string(chosenDecorator.Reverse().ToArray());
+            return $"{prefixDecorator}{TurnLeet(name)}{suffixDecorator}";
         }
 
         public static string TurnLeet(string text)
         {
             return text
-                .Replace("a", "4")
+                .Replace("l", "1")
+                .ToUpper()
                 .Replace("A", "4")
-                .Replace("e", "3")
                 .Replace("E", "3")
                 .Replace("L", "7")
-                .Replace("l", "1")
-                .Replace("i", "1")
                 .Replace("I", "1")
-                .Replace("o", "0")
                 .Replace("O", "0");
         }
     }

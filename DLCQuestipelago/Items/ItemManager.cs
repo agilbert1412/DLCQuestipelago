@@ -13,7 +13,7 @@ namespace DLCQuestipelago.Items
         public ItemManager(ArchipelagoClient archipelago, IEnumerable<ReceivedItem> itemsAlreadyProcessed)
         {
             _archipelago = archipelago;
-            ItemParser = new ItemParser();
+            ItemParser = new ItemParser(archipelago);
             _itemsAlreadyProcessed = new HashSet<ReceivedItem>(itemsAlreadyProcessed);
         }
 
