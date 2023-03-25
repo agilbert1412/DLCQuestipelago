@@ -48,6 +48,7 @@ namespace DLCQuestipelago
 
             _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
             _notificationHandler = new ArchipelagoNotificationsHandler(Log, _archipelago);
+            DLCContentManagerInitializePatch.Initialize(Log, _notificationHandler);
             ConnectToArchipelago();
             IsInGame = false;
 
@@ -114,9 +115,9 @@ namespace DLCQuestipelago
             {
                 return;
             }
-
+            
             var random = new Random((int)gameTime.TotalGameTime.TotalMilliseconds);
-            if (random.NextDouble() < 0.001)
+            if (random.NextDouble() < 0.00004)
             {
                 var trapIndex = random.Next(0, ItemParser.TrapItems.Length);
                 var trap = ItemParser.TrapItems[trapIndex];
@@ -138,7 +139,7 @@ namespace DLCQuestipelago
             _locationChecker.SendAllLocationChecks();
             _itemManager.ReceiveAllNewItems();
 
-            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence, _harmony);
+            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
 
             IsInGame = true;
             player.AllowPerformZeldaItem = true;

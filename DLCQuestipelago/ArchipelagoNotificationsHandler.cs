@@ -31,8 +31,12 @@ namespace DLCQuestipelago
         {
             _log = log;
             _archipelago = archipelago;
-            _dualContentManager = Plugin.DualContentManager;
-            _dualAssetManager = Plugin.DualAssetManager;
+        }
+
+        public void LoadDlcPacks(DLCDualContentManager dualContentManager, DLCDualAssetManager dualAssetManager)
+        {
+            _dualContentManager = dualContentManager;
+            _dualAssetManager = dualAssetManager;
             LoadAllDlcPacks();
         }
 

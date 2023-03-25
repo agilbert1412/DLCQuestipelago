@@ -62,16 +62,16 @@ namespace DLCQuestipelago.DualContentManager
             var campaignObjectSpriteSheetPath = Path.Combine("texture", "campaignObjectSpriteSheet");
             if (_contentManager.HasAsset(campaignObjectSpriteSheetPath, source))
             {
-                objectSpriteSheet = _contentManager.Load<SpriteSheet>(campaignObjectSpriteSheetPath);
+                objectSpriteSheet = _contentManager.Load<SpriteSheet>(campaignObjectSpriteSheetPath, source);
             }
 
             var campaignCharacterSpriteSheet = Path.Combine("texture", "campaignCharacterSpriteSheet");
             if (_contentManager.HasAsset(campaignCharacterSpriteSheet, source))
             {
-                characterSpriteSheet = _contentManager.Load<SpriteSheet>(campaignCharacterSpriteSheet);
+                characterSpriteSheet = _contentManager.Load<SpriteSheet>(campaignCharacterSpriteSheet, source);
             }
 
-            dlcSpriteSheet = _contentManager.Load<SpriteSheet>(Path.Combine("texture", "dlcSpriteSheet"));
+            dlcSpriteSheet = _contentManager.Load<SpriteSheet>(Path.Combine("texture", "dlcSpriteSheet"), source);
         }
 
         public SpriteSheet[] GetSpriteSheetsByName(string name)

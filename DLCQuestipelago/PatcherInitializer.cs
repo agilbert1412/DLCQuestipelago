@@ -16,9 +16,9 @@ namespace DLCQuestipelago
 {
     public static class PatcherInitializer
     {
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence, Harmony harmony)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence)
         {
-            InitializeDualContentManagerPatches(log, harmony);
+            InitializeDualContentManagerPatches(log);
             FrameUpdatePatch.Initialize(log);
             StatsScreenInvalidateAttemptPatch.Initialize(log, locationChecker, itemManager.ItemParser);
             DLCPackPurchasePatch.Initialize(log, locationChecker);
@@ -38,9 +38,8 @@ namespace DLCQuestipelago
             InitializeAwardmentPatches(log, locationChecker);
         }
 
-        private static void InitializeDualContentManagerPatches(ManualLogSource log, Harmony harmony)
+        private static void InitializeDualContentManagerPatches(ManualLogSource log)
         {
-            DLCContentManagerInitializePatch.Initialize(log);
             ConstructAnimationPatch.Initialize(log);
         }
 
