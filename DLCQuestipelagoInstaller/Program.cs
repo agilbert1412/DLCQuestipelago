@@ -55,8 +55,8 @@ namespace DLCQuestipelagoInstaller
 
             Console.WriteLine($"Your modded DLCQuest is now available at {moddedFolder}. To Run it, Launch \"{BEPINEX_EXECUTABLE}\".");
             Console.WriteLine("Do you wish to Create a Desktop Shortcut? [yes/no]");
-            var createShortcutAnswer = Console.ReadLine();
-            if (createShortcutAnswer.ToLower().First() == 'y')
+            var createShortcutAnswer = Console.ReadLine() ?? "";
+            if (createShortcutAnswer.Length > 0 && createShortcutAnswer.ToLower().First() == 'y')
             {
                 CreateDesktopShortcut(moddedFolder);
             }
