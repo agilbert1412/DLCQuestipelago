@@ -6,6 +6,7 @@ using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.FakeEndingBehavior;
 using DLCQuestipelago.Items;
+using DLCQuestipelago.Items.Traps;
 using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.PlayerName;
@@ -28,6 +29,7 @@ namespace DLCQuestipelago
             GrooveGiveMattockPatch.Initialize(log, locationChecker);
             StoreScreenSetupEntriesPatch.Initialize(log, locationChecker, itemManager.ItemParser);
             TriggerUtilBossDoorPatch.Initialize(log, archipelago);
+            BossSheepAttackPatch.Initialize(log, archipelago);
             DiePatch.Initialize(log, archipelago);
             InitializeItemShufflePatches(log, archipelago, locationChecker);
             InitializeDLCUnlockPatches(log, archipelago, locationChecker);
@@ -98,8 +100,10 @@ namespace DLCQuestipelago
 
         private static void InitializeNameChangePatches(ManualLogSource log, ArchipelagoClient archipelago)
         {
-            PlayerToSlotNamePatch.Initialize(log, archipelago);
-            PurchaseNameChangePatch.Initialize(log, archipelago);
+            var nameChanger = new NameChanger(archipelago);
+            PlayerNameInDialogPatch.Initialize(log, archipelago, nameChanger);
+            PlayerNameInMessageBoxPatch.Initialize(log, archipelago, nameChanger);
+            PurchaseNameChangePatch.Initialize(log, archipelago, nameChanger);
         }
 
         private static void InitializeAllPersistencyPatches(ManualLogSource log, ArchipelagoClient archipelago)

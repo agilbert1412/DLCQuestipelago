@@ -23,6 +23,11 @@ namespace DLCQuestipelago.Items.Traps
 
         public override bool OnCollision(PhysicsObject objA, PhysicsObject objB)
         {
+            if (objB.Entity is NPC)
+            {
+                return false;
+            }
+
             if (objB.Entity is Player { IsAlive: true })
             {
                 RemainingKills -= 1;

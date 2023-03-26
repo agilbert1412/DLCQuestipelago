@@ -20,7 +20,7 @@ namespace DLCQuestipelago.Items
 {
     public class ItemParser
     {
-        private const string ZOMBIE_SHEEP = "Zombie Sheep";
+        public const string ZOMBIE_SHEEP = "Zombie Sheep";
         private const string TEMPORARY_SPIKE = "Temporary Spike";
         private const string LOADING_SCREEN = "Loading Screen";
 
@@ -40,30 +40,30 @@ namespace DLCQuestipelago.Items
 
         private static MethodInfo ZeldaMethod = typeof(Player).GetMethod("PerformZeldaItem", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(string), typeof(string), typeof(float)}, null);
 
-        public void ProcessItem(ReceivedItem item)
+        public void ProcessItem(ReceivedItem item, bool isNew)
         {
-            ProcessItem(item.ItemName);
+            ProcessItem(item.ItemName, isNew);
         }
 
-        public void ProcessItem(string itemName)
+        public void ProcessItem(string itemName, bool isNew)
         {
-            if (TryHandleDLC(itemName))
+            if (TryHandleDLC(itemName, isNew))
             {
                 return;
             }
 
-            if (TryHandleItem(itemName))
+            if (TryHandleItem(itemName, isNew))
             {
                 return;
             }
 
-            if (TryHandleTrap(itemName))
+            if (TryHandleTrap(itemName, isNew))
             {
                 return;
             }
         }
 
-        private bool TryHandleDLC(string itemName)
+        private bool TryHandleDLC(string itemName, bool isNew)
         {
             DLCPack unlockedDLC = null;
             foreach (var x in DLCManager.Instance.Packs)
@@ -92,7 +92,7 @@ namespace DLCQuestipelago.Items
             return false;
         }
 
-        private static bool TryHandleItem(string itemName)
+        private static bool TryHandleItem(string itemName, bool isNew)
         {
             if (CampaignManager.Instance.Campaign is DLCQuestCampaign)
             {
@@ -138,8 +138,13 @@ namespace DLCQuestipelago.Items
             return false;
         }
 
-        private bool TryHandleTrap(string itemName)
+        private bool TryHandleTrap(string itemName, bool isNew)
         {
+            if (!isNew)
+            {
+                return false;
+            }
+
             if (itemName == ZOMBIE_SHEEP)
             {
                 SpawnZombieSheepOnPlayer();
@@ -159,7 +164,7 @@ namespace DLCQuestipelago.Items
             return false;
         }
 
-        private static void SpawnZombieSheepOnPlayer()
+        public static void SpawnZombieSheepOnPlayer()
         {
             var zombieSheep = new ZombieSheepTrap(Plugin.DualContentManager);
             zombieSheep.LoadContent();
@@ -173,9 +178,10 @@ namespace DLCQuestipelago.Items
         private static void SpawnTemporarySpikeAroundPlayer()
         {
             var spikePosition = Player.Position;
-            var spike = new TemporarySpike(spikePosition, Spike.DirectionEnum.Up, 5);
+            var spike = new TemporarySpike(spikePosition, Spike.DirectionEnum.Up, 3);
             spike.LoadContent();
-            CurrentScene.Interpolators.Create(0.0f, 1f, 3f, null, (_) => CurrentScene.AddToScene(spike));
+            var delay = CurrentScene.IsBossMode ? 8f : 3f;
+            CurrentScene.Interpolators.Create(0.0f, 1f, delay, null, (_) => CurrentScene.AddToScene(spike));
         }
 
         private void TriggerLoadingScreen()

@@ -116,7 +116,7 @@ namespace DLCQuestipelago
                 return;
             }
             
-            var random = new Random((int)gameTime.TotalGameTime.TotalMilliseconds);
+            /*var random = new Random((int)gameTime.TotalGameTime.TotalMilliseconds);
             if (random.NextDouble() < 0.00004)
             {
                 var trapIndex = random.Next(0, ItemParser.TrapItems.Length);
@@ -124,14 +124,14 @@ namespace DLCQuestipelago
                 Log.LogInfo($"Creating Trap Item: {trap}");
                 _itemManager.ItemParser.ProcessItem(trap);
                 SceneManager.Instance.CurrentScene.Update(gameTime);
-            }
+            }*/
         }
 
         public void EnterGame()
         {
             var player = SceneManager.Instance.CurrentScene.Player;
             player.AllowPerformZeldaItem = false;
-            _itemManager = new ItemManager(_archipelago, new ReceivedItem[0]);
+            _itemManager = new ItemManager(_archipelago);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(_archipelago);
 
@@ -158,6 +158,7 @@ namespace DLCQuestipelago
 
                 _locationChecker.VerifyNewLocationChecksWithArchipelago();
                 _locationChecker.SendAllLocationChecks();
+                _itemManager.SaveItemsAlreadyProcessedToCampaign();
             }
             catch (Exception ex)
             {
@@ -189,6 +190,7 @@ namespace DLCQuestipelago
             _notificationHandler.AddNotification(lastReceivedItem);
 
             InventoryCoinsGetPatch.UpdateCoinsUI();
+            SceneManager.Instance.CurrentScene.Player.RefreshAnimations();
         }
 
         private void TryShowNotification(string icon)

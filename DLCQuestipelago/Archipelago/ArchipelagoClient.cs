@@ -409,14 +409,14 @@ namespace DLCQuestipelago.Archipelago
             var locationId = -1L;
             if (MakeSureConnected())
             {
-                //try
-                //{
-                //    locationId = _session.Locations.GetLocationIdFromName(gameName, locationName);
-                //}
-                //catch (Exception ex)
-                //{
-                //    _console.LogError(ex.Message);
-                //}
+                try
+                {
+                    locationId = _session.Locations.GetLocationIdFromName(gameName, locationName);
+                }
+                catch (Exception ex)
+                {
+                    _console.LogError(ex.Message);
+                }
             }
             if (locationId <= 0)
             {
@@ -585,13 +585,6 @@ namespace DLCQuestipelago.Archipelago
                 return true;
             }
 
-            if (!_allowRetries)
-            {
-                _console.LogError("Reconnection attempt failed");
-                _lastConnectFailure = DateTime.Now;
-                return false;
-            }
-
             if (_connectionInfo == null)
             {
                 return false;
@@ -601,6 +594,13 @@ namespace DLCQuestipelago.Archipelago
             var timeSinceLastFailure = now - _lastConnectFailure;
             if (timeSinceLastFailure.TotalSeconds < threshold)
             {
+                return false;
+            }
+
+            if (!_allowRetries)
+            {
+                _console.LogError("Reconnection attempt failed");
+                _lastConnectFailure = DateTime.Now;
                 return false;
             }
 

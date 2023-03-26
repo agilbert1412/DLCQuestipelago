@@ -40,7 +40,7 @@ namespace DLCQuestipelago.Archipelago
             Campaign = GetSlotSetting(CAMPAIGN_KEY, Campaign.LiveFreemiumOrDie);
             ItemShuffle = GetSlotSetting(ITEM_SHUFFLE_KEY, ItemShuffle.Shuffled);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
-            Seed = GetSlotSetting(SEED_KEY, "");
+            Seed = GetSlotSetting(SEED_KEY, "0");
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
         }
 

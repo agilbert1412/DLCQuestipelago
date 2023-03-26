@@ -43,19 +43,19 @@ namespace DLCQuestipelago.Locations
             };
             _sheepNames = new Dictionary<int, string>
             {
-                {0, "Sheep"},
-                {1, "Sheep"},
-                {2, "Sheep"},
-                {3, "Sheep"},
-                {4, "Sheep"},
-                {5, "Sheep"},
-                {6, "Sheep"},
-                {7, "Sheep"},
-                {8, "Sheep"},
-                {9, "Sheep"},
-                {10, "Sheep"},
-                {11, "Sheep"},
-                {12, "Sheep"},
+                {0, "Double Jump Alcove Sheep"},
+                {1, "Double Jump Floating Sheep"},
+                {2, "Sexy Outfits Sheep"},
+                {3, "Forest High Sheep"},
+                {4, "Forest Low Sheep"},
+                {5, "Between Trees Sheep"},
+                {6, "Hole in the Wall Sheep"},
+                {7, "Shepherd Sheep"},
+                {8, "Top Hat Sheep"},
+                {9, "North West Ceiling Sheep"},
+                {10, "North West Alcove Sheep"},
+                {11, "West Cave Sheep"},
+                {12, "Cutscene Sheep"},
             };
         }
 
