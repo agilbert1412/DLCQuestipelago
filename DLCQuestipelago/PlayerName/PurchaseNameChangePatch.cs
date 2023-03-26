@@ -25,16 +25,18 @@ namespace DLCQuestipelago.PlayerName
 
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;
+        private static NameChanger _nameChanger;
 
         private static string ApName => _archipelago.GetPlayerAlias(_archipelago.SlotData.SlotName) ?? _archipelago.SlotData.SlotName;
         private static string NewName1 => string.Format(NEW_NAME_1, ApName);
         private static string NewName2 => NEW_NAME_2;
-        private static string FinalName => PlayerToSlotNamePatch.ChangeName(ApName);
+        private static string FinalName => _nameChanger.ChangeName(ApName);
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, NameChanger nameChanger)
         {
             _log = log;
             _archipelago = archipelago;
+            _nameChanger = nameChanger;
         }
 
         //public static void PurchaseNameChange()
