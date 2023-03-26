@@ -48,7 +48,7 @@ namespace DLCQuestipelago.Items
             var obtainedCoins = receivedCoinBundles * _archipelago.SlotData.CoinBundleSize;
             var spentCoins = DLCManager.Instance.Packs.Values.Where(x => x.State == DLCPackStateEnum.Purchased).Sum(x => x.Data.Cost);
             var currentCoins = obtainedCoins - spentCoins;
-            // __result = currentCoins + 4;
+            __result = currentCoins; // + 4;
             // _coinDisplay.HandleCoinChanged(currentCoins);
             return false; // don't run original logic
         }
