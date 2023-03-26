@@ -54,6 +54,10 @@ namespace DLCQuestipelago.ItemShufflePatches
                 __result = _conversationStarter.StartConversation(__instance, "mattockcomplete");
                 // AwardmentUtil.AwardGoodPlayerAwardment();
             }
+            else
+            {
+                __result = _conversationStarter.StartConversation(__instance, "default");
+            }
 
             return false;
         }
