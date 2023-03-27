@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
@@ -12,12 +11,12 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(Grindstone.Activate))]
     public static class GrindstoneUnlockPackPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
         private static int grindCount;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _log = log;
             grindCount = 0;

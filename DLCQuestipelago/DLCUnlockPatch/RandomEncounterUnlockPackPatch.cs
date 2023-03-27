@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.DLC;
+﻿using DLCLib.DLC;
 using DLCLib.Scripts;
 using HarmonyLib;
 
@@ -9,9 +8,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(RandomEncounter.StartRandomEncounterConversation))]
     public static class RandomEncounterUnlockPackPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }

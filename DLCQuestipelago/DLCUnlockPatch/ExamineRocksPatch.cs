@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib;
+﻿using DLCLib;
 using DLCLib.World;
 using HarmonyLib;
 using System.Reflection;
@@ -10,9 +9,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(TriggerUtil.ExamineRocks))]
     public static class ExamineRocksPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }

@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
@@ -11,10 +10,10 @@ namespace DLCQuestipelago
     [HarmonyPatch("Purchase")]
     public static class DLCPackPurchasePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(Logger log, LocationChecker locationChecker)
         {
             _log = log;
             _locationChecker = locationChecker;

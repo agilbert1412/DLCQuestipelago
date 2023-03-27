@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCQuestipelago.Archipelago;
+﻿using DLCQuestipelago.Archipelago;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,11 +6,11 @@ namespace DLCQuestipelago.Locations
 {
     public class LocationChecker
     {
-        private static ManualLogSource _console;
+        private static Logger _console;
         private ArchipelagoClient _archipelago;
         private Dictionary<string, long> _checkedLocations;
 
-        public LocationChecker(ManualLogSource console, ArchipelagoClient archipelago, List<string> locationsAlreadyChecked)
+        public LocationChecker(Logger console, ArchipelagoClient archipelago, List<string> locationsAlreadyChecked)
         {
             _console = console;
             _archipelago = archipelago;

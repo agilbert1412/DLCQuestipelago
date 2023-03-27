@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Screens;
+﻿using DLCLib.Screens;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -10,11 +9,11 @@ namespace DLCQuestipelago
     [HarmonyPatch("IsValidAttempt")]
     public static class StatsScreenInvalidateAttemptPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static LocationChecker _locationChecker;
         private static ItemParser _itemParser;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker, ItemParser itemParser)
+        public static void Initialize(Logger log, LocationChecker locationChecker, ItemParser itemParser)
         {
             _log = log;
             _locationChecker = locationChecker;

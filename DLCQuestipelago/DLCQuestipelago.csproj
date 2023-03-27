@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="Archipelago.MultiClient.Net" Version="4.2.4" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
   
@@ -22,14 +21,11 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <!--<Reference Include="0Harmony">
       <HintPath>..\..\BepInEx\BepInEx\core\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.Core">
-      <HintPath>..\..\BepInEx\BepInEx\core\BepInEx.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.NetLauncher.Common">
-      <HintPath>..\..\BepInEx\BepInEx.NetLauncher.Common.dll</HintPath>
+    </Reference>-->
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\Programs\Steam\steamapps\common\DLC Quest\MelonLoader\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Core">
       <HintPath>..\..\DLC Quest\Core.dll</HintPath>
@@ -45,6 +41,9 @@
     </Reference>
     <Reference Include="EasyStorage">
       <HintPath>..\..\DLC Quest\EasyStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="MelonLoader">
+      <HintPath>..\..\..\..\Programs\Steam\steamapps\common\DLC Quest\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework">
       <HintPath>XNA\Microsoft.Xna.Framework.dll</HintPath>
@@ -90,8 +89,8 @@
   </ItemGroup>
 
 	<PropertyGroup Label="UserMacros">
-		<GamePath>..\..\DLC Quest Debug\</GamePath>
-		<PluginsPath>$(GamePath)BepInEx\plugins\DLCQuestipelago\</PluginsPath>
+		<GamePath>D:\Programs\Steam\steamapps\common\DLC Quest</GamePath>
+		<PluginsPath>$(GamePath)\Mods\DLCQuestipelago\</PluginsPath>
 		<BepInExLauncher>BepInEx.NetLauncher.exe</BepInExLauncher>
 	</PropertyGroup>
 

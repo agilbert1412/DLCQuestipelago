@@ -1,6 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.World.Props;
-using DLCQuestipelago.Archipelago;
+﻿using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.DualContentManager;
@@ -11,13 +9,12 @@ using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
-using HarmonyLib;
 
 namespace DLCQuestipelago
 {
     public static class PatcherInitializer
     {
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence)
         {
             InitializeDualContentManagerPatches(log);
             FrameUpdatePatch.Initialize(log);
@@ -40,12 +37,12 @@ namespace DLCQuestipelago
             InitializeAwardmentPatches(log, locationChecker);
         }
 
-        private static void InitializeDualContentManagerPatches(ManualLogSource log)
+        private static void InitializeDualContentManagerPatches(Logger log)
         {
             ConstructAnimationPatch.Initialize(log);
         }
 
-        private static void InitializeItemShufflePatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeItemShufflePatches(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             CompleteFetchQuestPatch.Initialize(log, archipelago, locationChecker);
             GetPickaxePatch.Initialize(log, archipelago, locationChecker);
@@ -60,7 +57,7 @@ namespace DLCQuestipelago
             FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
         }
 
-        private static void InitializeDLCUnlockPatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeDLCUnlockPatches(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             GrindstoneUnlockPackPatch.Initialize(log, archipelago, locationChecker);
             RandomEncounterUnlockPackPatch.Initialize(log);
@@ -72,33 +69,33 @@ namespace DLCQuestipelago
             ComedianDLCPatch.Initialize(log);
         }
 
-        private static void InitializeAllObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        private static void InitializeAllObjectivePatches(Logger log, ObjectivePersistence objectivePersistence)
         {
             InitializeDlcQuestObjectivePatches(log, objectivePersistence);
             InitializeLfodObjectivePatches(log, objectivePersistence);
         }
 
-        private static void InitializeDlcQuestObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        private static void InitializeDlcQuestObjectivePatches(Logger log, ObjectivePersistence objectivePersistence)
         {
             Goal.DLCQuest.FakeEndingObjectivePatch.Initialize(log, objectivePersistence);
             Goal.DLCQuest.BadEndingObjectivePatch.Initialize(log, objectivePersistence);
             Goal.DLCQuest.GoodEndingObjectivePatch.Initialize(log, objectivePersistence);
         }
 
-        private static void InitializeLfodObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        private static void InitializeLfodObjectivePatches(Logger log, ObjectivePersistence objectivePersistence)
         {
             Goal.LFOD.FakeEndingObjectivePatch.Initialize(log, objectivePersistence);
             Goal.LFOD.TrueEndingObjectivePatch.Initialize(log, objectivePersistence);
         }
 
-        private static void InitializeFakeEndingDisconnectPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeFakeEndingDisconnectPatches(Logger log, ArchipelagoClient archipelago)
         {
             FakeEndingDisconnectPatch.Initialize(log, archipelago);
             FailedReconnectPatch.Initialize(log, archipelago);
             SuccessReconnectPatch.Initialize(log, archipelago);
         }
 
-        private static void InitializeNameChangePatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeNameChangePatches(Logger log, ArchipelagoClient archipelago)
         {
             var nameChanger = new NameChanger(archipelago);
             PlayerNameInDialogPatch.Initialize(log, archipelago, nameChanger);
@@ -106,7 +103,7 @@ namespace DLCQuestipelago
             PurchaseNameChangePatch.Initialize(log, archipelago, nameChanger);
         }
 
-        private static void InitializeAllPersistencyPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeAllPersistencyPatches(Logger log, ArchipelagoClient archipelago)
         {
             ClearSaveGamePatch.Initialize(log);
             ContinueGamePatch.Initialize(log);
@@ -116,7 +113,7 @@ namespace DLCQuestipelago
             StartNewGamePatch.Initialize(log);
         }
 
-        private static void InitializeAwardmentPatches(ManualLogSource log, LocationChecker locationChecker)
+        private static void InitializeAwardmentPatches(Logger log, LocationChecker locationChecker)
         {
             IGetThatReferencePatch.Initialize(log, locationChecker);
             NiceTryPatch.Initialize(log, locationChecker);

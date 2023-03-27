@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Scripts.LFOD;
+﻿using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
 
@@ -9,10 +8,10 @@ namespace DLCQuestipelago.Goal.LFOD
     [HarmonyPatch(nameof(BossFight.PerformFinalAttack))]
     public static class TrueEndingObjectivePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ObjectivePersistence _objectivePersistence;
 
-        public static void Initialize(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        public static void Initialize(Logger log, ObjectivePersistence objectivePersistence)
         {
             _log = log;
             _objectivePersistence = objectivePersistence;

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core;
 using DLCDataTypes;
 using DLCLib;
 using DLCLib.AI;
@@ -12,7 +8,6 @@ using DLCLib.Character;
 using DLCLib.Character.LFOD;
 using DLCLib.Physics;
 using DLCLib.Render;
-using DLCLib.World.Props;
 using DLCQuestipelago.DualContentManager;
 using Microsoft.Xna.Framework;
 

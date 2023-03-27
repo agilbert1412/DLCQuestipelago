@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.DLC;
+﻿using DLCLib.DLC;
 using DLCLib.World;
 using HarmonyLib;
 
@@ -9,9 +8,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(TriggerUtil.ActivateNightForest))]
     public static class TriggerUtilActivateNightForestPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }

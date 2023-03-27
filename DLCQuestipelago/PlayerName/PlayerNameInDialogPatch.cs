@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using BepInEx.Logging;
-using DLCLib.HUD;
+﻿using DLCLib.HUD;
 using DLCLib.Render;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
@@ -12,11 +9,11 @@ namespace DLCQuestipelago.PlayerName
     [HarmonyPatch(nameof(DialogDisplay.AddDialog))]
     public static class PlayerNameInDialogPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static NameChanger _nameChanger;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, NameChanger nameChanger)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, NameChanger nameChanger)
         {
             _log = log;
             _archipelago = archipelago;

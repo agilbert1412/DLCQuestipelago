@@ -1,16 +1,13 @@
-﻿using System;
-using DLCLib.Campaigns;
+﻿using DLCLib.Campaigns;
 using DLCLib.Character;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml;
 using Awardments;
 using Core;
 using DLCLib;
 using DLCLib.Audio;
-using DLCLib.Character.LFOD;
 using DLCLib.Conversation;
 using DLCLib.Effects;
 using DLCLib.World.Props;
@@ -166,7 +163,7 @@ namespace DLCQuestipelago.Items
 
         public static void SpawnZombieSheepOnPlayer()
         {
-            var zombieSheep = new ZombieSheepTrap(Plugin.DualContentManager);
+            var zombieSheep = new ZombieSheepTrap(DLCQuestipelagoMod.DualContentManager);
             zombieSheep.LoadContent();
             zombieSheep.Respawn(Player.Position);
             var addZombieSheepSpawningEffectMethod =

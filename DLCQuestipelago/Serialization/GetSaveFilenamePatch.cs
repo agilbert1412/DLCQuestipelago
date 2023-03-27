@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Save;
+﻿using DLCLib.Save;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
 
@@ -9,10 +8,10 @@ namespace DLCQuestipelago.Serialization
     [HarmonyPatch("GetSaveFilename")]
     public static class GetSaveFilenamePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelagoClient;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelagoClient)
+        public static void Initialize(Logger log, ArchipelagoClient archipelagoClient)
         {
             _log = log;
             _archipelagoClient = archipelagoClient;
@@ -21,7 +20,7 @@ namespace DLCQuestipelago.Serialization
         // protected string GetSaveFilename()
         private static void Postfix(DLCSaveManager __instance, ref string __result)
         {
-            var connectionInfo = Plugin.Instance.APConnectionInfo;
+            var connectionInfo = DLCQuestipelagoMod.Instance.APConnectionInfo;
             if (connectionInfo == null)
             {
                 return;

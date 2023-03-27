@@ -1,11 +1,6 @@
 ﻿
 using System;
-using System.Linq;
-using System.Reflection;
-using BepInEx.Logging;
-using DLCLib;
 using DLCLib.Character;
-using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
 
@@ -15,11 +10,11 @@ namespace DLCQuestipelago.Items.Traps
     [HarmonyPatch("PerformAttack")]
     internal class BossSheepAttackPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static Random _random;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;

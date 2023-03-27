@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib;
+﻿using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
 using DLCQuestipelago.Locations;
@@ -11,10 +10,10 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(GrooveNPC.Activate))]
     public static class GrooveGiveMattockPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(Logger log, LocationChecker locationChecker)
         {
             _log = log;
             _locationChecker = locationChecker;

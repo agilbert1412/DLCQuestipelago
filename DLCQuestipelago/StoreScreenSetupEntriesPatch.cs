@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using Core;
+﻿using Core;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.HUD;
@@ -20,11 +19,11 @@ namespace DLCQuestipelago
     [HarmonyPatch("SetupEntries")]
     public static class StoreScreenSetupEntriesPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static LocationChecker _locationChecker;
         private static ItemParser _itemParser;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker, ItemParser itemParser)
+        public static void Initialize(Logger log, LocationChecker locationChecker, ItemParser itemParser)
         {
             _log = log;
             _locationChecker = locationChecker;

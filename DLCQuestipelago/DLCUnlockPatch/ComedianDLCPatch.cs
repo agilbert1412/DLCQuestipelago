@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Character;
+﻿using DLCLib.Character;
 using HarmonyLib;
 using System.Reflection;
 
@@ -9,9 +8,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(ComedianNPC.Activate))]
     public static class ComedianDLCPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }

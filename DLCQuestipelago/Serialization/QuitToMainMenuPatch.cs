@@ -1,6 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Save;
-using DLCLib.Screens;
+﻿using DLCLib.Screens;
 using HarmonyLib;
 
 namespace DLCQuestipelago.Serialization
@@ -9,9 +7,9 @@ namespace DLCQuestipelago.Serialization
     [HarmonyPatch("QuitToCampaignScreen")]
     public static class QuitToMainMenuPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }
@@ -19,7 +17,7 @@ namespace DLCQuestipelago.Serialization
         // protected void QuitToCampaignScreen()
         private static void Postfix(MainMenuScreen __instance)
         {
-            Plugin.Instance.SaveAndQuit();
+            DLCQuestipelagoMod.Instance.SaveAndQuit();
         }
     }
 }

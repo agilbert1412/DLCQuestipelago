@@ -1,12 +1,8 @@
 ﻿using DLCQuestipelago.Archipelago;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Serialization;
-using DLCLib;
-using DLCLib.Campaigns;
 using DLCLib.Save;
 using EasyStorage;
 using Newtonsoft.Json;

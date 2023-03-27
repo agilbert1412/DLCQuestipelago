@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.DLC;
+﻿using DLCLib.DLC;
 using DLCQuestipelago.Items;
 using HarmonyLib;
 
@@ -9,10 +8,10 @@ namespace DLCQuestipelago
     [HarmonyPatch(nameof(DLCManager.IsPurchased))]
     public static class DLCIsPurchasedPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ItemParser _itemParser;
 
-        public static void Initialize(ManualLogSource log, ItemParser itemParser)
+        public static void Initialize(Logger log, ItemParser itemParser)
         {
             _log = log;
             _itemParser = itemParser;
@@ -27,7 +26,7 @@ namespace DLCQuestipelago
                 return false;
             }
 
-            if (Plugin.Instance.IsInGame)
+            if (DLCQuestipelagoMod.Instance.IsInGame)
             {
                 __result = _itemParser.ReceivedDLCs.Contains(name);
             }

@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago
@@ -8,9 +7,9 @@ namespace DLCQuestipelago
     [HarmonyPatch("Update")]
     public static class FrameUpdatePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }
@@ -18,7 +17,7 @@ namespace DLCQuestipelago
         // protected override void Update(GameTime gameTime)
         private static void Postfix(DLCGame.DLCGame __instance, GameTime gameTime)
         {
-            Plugin.Instance.OnUpdateTicked(gameTime);
+            DLCQuestipelagoMod.Instance.OnUpdateTicked(gameTime);
         }
     }
 }

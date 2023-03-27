@@ -1,17 +1,14 @@
-﻿using BepInEx.Logging;
-using HarmonyLib;
-
-namespace DLCQuestipelago.Archipelago
+﻿namespace DLCQuestipelago.Archipelago
 {
     public class ChatForwarder
     {
         public const string COMMAND_PREFIX = "!!";
 
-        private static ManualLogSource _console;
+        private static Logger _console;
         private static ArchipelagoClient _archipelago;
-        private Harmony _harmony;
+        private HarmonyLib.Harmony _harmony;
 
-        public ChatForwarder(ManualLogSource console, Harmony harmony)
+        public ChatForwarder(Logger console, HarmonyLib.Harmony harmony)
         {
             _console = console;
             _harmony = harmony;
@@ -53,7 +50,7 @@ namespace DLCQuestipelago.Archipelago
 
             if (message.StartsWith(COMMAND_PREFIX))
             {
-                _console.LogMessage($"Unrecognized command. Use {COMMAND_PREFIX}help for a list of commands");
+                _console.LogInfo($"Unrecognized command. Use {COMMAND_PREFIX}help for a list of commands");
                 return true;
             }
 
@@ -97,10 +94,10 @@ namespace DLCQuestipelago.Archipelago
 
         private static void PrintCommandHelp()
         {
-            _console.LogMessage($"{COMMAND_PREFIX}help - Shows the list of client commands");
-            _console.LogMessage($"{COMMAND_PREFIX}goal - Shows your current Archipelago Goal");
+            _console.LogInfo($"{COMMAND_PREFIX}help - Shows the list of client commands");
+            _console.LogInfo($"{COMMAND_PREFIX}goal - Shows your current Archipelago Goal");
 #if DEBUG
-            _console.LogMessage($"{COMMAND_PREFIX}sync - Sends a Sync packet to the Archipelago server");
+            _console.LogInfo($"{COMMAND_PREFIX}sync - Sends a Sync packet to the Archipelago server");
 #endif
         }
     }

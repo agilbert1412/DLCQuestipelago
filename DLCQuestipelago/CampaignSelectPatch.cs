@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Screens;
+﻿using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
 
@@ -12,10 +11,10 @@ namespace DLCQuestipelago
         private const string BASIC_CAMPAIGN = "dlcquest";
         private const string LFOD_CAMPAIGN = "lfod";
 
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;

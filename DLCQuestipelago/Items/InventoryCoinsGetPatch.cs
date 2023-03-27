@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib;
+﻿using DLCLib;
 using DLCLib.Campaigns;
 using DLCLib.DLC;
 using DLCLib.HUD;
@@ -20,13 +19,13 @@ namespace DLCQuestipelago.Items
         public const string BASIC_CAMPAIGN_COIN_NAME = $"{BASIC_CAMPAIGN}: {AP_COIN_BUNDLE}";
         public const string LFOD_CAMPAIGN_COIN_NAME = $"{LFOD_CAMPAIGN}: {AP_COIN_BUNDLE}";
 
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
 
         private static CoinDisplay _coinDisplay => SceneManager.Instance.CurrentScene.HUDManager.CoinDisplay;
         private static string _relevantCoinName => CampaignManager.Instance.Campaign is DLCQuestCampaign ? BASIC_CAMPAIGN_COIN_NAME : LFOD_CAMPAIGN_COIN_NAME;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;
@@ -35,7 +34,7 @@ namespace DLCQuestipelago.Items
         //public override void OnPickup(Player player)
         private static bool Prefix(Inventory __instance, ref int __result)
         {
-            if (!Plugin.Instance.IsInGame || _archipelago == null)
+            if (!DLCQuestipelagoMod.Instance.IsInGame || _archipelago == null)
             {
                 return true; // run original logic;
             }

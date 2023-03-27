@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DLCQuestipelago.Archipelago
@@ -16,7 +15,7 @@ namespace DLCQuestipelago.Archipelago
         private const string MULTIWORLD_VERSION_KEY = "client_version";
 
         private Dictionary<string, object> _slotDataFields;
-        private ManualLogSource _console;
+        private Logger _console;
 
         public string SlotName { get; private set; }
         public Coinsanity Coinsanity { get; private set; }
@@ -28,7 +27,7 @@ namespace DLCQuestipelago.Archipelago
         public string Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
 
-        public SlotData(string slotName, Dictionary<string, object> slotDataFields, ManualLogSource console)
+        public SlotData(string slotName, Dictionary<string, object> slotDataFields, Logger console)
         {
             SlotName = slotName;
             _slotDataFields = slotDataFields;

@@ -1,12 +1,9 @@
-﻿using BepInEx.Logging;
-using DLCLib;
+﻿using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.ItemShufflePatches
 {
@@ -14,12 +11,12 @@ namespace DLCQuestipelago.ItemShufflePatches
     [HarmonyPatch(nameof(FetchNPC.Activate))]
     public static class FetchNpcActivatePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
         private static ConversationStarter _conversationStarter;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
         {
             _log = log;
             _archipelago = archipelago;

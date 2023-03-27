@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx.Logging;
-using Core;
 using DLCLib;
-using DLCLib.Campaigns;
-using DLCLib.Screens;
 using Microsoft.Xna.Framework.Content;
 
 namespace DLCQuestipelago.DualContentManager
 {
     public class DLCDualContentManager
     {
-        private ManualLogSource _console;
+        private Logger _console;
 
         private ContentManager _baseContentManager;
         private ContentManager _dlcCampaignContentManager;
@@ -30,7 +23,7 @@ namespace DLCQuestipelago.DualContentManager
 
         public ContentManager LfodCampaignContentManager => _lfodCampaignContentManager;
 
-        public DLCDualContentManager(IServiceProvider serviceProvider, string rootDirectory, ManualLogSource console)
+        public DLCDualContentManager(IServiceProvider serviceProvider, string rootDirectory, Logger console)
         {
             _console = console;
 

@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx.Logging;
-using Core;
-using DLCLib;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteSheetRuntime;
 
@@ -16,7 +8,7 @@ namespace DLCQuestipelago.DualContentManager
 {
     public class DLCDualAssetManager
     {
-        private ManualLogSource _console;
+        private Logger _console;
         private DLCDualContentManager _contentManager;
 
         public SpriteSheet BaseCharacterSpriteSheet;
@@ -31,7 +23,7 @@ namespace DLCQuestipelago.DualContentManager
         private SpriteSheet[] _dlcSpriteSheets;
         private SpriteSheet[] _allSpriteSheets;
 
-        public DLCDualAssetManager(ManualLogSource console, DLCDualContentManager contentManager)
+        public DLCDualAssetManager(Logger console, DLCDualContentManager contentManager)
         {
             _console = console;
             _contentManager = contentManager;

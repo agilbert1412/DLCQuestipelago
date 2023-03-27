@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib;
+﻿using DLCLib;
 using DLCLib.DLC;
 using DLCLib.Scripts.LFOD;
 using DLCLib.World;
@@ -11,9 +10,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(TriggerUtil.ExamineBanWall))]
     public static class ExamineBanWallPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }

@@ -1,6 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Conversation;
-using DLCLib.World.Props;
+﻿using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -11,11 +9,11 @@ namespace DLCQuestipelago.ItemShufflePatches
     [HarmonyPatch("GrantSword")]
     public static class GrantSwordPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _log = log;
             _archipelago = archipelago;

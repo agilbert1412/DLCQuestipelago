@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib;
+﻿using DLCLib;
 using DLCLib.Campaigns;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
@@ -15,13 +14,13 @@ namespace DLCQuestipelago
         private const string LFOD_CAMPAIGN_NAME = "Live Freemium or Die:";
         private const string COIN_LOCATION_NAME = "Coin";
 
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
         private static bool _wasCollected = false;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _log = log;
             _archipelago = archipelago;

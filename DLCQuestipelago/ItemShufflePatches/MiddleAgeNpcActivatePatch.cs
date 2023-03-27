@@ -1,11 +1,8 @@
-﻿using BepInEx.Logging;
-using Core;
+﻿using Core;
 using DLCLib;
 using DLCLib.Character;
-using DLCLib.Conversation;
 using DLCLib.DLC;
 using DLCLib.Scripts.LFOD;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -16,12 +13,12 @@ namespace DLCQuestipelago.ItemShufflePatches
     [HarmonyPatch(nameof(MiddleAgedManNPC.Activate))]
     public static class MiddleAgeNpcActivatePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
         private static ConversationStarter _conversationStarter;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
         {
             _log = log;
             _archipelago = archipelago;

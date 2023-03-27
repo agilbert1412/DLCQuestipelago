@@ -4,9 +4,7 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
-using BepInEx.Logging;
 using DLCQuestipelago.Archipelago.Deathlink;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +15,9 @@ namespace DLCQuestipelago.Archipelago
     public class ArchipelagoClient
     {
         private const string GAME_NAME = "DLCquest";
-        private ManualLogSource _console;
+        private Logger _console;
         private ArchipelagoSession _session;
         private DeathLinkService _deathLinkService;
-        private Harmony _harmony;
         private ArchipelagoConnectionInfo _connectionInfo;
 
         private Action _itemReceivedFunction;
@@ -31,10 +28,9 @@ namespace DLCQuestipelago.Archipelago
 
         private DataPackageCache _localDataPackage;
 
-        public ArchipelagoClient(ManualLogSource console, Harmony harmony, Action itemReceivedFunction)
+        public ArchipelagoClient(Logger console, HarmonyLib.Harmony harmony, Action itemReceivedFunction)
         {
             _console = console;
-            _harmony = harmony;
             _itemReceivedFunction = itemReceivedFunction;
             IsConnected = false;
             ScoutedLocations = new Dictionary<string, ScoutedLocation>();
@@ -612,7 +608,7 @@ namespace DLCQuestipelago.Archipelago
                 return false;
             }
 
-            _console.LogMessage("Reconnection attempt successful!");
+            _console.LogInfo("Reconnection attempt successful!");
             return IsConnected;
         }
 

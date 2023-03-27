@@ -1,14 +1,7 @@
-﻿using System;
-using System.Reflection;
-using BepInEx.Logging;
-using Core;
+﻿using System.Reflection;
 using DLCLib;
-using DLCLib.DLC;
 using DLCLib.NIS;
-using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.Archipelago.Deathlink
 {
@@ -16,10 +9,10 @@ namespace DLCQuestipelago.Archipelago.Deathlink
     [HarmonyPatch("Complete")]
     public static class RespawnAfterCutscenePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;

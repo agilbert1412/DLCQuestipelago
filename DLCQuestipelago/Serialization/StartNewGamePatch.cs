@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Save;
+﻿using DLCLib.Save;
 using HarmonyLib;
 
 namespace DLCQuestipelago.Serialization
@@ -8,16 +7,16 @@ namespace DLCQuestipelago.Serialization
     [HarmonyPatch("StartNewGame")]
     public static class StartNewGamePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }
 
         private static void Postfix(DLCSaveManager __instance)
         {
-            Plugin.Instance.EnterGame();
+            DLCQuestipelagoMod.Instance.EnterGame();
         }
     }
 }

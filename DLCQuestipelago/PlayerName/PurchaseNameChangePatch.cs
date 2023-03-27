@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.Input;
@@ -11,7 +7,6 @@ using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago.PlayerName
@@ -23,7 +18,7 @@ namespace DLCQuestipelago.PlayerName
         private static string NEW_NAME_1 = "{0} 2";
         private static string NEW_NAME_2 = "Axe_y";
 
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static NameChanger _nameChanger;
 
@@ -32,7 +27,7 @@ namespace DLCQuestipelago.PlayerName
         private static string NewName2 => NEW_NAME_2;
         private static string FinalName => _nameChanger.ChangeName(ApName);
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, NameChanger nameChanger)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, NameChanger nameChanger)
         {
             _log = log;
             _archipelago = archipelago;

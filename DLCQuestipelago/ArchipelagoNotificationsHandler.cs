@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
-using Core;
 using DLCDataTypes;
 using DLCLib;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
-using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Notifications;
@@ -21,13 +16,13 @@ namespace DLCQuestipelago
 {
     public class ArchipelagoNotificationsHandler
     {
-        private ManualLogSource _log;
+        private Logger _log;
         private ArchipelagoClient _archipelago;
         private DLCDualContentManager _dualContentManager;
         private DLCDualAssetManager _dualAssetManager;
         private List<DLCPack> _dlcPacks;
 
-        public ArchipelagoNotificationsHandler(ManualLogSource log, ArchipelagoClient archipelago)
+        public ArchipelagoNotificationsHandler(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;

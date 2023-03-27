@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Audio;
-using DLCLib.Conversation;
 using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
@@ -14,11 +12,11 @@ namespace DLCQuestipelago.ItemShufflePatches
     [HarmonyPatch(nameof(FetchQuestPickup.OnPickup))]
     public static class PickupBoxOfSuppliesPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
             _log = log;
             _archipelago = archipelago;

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx.Logging;
+﻿using System.Collections.Generic;
 using DLCLib;
 using DLCLib.Character;
-using DLCLib.Render;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 
@@ -16,12 +10,12 @@ namespace DLCQuestipelago.Locations
     [HarmonyPatch("RecordMobDeath")]
     public static class KillSheepPatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static LocationChecker _locationChecker;
         private static Dictionary<Vector2, int> _sheepIds;
         private static Dictionary<int, string> _sheepNames;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(Logger log, LocationChecker locationChecker)
         {
             _log = log;
             _locationChecker = locationChecker;

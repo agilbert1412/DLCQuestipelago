@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Screens;
+﻿using DLCLib.Screens;
 using GameStateManagement;
 using HarmonyLib;
 
@@ -9,9 +8,9 @@ namespace DLCQuestipelago.Serialization
     [HarmonyPatch("continueGameEntry_Selected")]
     public static class ContinueGamePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }
@@ -19,12 +18,12 @@ namespace DLCQuestipelago.Serialization
         // private void continueGameEntry_Selected(object sender, PlayerIndexEventArgs e)
         private static void Postfix(MainMenuScreen __instance, object sender, PlayerIndexEventArgs e)
         {
-            if (Plugin.Instance.IsInGame)
+            if (DLCQuestipelagoMod.Instance.IsInGame)
             {
                 return;
             }
 
-            Plugin.Instance.EnterGame();
+            DLCQuestipelagoMod.Instance.EnterGame();
         }
     }
 }

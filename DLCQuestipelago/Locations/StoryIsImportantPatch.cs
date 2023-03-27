@@ -1,6 +1,4 @@
 ﻿using Awardments;
-using BepInEx.Logging;
-using DLCLib.World;
 using HarmonyLib;
 
 namespace DLCQuestipelago.Locations
@@ -10,10 +8,10 @@ namespace DLCQuestipelago.Locations
     public static class StoryIsImportantPatch
     {
         private const string ACHIEVEMENT_NAME = $"Story is Important";
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(Logger log, LocationChecker locationChecker)
         {
             _log = log;
             _locationChecker = locationChecker;

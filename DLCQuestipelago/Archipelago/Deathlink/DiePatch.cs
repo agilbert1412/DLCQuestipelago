@@ -1,8 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib;
-using DLCLib.DLC;
-using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
+﻿using DLCLib;
 using HarmonyLib;
 
 namespace DLCQuestipelago.Archipelago.Deathlink
@@ -11,11 +7,11 @@ namespace DLCQuestipelago.Archipelago.Deathlink
     [HarmonyPatch(nameof(Player.Die))]
     public static class DiePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
         private static bool _isCurrentlyReceivingDeathlink;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;

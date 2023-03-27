@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using DLCLib.Character;
+﻿using DLCLib.Character;
 using DLCLib.DLC;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -10,9 +9,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(TrollNPC.TakeDamage))]
     public static class TrollTakeDamagePatch
     {
-        private static ManualLogSource _log;
+        private static Logger _log;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(Logger log)
         {
             _log = log;
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BepInEx.Logging;
+﻿using System.Collections.Generic;
 using DLCLib;
 using DLCLib.Input;
 using DLCLib.Screens;
@@ -8,7 +6,6 @@ using DLCLib.World;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago
@@ -21,10 +18,10 @@ namespace DLCQuestipelago
         private const string SWORD_2 = "Really Big Sword Pack";
         private const string SWORD_3 = "Unfathomable Sword Pack";
 
-        private static ManualLogSource _log;
+        private static Logger _log;
         private static ArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(Logger log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;

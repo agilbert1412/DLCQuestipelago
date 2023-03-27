@@ -1,35 +1,29 @@
-﻿using BepInEx;
-using BepInEx.NetLauncher.Common;
-using DLCLib;
-using DLCLib.DLC;
+﻿using DLCLib;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.Serialization;
-using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Notifications;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DLCQuestipelago.DualContentManager;
+using MelonLoader;
 
 namespace DLCQuestipelago
 {
-    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    public class Plugin : BasePlugin
+    public class DLCQuestipelagoMod : MelonMod
     {
         private const string CONNECT_SYNTAX = "Syntax: connect ip:port slot password";
-        public static Plugin Instance;
+        public static DLCQuestipelagoMod Instance;
         public static DLCDualContentManager DualContentManager;
         public static DLCDualAssetManager DualAssetManager;
-
-        private Harmony _harmony;
+        
         private ArchipelagoClient _archipelago;
+        private Logger _logger;
         public ArchipelagoConnectionInfo APConnectionInfo { get; set; }
         private LocationChecker _locationChecker;
         private ItemManager _itemManager;
@@ -38,22 +32,22 @@ namespace DLCQuestipelago
 
         public bool IsInGame { get; private set; }
 
-        public override void Load()
+        public override void OnInitializeMelon()
         {
-            Log.LogInfo($"Loading {PluginInfo.PLUGIN_NAME}...");
+            _logger = new Logger(LoggerInstance);
+            _logger.LogInfo($"Loading {Info.Name}...");
             Instance = this;
+            
+            HarmonyInstance.PatchAll();
 
-            _harmony = new Harmony(PluginInfo.PLUGIN_NAME);
-            _harmony.PatchAll();
-
-            _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
-            _notificationHandler = new ArchipelagoNotificationsHandler(Log, _archipelago);
-            DLCContentManagerInitializePatch.Initialize(Log, _notificationHandler);
+            _archipelago = new ArchipelagoClient(_logger, HarmonyInstance, OnItemReceived);
+            _notificationHandler = new ArchipelagoNotificationsHandler(_logger, _archipelago);
+            DLCContentManagerInitializePatch.Initialize(_logger, _notificationHandler);
             ConnectToArchipelago();
             IsInGame = false;
 
-            CampaignSelectPatch.Initialize(Log, _archipelago);
-            Log.LogInfo($"{PluginInfo.PLUGIN_NAME} is loaded!");
+            CampaignSelectPatch.Initialize(_logger, _archipelago);
+            _logger.LogInfo($"{Info.Name} is loaded!");
         }
 
         public void SaveAndQuit()
@@ -77,14 +71,14 @@ namespace DLCQuestipelago
                 APConnectionInfo = null;
                 var userMessage =
                     $"Could not connect to archipelago. Please verify the connection file ({Persistency.ConnectionFile}) and that the server is available.";
-                Log.LogError(userMessage);
+                _logger.LogError(userMessage);
                 Console.ReadKey();
                 Environment.Exit(0);
                 return;
             }
 
             // _chatForwarder.ListenToChatMessages(_archipelago);
-            Log.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");// Type !!help for client commands");
+            _logger.LogInfo($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");// Type !!help for client commands");
             WritePersistentArchipelagoData();
         }
 
@@ -132,14 +126,14 @@ namespace DLCQuestipelago
             var player = SceneManager.Instance.CurrentScene.Player;
             player.AllowPerformZeldaItem = false;
             _itemManager = new ItemManager(_archipelago);
-            _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
+            _locationChecker = new LocationChecker(_logger, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(_archipelago);
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();
             _itemManager.ReceiveAllNewItems();
 
-            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
+            PatcherInitializer.Initialize(_logger, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
 
             IsInGame = true;
             player.AllowPerformZeldaItem = true;
@@ -162,7 +156,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                Log.LogError($"Failed at properly syncing with archipelago when exiting game. Message: {ex.Message}");
+                _logger.LogError($"Failed at properly syncing with archipelago when exiting game. Message: {ex.Message}");
                 return;
             }
         }
@@ -184,7 +178,7 @@ namespace DLCQuestipelago
             }
 
             var lastReceivedItem = _archipelago.GetAllReceivedItems().Last().ItemName;
-            Log.LogMessage($"Received Item: {lastReceivedItem}");
+            _logger.LogInfo($"Received Item: {lastReceivedItem}");
             _itemManager.ReceiveAllNewItems();
 
             _notificationHandler.AddNotification(lastReceivedItem);
