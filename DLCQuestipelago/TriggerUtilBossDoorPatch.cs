@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Input;
@@ -8,7 +7,6 @@ using DLCLib.World;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago

@@ -1,4 +1,5 @@
-﻿using IWshRuntimeLibrary;
+﻿using System.Diagnostics;
+using IWshRuntimeLibrary;
 using Microsoft.Win32;
 using File = System.IO.File;
 
@@ -6,12 +7,13 @@ namespace DLCQuestipelagoInstaller
 {
     public class Program
     {
-        private const string BEPINEX_EXECUTABLE = "BepInEx.NetLauncher.exe";
+        private const string BEPINEX_EXECUTABLE = "BepInEx.NET.Framework.Launcher.exe";
         private const string DLC_EXECUTABLE = "DLC.exe";
         private const string CONTENT_FOLDER = "Content";
         private const string BEPINEX_MODLOADER_FOLDER = "BepInEx ModLoader";
         private const string DLCQUESTIPELAGO_PLUGIN_FOLDER = "DLCQuestipelago Plugin";
         private const string DEFAULT_MODDED_FOLDER_NAME = "DLCQuestipelago";
+        private const string AP_CONNECTION_FILE = "ArchipelagoConnectionInfo.json";
 
         public static void Main()
         {
@@ -33,6 +35,15 @@ namespace DLCQuestipelagoInstaller
             }
             Console.WriteLine();
 
+            Console.WriteLine("Unblocking every file...");
+            if (!RunPowerShell("unblock-win.ps1", out var error))
+            {
+                Console.WriteLine($"Could not unblock the mod files. Windows may have flagged them as malicious. You will need to unblock them manually by going to each relevant file -> properties -> unblock.");
+                Console.WriteLine($"The installer will proceed anyway.");
+                Console.WriteLine($"Error Message: {error}");
+            }
+            Console.WriteLine();
+
             if (!Directory.Exists(moddedFolder))
             {
                 Console.WriteLine("Creating Install Directory...");
@@ -50,6 +61,10 @@ namespace DLCQuestipelagoInstaller
             var pluginFolder = Path.Combine(moddedFolder, "BepInEx", "plugins", "DLCQuestipelago");
             Console.WriteLine("Installing DLCQuestipelago Mod...");
             CopyFolderContent(modFolder, pluginFolder);
+            Console.Write("Creating Connection File...");
+            var apFileOriginalLocation = Path.Combine(pluginFolder, AP_CONNECTION_FILE);
+            File.Copy(apFileOriginalLocation, Path.Combine(moddedFolder, AP_CONNECTION_FILE));
+            File.Delete(apFileOriginalLocation);
 
             Console.WriteLine();
 
@@ -165,6 +180,32 @@ namespace DLCQuestipelagoInstaller
             {
                 Console.WriteLine($"Could not create desktop shortcut. Error: {ex.Message}");
                 Console.WriteLine($"You can still use your modded DLC Quest by launching the executable at \"{bepInExPath}\"");
+            }
+        }
+
+        private static bool RunPowerShell(string scriptPath, out string errorMessage)
+        {
+            try
+            {
+                var ps1File = scriptPath;
+
+                var startInfo = new ProcessStartInfo()
+                {
+                    FileName = "powershell.exe",
+                    Arguments = $"-NoProfile -ExecutionPolicy ByPass -File \"{ps1File}\"",
+                    UseShellExecute = false
+                };
+                var process = Process.Start(startInfo);
+                process?.WaitForExit();
+                process?.Close();
+
+                errorMessage = "";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
             }
         }
     }

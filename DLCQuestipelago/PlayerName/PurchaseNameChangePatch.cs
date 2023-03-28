@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.DLC;
@@ -11,7 +8,6 @@ using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago.PlayerName

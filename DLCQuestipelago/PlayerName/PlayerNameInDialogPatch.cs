@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using DLCLib.HUD;
 using DLCLib.Render;
 using DLCQuestipelago.Archipelago;

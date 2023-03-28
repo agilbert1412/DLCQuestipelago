@@ -1,5 +1,4 @@
 ﻿using BepInEx.Logging;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
@@ -11,7 +10,6 @@ using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
-using HarmonyLib;
 
 namespace DLCQuestipelago
 {

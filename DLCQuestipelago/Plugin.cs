@@ -1,7 +1,5 @@
 ﻿using BepInEx;
-using BepInEx.NetLauncher.Common;
 using DLCLib;
-using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
@@ -12,10 +10,9 @@ using Newtonsoft.Json;
 using Notifications;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using BepInEx.NET.Common;
 using DLCQuestipelago.DualContentManager;
 
 namespace DLCQuestipelago
@@ -76,7 +73,7 @@ namespace DLCQuestipelago
             {
                 APConnectionInfo = null;
                 var userMessage =
-                    $"Could not connect to archipelago. Please verify the connection file ({Persistency.ConnectionFile}) and that the server is available.";
+                    $"Could not connect to archipelago. Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.";
                 Log.LogError(userMessage);
                 Console.ReadKey();
                 Environment.Exit(0);
@@ -90,7 +87,13 @@ namespace DLCQuestipelago
 
         private void ReadPersistentArchipelagoData()
         {
-            var jsonString = File.ReadAllText(Persistency.ConnectionFile);
+            if (!File.Exists(Persistency.CONNECTION_FILE))
+            {
+                var defaultConnectionInfo = new ArchipelagoConnectionInfo("archipelago.gg", 38281, "Name", false);
+                WritePersistentData(defaultConnectionInfo, Persistency.CONNECTION_FILE);
+            }
+
+            var jsonString = File.ReadAllText(Persistency.CONNECTION_FILE);
             var connectionInfo = JsonConvert.DeserializeObject<ArchipelagoConnectionInfo>(jsonString);
             if (connectionInfo == null)
             {
@@ -102,8 +105,13 @@ namespace DLCQuestipelago
 
         private void WritePersistentArchipelagoData()
         {
-            var jsonObject = JsonConvert.SerializeObject(APConnectionInfo);
-            File.WriteAllText(Persistency.ConnectionFile, jsonObject);
+            WritePersistentData(APConnectionInfo, Persistency.CONNECTION_FILE);
+        }
+
+        private void WritePersistentData(object data, string path)
+        {
+            var jsonObject = JsonConvert.SerializeObject(data);
+            File.WriteAllText(path, jsonObject);
         }
 
         //private TimeSpan _lastTimeSentChecks;
@@ -191,20 +199,6 @@ namespace DLCQuestipelago
 
             InventoryCoinsGetPatch.UpdateCoinsUI();
             SceneManager.Instance.CurrentScene.Player.RefreshAnimations();
-        }
-
-        private void TryShowNotification(string icon)
-        {
-            NotificationManager.Instance.AddNotification(new Notification()
-            {
-                Title = "Test Notification",
-                Description = $"Icon: {icon}",
-                Texture = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.Texture,
-                SourceRectangle =
-                    SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet.SourceRectangle(icon),
-                Tint = Color.White,
-                CueName = "toast_up"
-            });
         }
     }
 }

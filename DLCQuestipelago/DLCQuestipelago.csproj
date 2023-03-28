@@ -29,7 +29,7 @@
       <HintPath>..\..\BepInEx\BepInEx\core\BepInEx.Core.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.NetLauncher.Common">
-      <HintPath>..\..\BepInEx\BepInEx.NetLauncher.Common.dll</HintPath>
+      <HintPath>..\..\BepInEx\BepInEx.NET.Common.dll</HintPath>
     </Reference>
     <Reference Include="Core">
       <HintPath>..\..\DLC Quest\Core.dll</HintPath>
@@ -92,7 +92,7 @@
 	<PropertyGroup Label="UserMacros">
 		<GamePath>..\..\DLC Quest Debug\</GamePath>
 		<PluginsPath>$(GamePath)BepInEx\plugins\DLCQuestipelago\</PluginsPath>
-		<BepInExLauncher>BepInEx.NetLauncher.exe</BepInExLauncher>
+		<BepInExLauncher>BepInEx.NET.Framework.Launcher.exe</BepInExLauncher>
 	</PropertyGroup>
 
 	<Target Name="BeforeBuild">

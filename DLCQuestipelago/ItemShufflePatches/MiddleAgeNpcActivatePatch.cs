@@ -2,10 +2,8 @@
 using Core;
 using DLCLib;
 using DLCLib.Character;
-using DLCLib.Conversation;
 using DLCLib.DLC;
 using DLCLib.Scripts.LFOD;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;

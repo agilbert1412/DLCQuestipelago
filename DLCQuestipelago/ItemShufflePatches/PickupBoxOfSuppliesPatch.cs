@@ -2,7 +2,6 @@
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Audio;
-using DLCLib.Conversation;
 using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;

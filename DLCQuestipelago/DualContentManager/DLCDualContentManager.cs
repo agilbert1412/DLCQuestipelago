@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BepInEx.Logging;
-using Core;
 using DLCLib;
-using DLCLib.Campaigns;
-using DLCLib.Screens;
 using Microsoft.Xna.Framework.Content;
 
 namespace DLCQuestipelago.DualContentManager

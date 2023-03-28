@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
 using BepInEx.Logging;
 using DLCLib;
-using DLCLib.Character;
 using DLCLib.Conversation;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;

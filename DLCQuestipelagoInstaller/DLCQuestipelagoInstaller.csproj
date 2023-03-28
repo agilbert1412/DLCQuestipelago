@@ -19,4 +19,10 @@
     </COMReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="unblock-win.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

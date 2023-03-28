@@ -1,8 +1,5 @@
 ﻿using BepInEx.Logging;
 using DLCLib;
-using DLCLib.DLC;
-using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
 using HarmonyLib;
 
 namespace DLCQuestipelago.Archipelago.Deathlink

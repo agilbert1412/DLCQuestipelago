@@ -206,7 +206,10 @@ namespace DLCQuestipelago.Archipelago
 
         public void ReportCheckedLocationsAsync(long[] locationIds)
         {
-            Task.Run(() => ReportCheckedLocations(locationIds));
+            Task.Run(() => {
+                ReportCheckedLocations(
+                    locationIds.Except(_session.Locations.AllLocationsChecked).ToArray());
+            }).ConfigureAwait(false);
         }
 
         public void ReportCheckedLocations(long[] locationIds)

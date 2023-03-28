@@ -2,11 +2,9 @@
 using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.ItemShufflePatches
 {
