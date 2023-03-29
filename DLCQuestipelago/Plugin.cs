@@ -12,7 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using BepInEx.NET.Common;
+using DLCLib.Campaigns;
 using DLCQuestipelago.DualContentManager;
 
 namespace DLCQuestipelago
@@ -153,6 +155,8 @@ namespace DLCQuestipelago
             player.AllowPerformZeldaItem = true;
             InventoryCoinsGetPatch.UpdateCoinsUI();
             player.RefreshAnimations();
+
+            CoinPickupPatch.CheckAllCoinsanityLocations(player.Inventory);
         }
 
         public void SaveGame()

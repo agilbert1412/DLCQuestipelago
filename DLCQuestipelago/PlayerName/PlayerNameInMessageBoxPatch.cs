@@ -23,6 +23,11 @@ namespace DLCQuestipelago.PlayerName
         //public MessageBoxScreen(string message, bool includeUsageText)
         public static bool Prefix(MessageBoxScreen __instance, ref string message, bool includeUsageText)
         {
+            if (_nameChanger == null)
+            {
+                return true; // run original logic
+            }
+
             message = _nameChanger.ChangePlayerNameInString(message);
             return true; // run original logic
         }

@@ -10,6 +10,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DLCQuestipelago.Archipelago
@@ -206,10 +207,14 @@ namespace DLCQuestipelago.Archipelago
 
         public void ReportCheckedLocationsAsync(long[] locationIds)
         {
-            Task.Run(() => {
-                ReportCheckedLocations(
-                    locationIds.Except(_session.Locations.AllLocationsChecked).ToArray());
-            }).ConfigureAwait(false);
+            var newLocations = locationIds.Except(_session.Locations.AllLocationsChecked).ToArray();
+            if (!newLocations.Any())
+            {
+                return;
+            }
+
+            ThreadPool.QueueUserWorkItem((o) => ReportCheckedLocations(newLocations));
+            // 
         }
 
         public void ReportCheckedLocations(long[] locationIds)
@@ -220,7 +225,7 @@ namespace DLCQuestipelago.Archipelago
             }
             try
             {
-                _session.Locations.CompleteLocationChecksAsync(locationIds);
+                _session.Locations.CompleteLocationChecks(locationIds);
             }
             catch (Exception ex)
             {

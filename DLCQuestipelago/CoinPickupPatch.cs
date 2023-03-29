@@ -36,11 +36,16 @@ namespace DLCQuestipelago
                 return; // Let things happened as they have
             }
 
+            CheckAllCoinsanityLocations(__instance);
+        }
+
+        public static void CheckAllCoinsanityLocations(Inventory inventory)
+        {
             var campaignLocation = CampaignManager.Instance.Campaign is LFODCampaign ? LFOD_CAMPAIGN_NAME : BASIC_CAMPAIGN_NAME;
             var bundleSize = _archipelago.SlotData.CoinBundleSize;
-            for (var i = bundleSize; i <= __instance.TotalCoinsCollected; i += bundleSize)
+            for (var i = bundleSize; i <= inventory.TotalCoinsCollected; i += bundleSize)
             {
-                var location = $"{campaignLocation} {__instance.TotalCoinsCollected} {COIN_LOCATION_NAME}";
+                var location = $"{campaignLocation} {i} {COIN_LOCATION_NAME}";
                 _log.LogDebug($"Checking Coin Bundle Location: {location}");
                 _locationChecker.AddCheckedLocation(location);
             }

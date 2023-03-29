@@ -47,6 +47,7 @@ namespace DLCQuestipelago.Locations
                 _console.LogError($"Location \"{locationName}\" could not be converted to an Archipelago id");
             }
 
+            _console.LogInfo($"Checking Location {locationName}!");
             _checkedLocations.Add(locationName, locationId);
         }
 
@@ -70,7 +71,14 @@ namespace DLCQuestipelago.Locations
 
             allCheckedLocations = allCheckedLocations.Distinct().Where(x => x > -1).ToList();
 
-            _archipelago.ReportCheckedLocationsAsync(allCheckedLocations.ToArray());
+            if (_archipelago.HasReceivedItem("Day One Patch Pack", out _))
+            {
+                _archipelago.ReportCheckedLocationsAsync(allCheckedLocations.ToArray());
+            }
+            else
+            {
+                _archipelago.ReportCheckedLocations(allCheckedLocations.ToArray());
+            }
         }
 
         public void VerifyNewLocationChecksWithArchipelago()
