@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace DLCQuestipelago.Serialization
+﻿namespace DLCQuestipelago.Serialization
 {
     public static class Persistency
     {

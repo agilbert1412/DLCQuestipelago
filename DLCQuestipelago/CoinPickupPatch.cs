@@ -1,6 +1,9 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Linq;
+using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Campaigns;
+using DLCLib.World;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
@@ -41,14 +44,29 @@ namespace DLCQuestipelago
 
         public static void CheckAllCoinsanityLocations(Inventory inventory)
         {
-            var campaignLocation = CampaignManager.Instance.Campaign is LFODCampaign ? LFOD_CAMPAIGN_NAME : BASIC_CAMPAIGN_NAME;
             var bundleSize = _archipelago.SlotData.CoinBundleSize;
-            for (var i = bundleSize; i <= inventory.TotalCoinsCollected; i += bundleSize)
+            var maxCoins = SceneManager.Instance.CurrentScene.Map.TotalCoins;
+            var currentCoins = inventory.TotalCoinsCollected;
+            var campaignLocation = CampaignManager.Instance.Campaign is LFODCampaign ? LFOD_CAMPAIGN_NAME : BASIC_CAMPAIGN_NAME;
+
+            var checkedCoinLocations = GetAllCheckedCoinLocations(currentCoins, bundleSize, maxCoins, campaignLocation);
+
+            _locationChecker.AddCheckedLocation(checkedCoinLocations);
+        }
+
+        public static string[] GetAllCheckedCoinLocations(int totalCoinsPickedUp, int bundleSize, int maxCoins, string campaignName)
+        {
+            if (totalCoinsPickedUp <= 0)
             {
-                var location = $"{campaignLocation} {i} {COIN_LOCATION_NAME}";
-                _log.LogDebug($"Checking Coin Bundle Location: {location}");
-                _locationChecker.AddCheckedLocation(location);
+                return new string[0];
             }
+
+            var checkedCoinLocations = Enumerable.Range(1, totalCoinsPickedUp)
+                .Where(x => x <= maxCoins && (x == maxCoins || x % bundleSize == 0))
+                .Select(x => $"{campaignName} {x} Coin")
+                .ToArray();
+
+            return checkedCoinLocations;
         }
     }
 }

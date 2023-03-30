@@ -7,14 +7,12 @@ using DLCQuestipelago.Serialization;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
-using Notifications;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using System.Reflection;
 using BepInEx.NET.Common;
-using DLCLib.Campaigns;
 using DLCQuestipelago.DualContentManager;
 
 namespace DLCQuestipelago
@@ -120,21 +118,11 @@ namespace DLCQuestipelago
         public void OnUpdateTicked(GameTime gameTime)
         {
             _archipelago.APUpdate();
-            // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
             if (!IsInGame)
             {
                 return;
             }
-            
-            /*var random = new Random((int)gameTime.TotalGameTime.TotalMilliseconds);
-            if (random.NextDouble() < 0.00004)
-            {
-                var trapIndex = random.Next(0, ItemParser.TrapItems.Length);
-                var trap = ItemParser.TrapItems[trapIndex];
-                Log.LogInfo($"Creating Trap Item: {trap}");
-                _itemManager.ItemParser.ProcessItem(trap);
-                SceneManager.Instance.CurrentScene.Update(gameTime);
-            }*/
+            // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
         }
 
         public void EnterGame()
@@ -157,7 +145,15 @@ namespace DLCQuestipelago
             player.RefreshAnimations();
 
             CoinPickupPatch.CheckAllCoinsanityLocations(player.Inventory);
-        }
+#if DEBUG
+            var inputGroundField = typeof(Player).GetField("PLAYER_INPUT_SCALE_GROUND", BindingFlags.NonPublic | BindingFlags.Static);
+            inputGroundField.SetValue(null, 45f * 1.5f);
+            var inputAirField = typeof(Player).GetField("PLAYER_INPUT_SCALE_AIR", BindingFlags.NonPublic | BindingFlags.Static);
+            inputAirField.SetValue(null, 30f * 1.5f);
+            // private static float PLAYER_INPUT_SCALE_GROUND = 45f;
+            // private static float PLAYER_INPUT_SCALE_AIR = 30f;
+#endif
+    }
 
         public void SaveGame()
         {

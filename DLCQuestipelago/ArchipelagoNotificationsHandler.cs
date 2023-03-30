@@ -67,42 +67,65 @@ namespace DLCQuestipelago
 
         private void AddCoinNotification(string itemName)
         {
-            const string pattern = "{0}: {1} Coin{2}";
             var campaign = itemName.Split(':')[0];
+            var numCoinsPerBundle = _archipelago.SlotData.CoinBundleSize;
+
+            var notificationToChange = GetExistingNotificationForCoins(campaign, numCoinsPerBundle);
+
+            if (notificationToChange != null)
+            {
+                ModifyExistingCoinNotification(notificationToChange, numCoinsPerBundle, campaign);
+                return;
+            }
+
+            CreateNewCoinNotification(numCoinsPerBundle, campaign);
+        }
+
+        private static void ModifyExistingCoinNotification(Notification notificationToChange, int numCoinsPerBundle, string campaign)
+        {
+            var words = notificationToChange.Description.Split(' ');
+            var numCoins = int.Parse(words[words.Length - 2]) + numCoinsPerBundle;
+            notificationToChange.Description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
+        }
+
+        private void CreateNewCoinNotification(int numCoins, string campaign)
+        {
+            var spriteSheet = SceneManager.Instance.CurrentScene.HUDManager.SpriteSheet;
+            var texture = spriteSheet.Texture;
+            var icon = spriteSheet.SourceRectangle("hud_coin");
+            var description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
+            AddNotification(description, texture, icon);
+        }
+
+        private static string GetNotificationDescriptionForNumberOfCoins(int numCoins, string campaign)
+        {
+            const string pattern = "{0}: {1} Coin{2}";
+            var pluralModifier = numCoins > 1 ? "s" : "";
+            var description = string.Format(pattern, campaign, numCoins, pluralModifier);
+            return description;
+        }
+
+        private static Notification GetExistingNotificationForCoins(string campaign, int numCoinsPerBundle)
+        {
             var notificationsField = typeof(NotificationManager).GetField("notifications", BindingFlags.NonPublic | BindingFlags.Instance);
             var notifications = (Queue<Notification>)notificationsField.GetValue(NotificationManager.Instance);
 
-            var numCoinsPerBundle = _archipelago.SlotData.CoinBundleSize;
-            var numCoins = numCoinsPerBundle;
-
-            Notification notificationToChange = null;
+            if (notifications.Count < 2)
+            {
+                return null;
+            }
+            
             foreach (var existingNotification in notifications.Skip(1))
             {
                 var existingDescription = existingNotification.Description;
                 var endsWithCoin = existingDescription.EndsWith("Coin") || existingDescription.EndsWith("Coins");
                 if (existingDescription.StartsWith(campaign) && endsWithCoin)
                 {
-                    notificationToChange = existingNotification;
-                    var words = existingDescription.Split(' ');
-                    numCoins = int.Parse(words[words.Length - 2]) + numCoinsPerBundle;
-                    break;
+                    return existingNotification;
                 }
             }
 
-            var pluralModifier = numCoins > 1 ? "s" : "";
-            var description = string.Format(pattern, campaign, numCoins, pluralModifier);
-
-            if (notificationToChange != null)
-            {
-                notificationToChange.Description = description;
-                return;
-            }
-
-            var spriteSheet = SceneManager.Instance.CurrentScene.HUDManager.SpriteSheet;
-            var texture = spriteSheet.Texture;
-            var icon = spriteSheet.SourceRectangle("hud_coin");
-
-            AddNotification(description, texture, icon);
+            return null;
         }
 
         private bool AddDLCNotification(string dlcName)

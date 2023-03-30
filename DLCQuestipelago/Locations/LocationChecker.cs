@@ -51,6 +51,20 @@ namespace DLCQuestipelago.Locations
             _checkedLocations.Add(locationName, locationId);
         }
 
+        public void RememberCheckedLocation(string[] locationNames)
+        {
+            foreach (var locationName in locationNames)
+            {
+                RememberCheckedLocation(locationName);
+            }
+        }
+
+        public void AddCheckedLocation(string[] locationNames)
+        {
+            RememberCheckedLocation(locationNames);
+            SendAllLocationChecks();
+        }
+
         public void AddCheckedLocation(string locationName)
         {
             RememberCheckedLocation(locationName);
