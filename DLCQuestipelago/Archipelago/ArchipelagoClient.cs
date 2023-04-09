@@ -17,7 +17,7 @@ namespace DLCQuestipelago.Archipelago
 {
     public class ArchipelagoClient
     {
-        private const string GAME_NAME = "DLCquest";
+        private const string GAME_NAME = "DLCQuest";
         private ManualLogSource _console;
         private ArchipelagoSession _session;
         private DeathLinkService _deathLinkService;
