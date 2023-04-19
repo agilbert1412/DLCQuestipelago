@@ -117,11 +117,11 @@ namespace DLCQuestipelago
         //private TimeSpan _lastTimeSentChecks;
         public void OnUpdateTicked(GameTime gameTime)
         {
-            _archipelago.APUpdate();
-            if (!IsInGame)
+            if (!IsInGame || _archipelago == null)
             {
                 return;
             }
+            _archipelago.APUpdate();
             // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
         }
 
@@ -186,13 +186,14 @@ namespace DLCQuestipelago
 
         private void OnItemReceived()
         {
-            if (!IsInGame)
+            Log.LogMessage($"Item received:");
+            if (!IsInGame || _archipelago == null)
             {
                 return;
             }
 
             var lastReceivedItem = _archipelago.GetAllReceivedItems().Last().ItemName;
-            Log.LogMessage($"Received Item: {lastReceivedItem}");
+            Log.LogMessage($"    {lastReceivedItem}");
             _itemManager.ReceiveAllNewItems();
 
             _notificationHandler.AddNotification(lastReceivedItem);

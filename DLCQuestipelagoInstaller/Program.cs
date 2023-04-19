@@ -104,6 +104,10 @@ namespace DLCQuestipelagoInstaller
             {
                 Console.WriteLine("Could not Find DLC Quest install location. Please enter the full path to it:");
                 var manualPath = Console.ReadLine();
+                if (manualPath.StartsWith("\"") && manualPath.EndsWith("\""))
+                {
+                    manualPath = manualPath.Substring(1, manualPath.Length - 2);
+                }
                 dlcQuestFolder = manualPath;
             }
 
@@ -142,6 +146,20 @@ namespace DLCQuestipelagoInstaller
             if (!Directory.Exists(destinationFolder))
             {
                 Directory.CreateDirectory(destinationFolder);
+            }
+
+            var originEndsWithSeparator = originFolder.EndsWith(Path.DirectorySeparatorChar);
+            var directoryEndsWithSeparator = destinationFolder.EndsWith(Path.DirectorySeparatorChar);
+            if (originEndsWithSeparator != directoryEndsWithSeparator)
+            {
+                if (originEndsWithSeparator)
+                {
+                    originFolder = originFolder.Substring(0, originFolder.Length - 1);
+                }
+                if (directoryEndsWithSeparator)
+                {
+                    destinationFolder = destinationFolder.Substring(0, originFolder.Length - 1);
+                }
             }
 
             var allFiles = Directory.EnumerateFiles(originFolder, "*", SearchOption.AllDirectories);
