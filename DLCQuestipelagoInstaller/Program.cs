@@ -158,7 +158,7 @@ namespace DLCQuestipelagoInstaller
                 }
                 if (directoryEndsWithSeparator)
                 {
-                    destinationFolder = destinationFolder.Substring(0, originFolder.Length - 1);
+                    destinationFolder = destinationFolder.Substring(0, destinationFolder.Length - 1);
                 }
             }
 
