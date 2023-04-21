@@ -387,6 +387,7 @@ namespace DLCQuestipelago.Archipelago
             }
             try
             {
+                _console.LogMessage("Goal Complete!");
                 var statusUpdatePacket = new StatusUpdatePacket();
                 statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
                 _session.Socket.SendPacket(statusUpdatePacket);

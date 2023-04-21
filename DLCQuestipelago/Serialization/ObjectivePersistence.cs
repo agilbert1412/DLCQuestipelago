@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using BepInEx.Logging;
 using DLCLib.Save;
 using DLCQuestipelago.Archipelago;
 using EasyStorage;
@@ -21,6 +22,7 @@ namespace DLCQuestipelago.Serialization
 
         private const string TRUE = "true";
 
+        private ManualLogSource _log;
         private ArchipelagoClient _archipelago;
 
 
@@ -29,8 +31,9 @@ namespace DLCQuestipelago.Serialization
         private static readonly FieldInfo SaveDeviceField =
             typeof(DLCSaveManager).GetField("saveDevice", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public ObjectivePersistence(ArchipelagoClient archipelago)
+        public ObjectivePersistence(ManualLogSource log, ArchipelagoClient archipelago)
         {
+            _log = log;
             _archipelago = archipelago;
         }
 
@@ -96,9 +99,9 @@ namespace DLCQuestipelago.Serialization
         {
             const string savegame_name_constant_section = "_savegame_";
             var saveFileName = (string)GetSaveFilenameMethod.Invoke(DLCSaveManager.Instance, new object[0]);
-            var index = saveFileName.IndexOf(savegame_name_constant_section) + savegame_name_constant_section.Length;
             saveFileName = saveFileName.Replace(".xml", "");
-            saveFileName = savegame_name_constant_section.Substring(index);
+            var index = saveFileName.IndexOf(savegame_name_constant_section) + savegame_name_constant_section.Length;
+            saveFileName = saveFileName.Substring(index);
             var objective_suffix = string.Format(goalPersistencyFilename, key);
             var objectiveFileName = $"{saveFileName}_{objective_suffix}";
 
@@ -116,6 +119,7 @@ namespace DLCQuestipelago.Serialization
                     writer.Flush();
                 }
             });
+            _log.LogMessage($"Objective Complete: {key}");
             CheckGoalCompletion();
         }
 
@@ -145,10 +149,6 @@ namespace DLCQuestipelago.Serialization
             }
 
             return objectivePersistencyContent == $"{key}: Completed";
-        }
-
-        private void A(string key)
-        {
         }
     }
 }

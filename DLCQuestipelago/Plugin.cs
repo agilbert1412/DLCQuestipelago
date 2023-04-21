@@ -120,8 +120,7 @@ namespace DLCQuestipelago
             {
                 return;
             }
-
-            _objectivePersistence.CheckGoalCompletion();
+            
             _archipelago.APUpdate();
             // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
         }
@@ -132,7 +131,7 @@ namespace DLCQuestipelago
             player.AllowPerformZeldaItem = false;
             _itemManager = new ItemManager(Log, _archipelago, _notificationHandler);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
-            _objectivePersistence = new ObjectivePersistence(_archipelago);
+            _objectivePersistence = new ObjectivePersistence(Log, _archipelago);
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();
