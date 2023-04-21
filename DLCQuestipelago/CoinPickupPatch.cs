@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Campaigns;
-using DLCLib.World;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
