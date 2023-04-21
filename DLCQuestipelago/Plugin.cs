@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using BepInEx.NET.Common;
 using DLCQuestipelago.DualContentManager;
@@ -121,6 +120,7 @@ namespace DLCQuestipelago
             {
                 return;
             }
+
             _archipelago.APUpdate();
             // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
         }
@@ -129,7 +129,7 @@ namespace DLCQuestipelago
         {
             var player = SceneManager.Instance.CurrentScene.Player;
             player.AllowPerformZeldaItem = false;
-            _itemManager = new ItemManager(_archipelago);
+            _itemManager = new ItemManager(Log, _archipelago, _notificationHandler);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(_archipelago);
 
@@ -146,12 +146,12 @@ namespace DLCQuestipelago
 
             CoinPickupPatch.CheckAllCoinsanityLocations(player.Inventory);
 #if DEBUG
+            // private static float PLAYER_INPUT_SCALE_GROUND = 45f;
+            // private static float PLAYER_INPUT_SCALE_AIR = 30f;
             var inputGroundField = typeof(Player).GetField("PLAYER_INPUT_SCALE_GROUND", BindingFlags.NonPublic | BindingFlags.Static);
             inputGroundField.SetValue(null, 45f * 1.5f);
             var inputAirField = typeof(Player).GetField("PLAYER_INPUT_SCALE_AIR", BindingFlags.NonPublic | BindingFlags.Static);
             inputAirField.SetValue(null, 30f * 1.5f);
-            // private static float PLAYER_INPUT_SCALE_GROUND = 45f;
-            // private static float PLAYER_INPUT_SCALE_AIR = 30f;
 #endif
     }
 
@@ -186,17 +186,12 @@ namespace DLCQuestipelago
 
         private void OnItemReceived()
         {
-            Log.LogMessage($"Item received:");
             if (!IsInGame || _archipelago == null)
             {
                 return;
             }
 
-            var lastReceivedItem = _archipelago.GetAllReceivedItems().Last().ItemName;
-            Log.LogMessage($"    {lastReceivedItem}");
             _itemManager.ReceiveAllNewItems();
-
-            _notificationHandler.AddNotification(lastReceivedItem);
 
             InventoryCoinsGetPatch.UpdateCoinsUI();
             SceneManager.Instance.CurrentScene.Player.RefreshAnimations();

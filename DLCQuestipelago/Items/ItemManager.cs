@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using BepInEx.Logging;
 using DLCLib.Save;
 using EasyStorage;
 using Newtonsoft.Json;
@@ -13,14 +14,19 @@ namespace DLCQuestipelago.Items
     {
         private const string ITEM_PERSISTENCY_FILENAME = "ArchipelagoPersistency.json";
 
+        private ManualLogSource _log;
         private ArchipelagoClient _archipelago;
+        private ArchipelagoNotificationsHandler _notificationHandler;
         public ItemParser ItemParser { get; }
         private HashSet<ReceivedItem> _itemsAlreadyProcessed;
         private HashSet<ReceivedItem> _itemsAlreadyProcessedThisRun;
 
-        public ItemManager(ArchipelagoClient archipelago)
+        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler)
         {
+            _log = log;
             _archipelago = archipelago;
+            _notificationHandler = notificationHandler;
+
             ItemParser = new ItemParser(archipelago);
             _itemsAlreadyProcessed = LoadItemsAlreadyProcessedFromCampaign();
             _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
@@ -49,6 +55,9 @@ namespace DLCQuestipelago.Items
             }
 
             var isNew = !_itemsAlreadyProcessed.Contains(receivedItem);
+            
+            _log.LogMessage($"Item received: {receivedItem.ItemName}");
+            _notificationHandler.AddNotification(receivedItem.ItemName);
             ItemParser.ProcessItem(receivedItem, isNew);
             _itemsAlreadyProcessedThisRun.Add(receivedItem);
 
