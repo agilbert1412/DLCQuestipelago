@@ -21,7 +21,7 @@ namespace DLCQuestipelago.Archipelago.Deathlink
 
         public static void ReceiveDeathLink()
         {
-            if (!_archipelago.SlotData.DeathLink)
+            if (_archipelago?.SlotData == null || !_archipelago.SlotData.DeathLink)
             {
                 return;
             }
