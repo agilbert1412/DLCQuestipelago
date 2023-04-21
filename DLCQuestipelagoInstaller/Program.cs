@@ -31,7 +31,7 @@ namespace DLCQuestipelagoInstaller
             var preferredFolder = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(preferredFolder))
             {
-                moddedFolder = preferredFolder;
+                moddedFolder = preferredFolder.Trim('"');
             }
             Console.WriteLine();
 
@@ -104,10 +104,7 @@ namespace DLCQuestipelagoInstaller
             {
                 Console.WriteLine("Could not Find DLC Quest install location. Please enter the full path to it:");
                 var manualPath = Console.ReadLine();
-                if (manualPath.StartsWith("\"") && manualPath.EndsWith("\""))
-                {
-                    manualPath = manualPath.Substring(1, manualPath.Length - 2);
-                }
+                manualPath = manualPath.Trim('"');
                 dlcQuestFolder = manualPath;
             }
 
