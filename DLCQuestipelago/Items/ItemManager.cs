@@ -55,14 +55,14 @@ namespace DLCQuestipelago.Items
             }
 
             var isNew = !_itemsAlreadyProcessed.Contains(receivedItem);
-            
-            _log.LogMessage($"Item received: {receivedItem.ItemName}");
-            _notificationHandler.AddNotification(receivedItem.ItemName);
             ItemParser.ProcessItem(receivedItem, isNew);
             _itemsAlreadyProcessedThisRun.Add(receivedItem);
 
             if (isNew)
             {
+
+                _log.LogMessage($"Item received: {receivedItem.ItemName}");
+                _notificationHandler.AddNotification(receivedItem.ItemName);
                 _itemsAlreadyProcessed.Add(receivedItem);
             }
         }
