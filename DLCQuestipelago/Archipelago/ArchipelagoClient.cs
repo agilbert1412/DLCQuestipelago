@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Archipelago.MultiClient.Net.MessageLog.Messages;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -534,14 +535,14 @@ namespace DLCQuestipelago.Archipelago
 
         private void SessionErrorReceived(Exception e, string message)
         {
-            _console.LogError($"Connection to Archipelago lost. The game will try reconnecting later. Message: {message}");
+            _console.LogError($"Connection to Archipelago lost due to receiving a server error. The game will try reconnecting later. Message: {message}");
             _lastConnectFailure = DateTime.Now;
             DisconnectAndCleanup();
         }
 
         private void SessionSocketClosed(string reason)
         {
-            _console.LogError($"Connection to Archipelago lost. The game will try reconnecting later. Message: {reason}");
+            _console.LogError($"Connection to Archipelago lost due to the socket closing. The game will try reconnecting later. Message: {reason}");
             _lastConnectFailure = DateTime.Now;
             DisconnectAndCleanup();
         }
