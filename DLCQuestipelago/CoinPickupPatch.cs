@@ -45,7 +45,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof()}.{nameof(Postfix)}:\n\t{ex}");
+                _log.LogError($"Failed in {nameof(CoinPickupPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

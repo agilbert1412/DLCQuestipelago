@@ -20,7 +20,7 @@ namespace DLCQuestipelago
         {
             InitializeDualContentManagerPatches(log);
             FrameUpdatePatch.Initialize(log);
-            StatsScreenInvalidateAttemptPatch.Initialize(log, locationChecker, itemManager.ItemParser);
+            StatsScreenInvalidateAttemptPatch.Initialize(log);
             DLCPackPurchasePatch.Initialize(log, locationChecker);
             DLCIsPurchasedPatch.Initialize(log, itemManager.ItemParser);
             CoinPickupPatch.Initialize(log, archipelago, locationChecker);
@@ -35,7 +35,7 @@ namespace DLCQuestipelago
             InitializeAllObjectivePatches(log, objectivePersistence);
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
-            InitializeAllPersistencyPatches(log, archipelago);
+            InitializeAllPersistencyPatches(log);
             KillSheepPatch.Initialize(log, locationChecker);
             InitializeAwardmentPatches(log, locationChecker);
             InitializeAntiCrashPatches(log);
@@ -107,11 +107,11 @@ namespace DLCQuestipelago
             PurchaseNameChangePatch.Initialize(log, archipelago, nameChanger);
         }
 
-        private static void InitializeAllPersistencyPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeAllPersistencyPatches(ManualLogSource log)
         {
             ClearSaveGamePatch.Initialize(log);
             ContinueGamePatch.Initialize(log);
-            GetSaveFilenamePatch.Initialize(log, archipelago);
+            GetSaveFilenamePatch.Initialize(log);
             QuitToMainMenuPatch.Initialize(log);
             SaveGameDataPatch.Initialize(log);
             StartNewGamePatch.Initialize(log);

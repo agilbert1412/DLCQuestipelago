@@ -67,7 +67,6 @@ namespace DLCQuestipelago.Items
             }
         }
 
-
         private static MethodInfo GetSaveFilenameMethod = typeof(DLCSaveManager).GetMethod("GetSaveFilename", BindingFlags.NonPublic | BindingFlags.Instance);
         private static FieldInfo SaveDeviceField = typeof(DLCSaveManager).GetField("saveDevice", BindingFlags.NonPublic | BindingFlags.Instance);
 

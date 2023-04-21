@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
@@ -28,38 +30,51 @@ namespace DLCQuestipelago.ItemShufflePatches
         //public override bool Activate()
         private static bool Prefix(FetchNPC __instance, ref bool __result)
         {
-            if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+            try
             {
-                return true;
-            }
-
-            var hasSupplies = _archipelago.HasReceivedItem("Box of Various Supplies", out _);
-            if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager.FETCH_QUEST_ACTIVATED_STR) && !__instance.FetchQuestStarted)
-            {
-                __result = _conversationStarter.StartConversation(__instance, "fetchqueststart");
-                if (hasSupplies)
+                if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
                 {
-                    SceneManager.Instance.CurrentScene.HUDManager.ObjectiveDisplay.MarkObjectivesComplete();
+                    return true;
                 }
-            }
-            else if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR))
-            {
-                __result = _conversationStarter.StartConversation(__instance, "fetchquestcomplete");
-            }
-            else if (hasSupplies)
-            {
-                __result = _conversationStarter.StartConversation(__instance, "fetchquestturnin");
-            }
-            else if (__instance.FetchQuestStarted)
-            {
-                __result = _conversationStarter.StartConversation(__instance, "fetchquestongoing");
-            }
-            else
-            {
-                __result = _conversationStarter.StartConversation(__instance, "default");
-            }
 
-            return false;
+                var hasSupplies = _archipelago.HasReceivedItem("Box of Various Supplies", out _);
+                if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager
+                        .FETCH_QUEST_ACTIVATED_STR) && !__instance.FetchQuestStarted)
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "fetchqueststart");
+                    if (hasSupplies)
+                    {
+                        SceneManager.Instance.CurrentScene.HUDManager.ObjectiveDisplay.MarkObjectivesComplete();
+                    }
+                }
+                else if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager
+                             .FETCH_QUEST_COMPLETE_STR))
+                {
+                    // It was going here
+                    __result = _conversationStarter.StartConversation(__instance, "fetchquestcomplete");
+                }
+                else if (hasSupplies)
+                {
+                    //instead of here
+                    __result = _conversationStarter.StartConversation(__instance, "fetchquestturnin");
+                }
+                else if (__instance.FetchQuestStarted)
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "fetchquestongoing");
+                }
+                else
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "default");
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(FetchNpcActivatePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

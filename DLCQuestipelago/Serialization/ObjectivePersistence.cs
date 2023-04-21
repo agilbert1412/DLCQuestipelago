@@ -1,4 +1,9 @@
-﻿using DLCQuestipelago.Archipelago;
+﻿using System.IO;
+using System.Reflection;
+using DLCLib.Save;
+using DLCQuestipelago.Archipelago;
+using EasyStorage;
+using Newtonsoft.Json;
 
 namespace DLCQuestipelago.Serialization
 {
@@ -12,11 +17,17 @@ namespace DLCQuestipelago.Serialization
         public const string OBJECTIVE_LFOD_FAKE_ENDING = "lfod_fake_ending";
         public const string OBJECTIVE_LFOD_TRUE_ENDING = "lfod_true_ending";
         public const string OBJECTIVE_LFOD_100_PERCENT = "lfod_100_percent";
+        private const string goalPersistencyFilename = "Goal_{0}.dlc";
 
         private const string TRUE = "true";
 
         private ArchipelagoClient _archipelago;
 
+
+        private static readonly MethodInfo GetSaveFilenameMethod =
+            typeof(DLCSaveManager).GetMethod("GetSaveFilename", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo SaveDeviceField =
+            typeof(DLCSaveManager).GetField("saveDevice", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public ObjectivePersistence(ArchipelagoClient archipelago)
         {
@@ -81,28 +92,59 @@ namespace DLCQuestipelago.Serialization
             RegisterObjectiveCompletion(OBJECTIVE_LFOD_TRUE_ENDING);
         }
 
+        private string GetObjectiveFileName(string key)
+        {
+            var saveFileName = (string)GetSaveFilenameMethod.Invoke(DLCSaveManager.Instance, new object[0]);
+            var objective_suffix = string.Format(goalPersistencyFilename, key);
+            var objectiveFileName = $"{saveFileName}_{objective_suffix}";
+
+            return objectiveFileName;
+        }
+
         private void RegisterObjectiveCompletion(string key)
         {
-            var keyOnMySlot = GetKeyOnMySlot(key);
-            _archipelago.SetStringDataStorage(keyOnMySlot, TRUE);
+            var saveDevice = (SaveDevice)SaveDeviceField.GetValue(DLCSaveManager.Instance);
+            saveDevice.Save(DLCSaveManager.Instance.DataSaveDirectory, GetObjectiveFileName(key), (stream) =>
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write($"{key}: Completed");
+                    writer.Flush();
+                }
+            });
             CheckGoalCompletion();
         }
 
         private bool HasCompletedObjective(string key)
         {
-            var keyOnMySlot = GetKeyOnMySlot(key);
-            var completionValue = _archipelago.ReadStringFromDataStorage(keyOnMySlot);
-            if (string.IsNullOrWhiteSpace(completionValue))
+            var saveDevice = (SaveDevice)SaveDeviceField.GetValue(DLCSaveManager.Instance);
+            var saveDirectory = DLCSaveManager.Instance.DataSaveDirectory;
+            var persistencyFileName = GetObjectiveFileName(key);
+            var fileExists = saveDevice.FileExists(saveDirectory, persistencyFileName);
+            if (!fileExists)
             {
                 return false;
             }
 
-            return completionValue.ToLower() == TRUE;
+            var objectivePersistencyContent = "";
+            saveDevice.Load(saveDirectory, persistencyFileName, (stream) =>
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    objectivePersistencyContent = reader.ReadToEnd();
+                }
+            });
+
+            if (string.IsNullOrWhiteSpace(objectivePersistencyContent))
+            {
+                return false;
+            }
+
+            return objectivePersistencyContent == $"{key}: Completed";
         }
 
-        private string GetKeyOnMySlot(string key)
+        private void A(string key)
         {
-            return $"{_archipelago.SlotData.SlotName}_{key}";
         }
     }
 }

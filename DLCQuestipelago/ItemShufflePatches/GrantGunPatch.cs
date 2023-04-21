@@ -16,7 +16,8 @@ namespace DLCQuestipelago.ItemShufflePatches
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago,
+            LocationChecker locationChecker)
         {
             _log = log;
             _archipelago = archipelago;
@@ -43,6 +44,5 @@ namespace DLCQuestipelago.ItemShufflePatches
                 return true; // run original logic
             }
         }
-    }
     }
 }

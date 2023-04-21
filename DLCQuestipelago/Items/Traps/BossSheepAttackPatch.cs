@@ -47,5 +47,4 @@ namespace DLCQuestipelago.Items.Traps
             }
         }
     }
-    }
 }

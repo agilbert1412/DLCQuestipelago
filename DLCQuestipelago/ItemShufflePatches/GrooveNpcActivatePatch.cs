@@ -39,6 +39,7 @@ namespace DLCQuestipelago.ItemShufflePatches
                 }
 
                 var hasCheckedPickaxeLocation = _locationChecker.IsLocationChecked("Pickaxe");
+                var hasCheckedBindleLocation = _locationChecker.IsLocationChecked("Humble Indie Bindle");
                 Scene currentScene = Singleton<SceneManager>.Instance.CurrentScene;
                 if (currentScene.Player.Inventory.HasBindle &&
                     !hasCheckedPickaxeLocation /*currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR)*/
@@ -46,7 +47,7 @@ namespace DLCQuestipelago.ItemShufflePatches
                 {
                     __result = _conversationStarter.StartConversation(__instance, "givemattock");
                 }
-                else if (!hasCheckedPickaxeLocation &&
+                else if ((!hasCheckedPickaxeLocation || !hasCheckedBindleLocation) &&
                          currentScene.EventList.Contains(TriggerUtil.ROCKS_DISCOVERED_STR))
                 {
                     __result = _conversationStarter.StartConversation(__instance, "fetchquest");
