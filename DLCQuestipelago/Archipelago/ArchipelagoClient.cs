@@ -9,6 +9,7 @@ using DLCQuestipelago.Archipelago.Deathlink;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -170,8 +171,17 @@ namespace DLCQuestipelago.Archipelago
 
         private void OnMessageReceived(LogMessage message)
         {
-            var fullMessage = string.Join(" ", message.Parts.Select(str => str.Text));
-            _console.LogInfo(fullMessage);
+            try
+            {
+                var fullMessage = string.Join(" ", message.Parts.Select(str => str.Text));
+                _console.LogInfo(fullMessage);
+            }
+            catch (Exception ex)
+            {
+                _console.LogError($"Failed in {nameof(ArchipelagoClient)}.{nameof(OnMessageReceived)}:\n\t{ex}");
+                Debugger.Break();
+                return; // run original logic
+            }
         }
 
         public void SendMessage(string text)
@@ -198,12 +208,21 @@ namespace DLCQuestipelago.Archipelago
 
         private void OnItemReceived(ReceivedItemsHelper receivedItemsHelper)
         {
-            if (!MakeSureConnected())
+            try
             {
-                return;
-            }
+                if (!MakeSureConnected())
+                {
+                    return;
+                }
 
-            _itemReceivedFunction();
+                _itemReceivedFunction();
+            }
+            catch (Exception ex)
+            {
+                _console.LogError($"Failed in {nameof(ArchipelagoClient)}.{nameof(OnItemReceived)}:\n\t{ex}");
+                Debugger.Break();
+                return; // run original logic
+            }
         }
 
         public void ReportCheckedLocationsAsync(long[] locationIds)
@@ -536,14 +555,14 @@ namespace DLCQuestipelago.Archipelago
 
         private void SessionErrorReceived(Exception e, string message)
         {
-            _console.LogError($"Connection to Archipelago lost due to receiving a server error. The game will try reconnecting later. Message: {message}");
+            _console.LogError($"Connection to Archipelago lost due to receiving a server error. The game will try reconnecting later.\n\tMessage: {message}\n\tException: {e}");
             _lastConnectFailure = DateTime.Now;
             DisconnectAndCleanup();
         }
 
         private void SessionSocketClosed(string reason)
         {
-            _console.LogError($"Connection to Archipelago lost due to the socket closing. The game will try reconnecting later. Message: {reason}");
+            _console.LogError($"Connection to Archipelago lost due to the socket closing. The game will try reconnecting later.\n\tReason: {reason}");
             _lastConnectFailure = DateTime.Now;
             DisconnectAndCleanup();
         }
