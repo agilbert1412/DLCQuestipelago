@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Conversation;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
@@ -24,13 +26,23 @@ namespace DLCQuestipelago.ItemShufflePatches
         //public static void GrantGun()
         private static bool Prefix()
         {
-            if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+            try
             {
+                if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+                {
+                    return true; // run original logic
+                }
+
+                _locationChecker.AddCheckedLocation("Gun");
+                return false; // don't run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(GrantGunPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
                 return true; // run original logic
             }
-
-            _locationChecker.AddCheckedLocation("Gun");
-            return false; // don't run original logic
         }
+    }
     }
 }

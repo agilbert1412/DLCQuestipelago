@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
@@ -24,17 +26,27 @@ namespace DLCQuestipelago
         // private void StartCampaign(string selectedCampaignName)
         private static bool Prefix(CampaignSelectScreen __instance, string selectedCampaignName)
         {
-            if (_archipelago.SlotData.Campaign == Campaign.Basic && selectedCampaignName == LFOD_CAMPAIGN)
+            try
             {
-                return false; // don't run original logic
-            }
+                if (_archipelago.SlotData.Campaign == Campaign.Basic && selectedCampaignName == LFOD_CAMPAIGN)
+                {
+                    return false; // don't run original logic
+                }
 
-            if (_archipelago.SlotData.Campaign == Campaign.LiveFreemiumOrDie && selectedCampaignName == BASIC_CAMPAIGN)
+                if (_archipelago.SlotData.Campaign == Campaign.LiveFreemiumOrDie &&
+                    selectedCampaignName == BASIC_CAMPAIGN)
+                {
+                    return false; // don't run original logic
+                }
+
+                return true; // run original logic
+            }
+            catch (Exception ex)
             {
-                return false; // don't run original logic
+                _log.LogError($"Failed in {nameof(CampaignSelectPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
             }
-
-            return true; // run original logic
         }
     }
 }

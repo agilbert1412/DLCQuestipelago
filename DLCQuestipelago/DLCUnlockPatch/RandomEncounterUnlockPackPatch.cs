@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCLib.Scripts;
 using HarmonyLib;
@@ -19,7 +21,16 @@ namespace DLCQuestipelago.DLCUnlockPatch
         // public static void StartRandomEncounterConversation()
         private static void Postfix()
         {
-            DLCManager.Instance.UnlockPack("psychological");
+            try
+            {
+                DLCManager.Instance.UnlockPack("psychological");
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(RandomEncounterUnlockPackPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

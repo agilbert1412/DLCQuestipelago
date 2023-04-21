@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
@@ -23,18 +25,28 @@ namespace DLCQuestipelago.DLCUnlockPatch
         //public override bool Activate()
         private static bool Prefix(GrooveNPC __instance, ref bool __result)
         {
-            var currentScene = SceneManager.Instance.CurrentScene;
-            if (currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR) && _locationChecker.IsLocationMissing("Pickaxe"))
+            try
             {
-                __instance.SetCurrentConversation("givemattock");
-                // AwardmentUtil.AwardGoodPlayerAwardment();
-                currentScene.ConversationManager.StartConversation(__instance.CurrentConversation);
-                // SceneManager.Instance.CurrentScene.Player.GetPhysicsObject().ResetDynamics();
+                var currentScene = SceneManager.Instance.CurrentScene;
+                if (currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR) &&
+                    _locationChecker.IsLocationMissing("Pickaxe"))
+                {
+                    __instance.SetCurrentConversation("givemattock");
+                    // AwardmentUtil.AwardGoodPlayerAwardment();
+                    currentScene.ConversationManager.StartConversation(__instance.CurrentConversation);
+                    // SceneManager.Instance.CurrentScene.Player.GetPhysicsObject().ResetDynamics();
 
-                return false; // don't run original logic
+                    return false; // don't run original logic
+                }
+
+                return true; // run original logic 
             }
-
-            return true; // run original logic 
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(GrooveGiveMattockPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

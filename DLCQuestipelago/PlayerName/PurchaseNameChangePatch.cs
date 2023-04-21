@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.DLC;
@@ -38,16 +39,25 @@ namespace DLCQuestipelago.PlayerName
         //public static void PurchaseNameChange()
         private static bool Prefix()
         {
-            Console.WriteLine("Name Change Pack purchased!");
-            if (!SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem)
+            try
             {
+                Console.WriteLine("Name Change Pack purchased!");
+                if (!SceneManager.Instance.CurrentScene.Player.AllowPerformZeldaItem)
+                {
+                    return false;
+                }
+
+                var newName = NewName1;
+                var promptPrefix = "Name Change purchased!";
+                CreateAndAnimateNameChangePrompt(promptPrefix, newName, NameChangeFailed_Accepted);
                 return false;
             }
-
-            var newName = NewName1;
-            var promptPrefix = "Name Change purchased!";
-            CreateAndAnimateNameChangePrompt(promptPrefix, newName, NameChangeFailed_Accepted);
-            return false;
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(PurchaseNameChangePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
 
         private static void NameChangeFailed_Accepted(object sender, PlayerIndexEventArgs e)

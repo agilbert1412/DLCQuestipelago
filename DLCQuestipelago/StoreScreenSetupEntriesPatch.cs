@@ -1,4 +1,5 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.DLC;
@@ -12,6 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteSheetRuntime;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace DLCQuestipelago
@@ -33,25 +35,37 @@ namespace DLCQuestipelago
 
         public static bool Prefix(StoreScreen __instance)
         {
-            var dlcSpriteSheet = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet;
+            try
+            {
+                var dlcSpriteSheet = SceneManager.Instance.CurrentScene.AssetManager.DLCSpriteSheet;
 
-            var scrollContainerField = typeof(StoreScreen).GetField("scrollContainer", BindingFlags.NonPublic | BindingFlags.Instance);
-            var scrollContainer = (HUDStackContainer)scrollContainerField.GetValue(__instance);
-            var dlcMenuEntriesField = typeof(StoreScreen).GetField("dlcMenuEntries", BindingFlags.NonPublic | BindingFlags.Instance);
-            var dlcMenuEntries = (List<DLCMenuEntry>)dlcMenuEntriesField.GetValue(__instance);
-            var modeField = typeof(StoreScreen).GetField("Mode", BindingFlags.NonPublic | BindingFlags.Instance);
-            var mode = (StoreScreen.StoreModeEnum)modeField.GetValue(__instance);
-            var containerField = typeof(StoreScreen).GetField("container", BindingFlags.NonPublic | BindingFlags.Instance);
-            var container = (HUDContainer)containerField.GetValue(__instance);
+                var scrollContainerField =
+                    typeof(StoreScreen).GetField("scrollContainer", BindingFlags.NonPublic | BindingFlags.Instance);
+                var scrollContainer = (HUDStackContainer)scrollContainerField.GetValue(__instance);
+                var dlcMenuEntriesField =
+                    typeof(StoreScreen).GetField("dlcMenuEntries", BindingFlags.NonPublic | BindingFlags.Instance);
+                var dlcMenuEntries = (List<DLCMenuEntry>)dlcMenuEntriesField.GetValue(__instance);
+                var modeField = typeof(StoreScreen).GetField("Mode", BindingFlags.NonPublic | BindingFlags.Instance);
+                var mode = (StoreScreen.StoreModeEnum)modeField.GetValue(__instance);
+                var containerField =
+                    typeof(StoreScreen).GetField("container", BindingFlags.NonPublic | BindingFlags.Instance);
+                var container = (HUDContainer)containerField.GetValue(__instance);
 
-            scrollContainer.ClearElements();
-            dlcMenuEntries.Clear();
-            AddCorrectDLCsToStore(__instance, mode, dlcSpriteSheet, dlcMenuEntries);
+                scrollContainer.ClearElements();
+                dlcMenuEntries.Clear();
+                AddCorrectDLCsToStore(__instance, mode, dlcSpriteSheet, dlcMenuEntries);
 
-            SetupTabColors(__instance, mode);
-            SetupNoDLCAvailableText(__instance, dlcMenuEntries, mode);
-            container.Layout();
-            return false; // don't run original logic
+                SetupTabColors(__instance, mode);
+                SetupNoDLCAvailableText(__instance, dlcMenuEntries, mode);
+                container.Layout();
+                return false; // don't run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(StoreScreenSetupEntriesPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
 
         private static void AddCorrectDLCsToStore(StoreScreen storeScreen, StoreScreen.StoreModeEnum mode,

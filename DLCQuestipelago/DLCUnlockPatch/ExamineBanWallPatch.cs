@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.Scripts.LFOD;
@@ -21,12 +23,21 @@ namespace DLCQuestipelago.DLCUnlockPatch
         // public static bool ExamineBanWall(TriggerVolume volume)
         private static void Postfix(TriggerVolume volume)
         {
-            if (!SceneManager.Instance.CurrentScene.EventList.Contains(FakeEnding.FAKE_ENDING_COMPLETE_STR))
+            try
             {
+                if (!SceneManager.Instance.CurrentScene.EventList.Contains(FakeEnding.FAKE_ENDING_COMPLETE_STR))
+                {
+                    return;
+                }
+
+                DLCManager.Instance.UnlockPack("namechange");
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(ExamineBanWallPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
                 return;
             }
-
-            DLCManager.Instance.UnlockPack("namechange");
         }
     }
 }

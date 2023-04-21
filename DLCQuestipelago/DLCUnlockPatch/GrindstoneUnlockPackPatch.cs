@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCLib.World.Props;
@@ -28,21 +30,41 @@ namespace DLCQuestipelago.DLCUnlockPatch
         // public bool Activate()
         public static bool Prefix(Grindstone __instance, ref bool __result)
         {
-            if (_locationChecker.IsLocationMissing("Sword"))
+            try
             {
-                __instance.Enable();
-                var IsCompleteField = typeof(Grindstone).GetProperty("IsComplete", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                IsCompleteField.SetValue(__instance, false);
+                if (_locationChecker.IsLocationMissing("Sword"))
+                {
+                    __instance.Enable();
+                    var IsCompleteField = typeof(Grindstone).GetProperty("IsComplete",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    IsCompleteField.SetValue(__instance, false);
+                }
+
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(GrindstoneUnlockPackPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
 
         private static void Postfix(Grindstone __instance, ref bool __result)
         {
-            grindCount++;
-            if (grindCount >= 9)
+            try
             {
-                DLCManager.Instance.UnlockPack("grindstone");
+                grindCount++;
+                if (grindCount >= 9)
+                {
+                    DLCManager.Instance.UnlockPack("grindstone");
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(GrindstoneUnlockPackPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
             }
         }
     }

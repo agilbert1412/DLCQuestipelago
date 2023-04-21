@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCLib.World;
 using HarmonyLib;
@@ -19,13 +21,23 @@ namespace DLCQuestipelago.DLCUnlockPatch
         // public void OnEnter(bool isFirstZone)
         private static void Postfix(Zone __instance, bool isFirstZone)
         {
-            if (!isFirstZone)
+            try
             {
-                DLCManager.Instance.UnlockPack("loading");
+                if (!isFirstZone)
+                {
+                    DLCManager.Instance.UnlockPack("loading");
+                }
+
+                if (__instance.IsSnowZone)
+                {
+                    DLCManager.Instance.UnlockPack("seasonpass");
+                }
             }
-            if (__instance.IsSnowZone)
+            catch (Exception ex)
             {
-                DLCManager.Instance.UnlockPack("seasonpass");
+                _log.LogError($"Failed in {nameof(ZoneOnEnterPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
             }
         }
     }

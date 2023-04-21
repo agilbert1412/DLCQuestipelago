@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Screens;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
@@ -11,21 +13,26 @@ namespace DLCQuestipelago
     public static class StatsScreenInvalidateAttemptPatch
     {
         private static ManualLogSource _log;
-        private static LocationChecker _locationChecker;
-        private static ItemParser _itemParser;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker, ItemParser itemParser)
+        public static void Initialize(ManualLogSource log)
         {
             _log = log;
-            _locationChecker = locationChecker;
-            _itemParser = itemParser;
         }
 
         // protected bool IsValidAttempt()
         public static bool Prefix(StatsScreen __instance, ref bool __result)
         {
-            __result = false;
-            return false; // don't run original logic
+            try
+            {
+                __result = false;
+                return false; // don't run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(StatsScreenInvalidateAttemptPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

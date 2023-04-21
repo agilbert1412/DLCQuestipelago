@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BepInEx.Logging;
 using DLCDataTypes;
@@ -22,17 +24,27 @@ namespace DLCQuestipelago.DualContentManager
         //public static void ConstructAnimation(AnimationData animData, out Animation anim)
         private static bool Prefix(AnimationData animData, out Animation anim)
         {
-            var spriteSheetsByName = Plugin.DualAssetManager.GetSpriteSheetsByName(animData.SpriteSheetName);
-            var correctSpriteSheet = spriteSheetsByName.First(x => x.Contains(animData.FrameNames.First()));
-            var sourceRects = new List<Rectangle>();
-            foreach (var frameName in animData.FrameNames)
+            try
             {
-                sourceRects.Add(correctSpriteSheet.SourceRectangle(frameName));
+                var spriteSheetsByName = Plugin.DualAssetManager.GetSpriteSheetsByName(animData.SpriteSheetName);
+                var correctSpriteSheet = spriteSheetsByName.First(x => x.Contains(animData.FrameNames.First()));
+                var sourceRects = new List<Rectangle>();
+                foreach (var frameName in animData.FrameNames)
+                {
+                    sourceRects.Add(correctSpriteSheet.SourceRectangle(frameName));
+                }
+
+                anim = new Animation(correctSpriteSheet.Texture, sourceRects, animData.FrameTime);
+
+                return false; // don't run original logic
             }
-
-            anim = new Animation(correctSpriteSheet.Texture, sourceRects, animData.FrameTime);
-
-            return false; // don't run original logic
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(ConstructAnimationPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                anim = null;
+                return true; // run original logic
+            }
         }
     }
 }

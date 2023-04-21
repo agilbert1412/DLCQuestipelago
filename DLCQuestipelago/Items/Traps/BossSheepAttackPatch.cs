@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib.Character;
 using DLCQuestipelago.Archipelago;
@@ -25,16 +26,26 @@ namespace DLCQuestipelago.Items.Traps
         //protected override void PerformAttack()
         private static bool Prefix(ShopkeepBossNPC __instance)
         {
-            var numberOfSheepReceived = _archipelago.GetReceivedItemCount(ItemParser.ZOMBIE_SHEEP);
-            var sheepChance = (double)numberOfSheepReceived / 300.0;
-
-            if (_random.NextDouble() < sheepChance)
+            try
             {
-                ItemParser.SpawnZombieSheepOnPlayer();
-                return false; // don't run original logic
-            }
+                var numberOfSheepReceived = _archipelago.GetReceivedItemCount(ItemParser.ZOMBIE_SHEEP);
+                var sheepChance = (double)numberOfSheepReceived / 300.0;
 
-            return true; // run original logic
+                if (_random.NextDouble() < sheepChance)
+                {
+                    ItemParser.SpawnZombieSheepOnPlayer();
+                    return false; // don't run original logic
+                }
+
+                return true; // run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(BossSheepAttackPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
+    }
     }
 }

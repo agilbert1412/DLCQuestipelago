@@ -1,4 +1,6 @@
-﻿using Awardments;
+﻿using System;
+using System.Diagnostics;
+using Awardments;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -21,8 +23,17 @@ namespace DLCQuestipelago.Locations
         //internal static void AwardDLCManAwardment()
         public static void Postfix()
         {
-            _log.LogInfo(ACHIEVEMENT_NAME);
-            _locationChecker.AddCheckedLocation(ACHIEVEMENT_NAME);
+            try
+            {
+                _log.LogInfo(ACHIEVEMENT_NAME);
+                _locationChecker.AddCheckedLocation(ACHIEVEMENT_NAME);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(StoryIsImportantPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

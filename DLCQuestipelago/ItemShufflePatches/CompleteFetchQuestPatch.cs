@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Conversation;
@@ -26,18 +28,29 @@ namespace DLCQuestipelago.ItemShufflePatches
         //public static void FetchQuestComplete()
         private static bool Prefix()
         {
-            if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+            try
             {
+                if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+                {
+                    return true; // run original logic
+                }
+
+                _locationChecker.AddCheckedLocation("Humble Indie Bindle");
+                var currentScene = SceneManager.Instance.CurrentScene;
+                var addEventMethod =
+                    typeof(Scene).GetMethod("AddEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+                addEventMethod.Invoke(currentScene, new object[] { ConversationManager.FETCH_QUEST_COMPLETE_STR });
+                currentScene.HUDManager.ObjectiveDisplay.Enabled = false;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(CompleteFetchQuestPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
                 return true; // run original logic
             }
-            
-            _locationChecker.AddCheckedLocation("Humble Indie Bindle");
-            var currentScene = SceneManager.Instance.CurrentScene;
-            var addEventMethod = typeof(Scene).GetMethod("AddEvent", BindingFlags.NonPublic | BindingFlags.Instance);
-            addEventMethod.Invoke(currentScene, new object[] { ConversationManager.FETCH_QUEST_COMPLETE_STR });
-            currentScene.HUDManager.ObjectiveDisplay.Enabled = false;
 
-            return false;
         }
     }
 }

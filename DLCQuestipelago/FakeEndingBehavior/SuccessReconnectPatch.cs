@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
@@ -22,7 +24,16 @@ namespace DLCQuestipelago.FakeEndingBehavior
         //private static void reconnectingScreen3_Accepted(object sender, PlayerIndexEventArgs e)
         public static void Postfix(object sender, PlayerIndexEventArgs e)
         {
-            _archipelago.ReconnectAfterTemporaryDisconnect();
+            try
+            {
+                _archipelago.ReconnectAfterTemporaryDisconnect();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(SuccessReconnectPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

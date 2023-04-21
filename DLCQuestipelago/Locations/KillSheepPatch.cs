@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
@@ -57,17 +59,26 @@ namespace DLCQuestipelago.Locations
         //internal void RecordMobDeath(Mob mob)
         public static bool Prefix(Scene __instance, Mob mob)
         {
-            if (!(mob is Sheep sheep))
+            try
             {
+                if (!(mob is Sheep sheep))
+                {
+                    return true; // run original logic;
+                }
+
+                var spawnPosition = mob.GetSpawnPosition();
+                var id = _sheepIds[spawnPosition];
+                var sheepLocationName = _sheepNames[id];
+                _log.LogInfo($"SheepKilled Sheep #{id} at {spawnPosition} ({sheepLocationName})");
+                _locationChecker.AddCheckedLocation(sheepLocationName);
                 return true; // run original logic;
             }
-
-            var spawnPosition = mob.GetSpawnPosition();
-            var id = _sheepIds[spawnPosition];
-            var sheepLocationName = _sheepNames[id];
-            _log.LogInfo($"SheepKilled Sheep #{id} at {spawnPosition} ({sheepLocationName})");
-            _locationChecker.AddCheckedLocation(sheepLocationName);
-            return true; // run original logic;
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(KillSheepPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

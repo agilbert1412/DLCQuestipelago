@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Audio;
@@ -27,18 +29,28 @@ namespace DLCQuestipelago.ItemShufflePatches
         //public override void OnPickup(Player player)
         private static bool Prefix(FetchQuestPickup __instance, Player player)
         {
-            if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+            try
             {
+                if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+                {
+                    return true; // run original logic
+                }
+
+                _locationChecker.AddCheckedLocation("Box of Various Supplies");
+                var scene = SceneManager.Instance.CurrentScene;
+                DLCAudioManager.Instance.PlaySound("pickup_dlc");
+                scene.RemoveFromScene(__instance);
+                var recordPickupMethod =
+                    typeof(Scene).GetMethod("RecordPickup", BindingFlags.NonPublic | BindingFlags.Instance);
+                recordPickupMethod.Invoke(scene, new object[] { __instance });
+                return false; // don't run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(PickupBoxOfSuppliesPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
                 return true; // run original logic
             }
-
-            _locationChecker.AddCheckedLocation("Box of Various Supplies");
-            var scene = SceneManager.Instance.CurrentScene;
-            DLCAudioManager.Instance.PlaySound("pickup_dlc");
-            scene.RemoveFromScene(__instance);
-            var recordPickupMethod = typeof(Scene).GetMethod("RecordPickup", BindingFlags.NonPublic | BindingFlags.Instance);
-            recordPickupMethod.Invoke(scene, new object[] { __instance });
-            return false; // don't run original logic
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.Character;
@@ -29,32 +31,44 @@ namespace DLCQuestipelago.ItemShufflePatches
         //public override bool Activate()
         private static bool Prefix(FetchNPC __instance, ref bool __result)
         {
-            if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+            try
             {
-                return true;
-            }
+                if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+                {
+                    return true;
+                }
 
-            var hasCheckedPickaxeLocation = _locationChecker.IsLocationChecked("Pickaxe");
-            Scene currentScene = Singleton<SceneManager>.Instance.CurrentScene;
-            if (currentScene.Player.Inventory.HasBindle && !hasCheckedPickaxeLocation/*currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR)*/)
-            {
-                __result = _conversationStarter.StartConversation(__instance, "givemattock");
-            }
-            else if (!hasCheckedPickaxeLocation && currentScene.EventList.Contains(TriggerUtil.ROCKS_DISCOVERED_STR))
-            {
-                __result = _conversationStarter.StartConversation(__instance, "fetchquest");
-            }
-            else if (hasCheckedPickaxeLocation)
-            {
-                __result = _conversationStarter.StartConversation(__instance, "mattockcomplete");
-                // AwardmentUtil.AwardGoodPlayerAwardment();
-            }
-            else
-            {
-                __result = _conversationStarter.StartConversation(__instance, "default");
-            }
+                var hasCheckedPickaxeLocation = _locationChecker.IsLocationChecked("Pickaxe");
+                Scene currentScene = Singleton<SceneManager>.Instance.CurrentScene;
+                if (currentScene.Player.Inventory.HasBindle &&
+                    !hasCheckedPickaxeLocation /*currentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR)*/
+                   )
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "givemattock");
+                }
+                else if (!hasCheckedPickaxeLocation &&
+                         currentScene.EventList.Contains(TriggerUtil.ROCKS_DISCOVERED_STR))
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "fetchquest");
+                }
+                else if (hasCheckedPickaxeLocation)
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "mattockcomplete");
+                    // AwardmentUtil.AwardGoodPlayerAwardment();
+                }
+                else
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "default");
+                }
 
-            return false;
+                return false; // don't run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(GrooveNpcActivatePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

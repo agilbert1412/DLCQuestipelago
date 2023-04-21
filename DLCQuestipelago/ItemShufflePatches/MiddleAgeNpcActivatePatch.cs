@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.Character;
@@ -30,35 +32,45 @@ namespace DLCQuestipelago.ItemShufflePatches
         //public override bool Activate()
         private static bool Prefix(FetchNPC __instance, ref bool __result)
         {
-            if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+            try
             {
-                return true;
-            }
+                if (_archipelago.SlotData.ItemShuffle == ItemShuffle.Disabled)
+                {
+                    return true;
+                }
 
-            var hasCheckedSwordLocation = _locationChecker.IsLocationChecked("Wooden Sword");
+                var hasCheckedSwordLocation = _locationChecker.IsLocationChecked("Wooden Sword");
 
-            if (!Singleton<DLCManager>.Instance.IsUnlocked("coloredtext"))
-            {
-                __result = _conversationStarter.StartConversation(__instance, "spawncoloredtextpack");
-            }
-            else if (!Singleton<DLCManager>.Instance.IsPurchased("coloredtext", false))
-            {
-                __result = _conversationStarter.StartConversation(__instance, "buycoloredtextpack");
-            }
-            else if (!hasCheckedSwordLocation)
-            {
-                __result = _conversationStarter.StartConversation(__instance, "warnshepherd");
-            }
-            else if (!Singleton<SceneManager>.Instance.CurrentScene.EventList.Contains(ShepherdEncounter.SHEPHERD_ENCOUNTER_COMPLETE_STR))
-            {
-                __result = _conversationStarter.StartConversation(__instance, "findandkillshepherd");
-            }
-            else
-            {
-                __result = _conversationStarter.StartConversation(__instance, "aftershpeherddead");
-            }
+                if (!Singleton<DLCManager>.Instance.IsUnlocked("coloredtext"))
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "spawncoloredtextpack");
+                }
+                else if (!Singleton<DLCManager>.Instance.IsPurchased("coloredtext", false))
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "buycoloredtextpack");
+                }
+                else if (!hasCheckedSwordLocation)
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "warnshepherd");
+                }
+                else if (!Singleton<SceneManager>.Instance.CurrentScene.EventList.Contains(ShepherdEncounter
+                             .SHEPHERD_ENCOUNTER_COMPLETE_STR))
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "findandkillshepherd");
+                }
+                else
+                {
+                    __result = _conversationStarter.StartConversation(__instance, "aftershpeherddead");
+                }
 
-            return false;
+                return false; // don't run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(MiddleAgeNpcActivatePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

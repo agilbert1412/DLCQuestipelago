@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
@@ -21,7 +23,16 @@ namespace DLCQuestipelago.FakeEndingBehavior
         //public static void OnFakeEndingComplete()
         public static void Postfix()
         {
-            _archipelago.DisconnectTemporarily();
+            try
+            {
+                _archipelago.DisconnectTemporarily();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(FakeEndingDisconnectPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

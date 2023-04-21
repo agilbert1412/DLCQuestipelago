@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
@@ -21,12 +23,21 @@ namespace DLCQuestipelago.Goal.LFOD
         // public static void SetupAfterFakeEnding()
         private static void Postfix()
         {
-            if (_objectivePersistence == null)
+            try
             {
+                if (_objectivePersistence == null)
+                {
+                    return;
+                }
+
+                _objectivePersistence.CompleteLfodFakeEnding();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(FakeEndingObjectivePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
                 return;
             }
-
-            _objectivePersistence.CompleteLfodFakeEnding();
         }
     }
 }

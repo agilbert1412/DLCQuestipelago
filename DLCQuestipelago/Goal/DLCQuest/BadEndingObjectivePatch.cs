@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Scripts;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
@@ -21,12 +23,21 @@ namespace DLCQuestipelago.Goal.DLCQuest
         // public static void OnGoodEndingCreditsComplete()
         private static void Postfix()
         {
-            if (_objectivePersistence == null)
+            try
             {
+                if (_objectivePersistence == null)
+                {
+                    return;
+                }
+
+                _objectivePersistence.CompleteDlcBadEnding();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(BadEndingObjectivePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
                 return;
             }
-
-            _objectivePersistence.CompleteDlcBadEnding();
         }
     }
 }

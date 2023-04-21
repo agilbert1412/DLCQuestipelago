@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Campaigns;
 using DLCLib.DLC;
@@ -35,22 +37,33 @@ namespace DLCQuestipelago.Items
         //public override void OnPickup(Player player)
         private static bool Prefix(Inventory __instance, ref int __result)
         {
-            if (!Plugin.Instance.IsInGame || _archipelago == null)
+            try
             {
-                return true; // run original logic;
+                if (!Plugin.Instance.IsInGame || _archipelago == null)
+                {
+                    return true; // run original logic;
+                }
+
+                if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
+                {
+                    return true; // run original logic
+                }
+
+                var receivedCoinBundles = _archipelago.GetReceivedItemCount(_relevantCoinName);
+                var obtainedCoins = receivedCoinBundles * _archipelago.SlotData.CoinBundleSize;
+                var spentCoins = DLCManager.Instance.Packs.Values.Where(x => x.State == DLCPackStateEnum.Purchased)
+                    .Sum(x => x.Data.Cost);
+                var currentCoins = obtainedCoins - spentCoins;
+                __result = currentCoins; // + 4;
+                // _coinDisplay.HandleCoinChanged(currentCoins);
+                return false; // don't run original logic
             }
-            if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
+            catch (Exception ex)
             {
+                _log.LogError($"Failed in {nameof(InventoryCoinsGetPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
                 return true; // run original logic
             }
-
-            var receivedCoinBundles = _archipelago.GetReceivedItemCount(_relevantCoinName);
-            var obtainedCoins = receivedCoinBundles * _archipelago.SlotData.CoinBundleSize;
-            var spentCoins = DLCManager.Instance.Packs.Values.Where(x => x.State == DLCPackStateEnum.Purchased).Sum(x => x.Data.Cost);
-            var currentCoins = obtainedCoins - spentCoins;
-            __result = currentCoins; // + 4;
-            // _coinDisplay.HandleCoinChanged(currentCoins);
-            return false; // don't run original logic
         }
 
         public static void UpdateCoinsUI()

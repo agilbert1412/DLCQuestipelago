@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Save;
 using HarmonyLib;
 
@@ -17,7 +19,16 @@ namespace DLCQuestipelago.Serialization
 
         private static void Postfix(DLCSaveManager __instance)
         {
-            Plugin.Instance.EnterGame();
+            try
+            {
+                Plugin.Instance.EnterGame();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(StartNewGamePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

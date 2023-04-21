@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCQuestipelago.Items;
 using HarmonyLib;
@@ -20,19 +22,28 @@ namespace DLCQuestipelago
 
         private static bool Prefix(DLCManager __instance, string name, bool defaultIfNotFound, ref bool __result)
         {
-            __result = defaultIfNotFound;
-            __instance.Packs.TryGetValue(name, out var pack);
-            if (pack == null)
+            try
             {
+                __result = defaultIfNotFound;
+                __instance.Packs.TryGetValue(name, out var pack);
+                if (pack == null)
+                {
+                    return false;
+                }
+
+                if (Plugin.Instance.IsInGame)
+                {
+                    __result = _itemParser.ReceivedDLCs.Contains(name);
+                }
+
                 return false;
             }
-
-            if (Plugin.Instance.IsInGame)
+            catch (Exception ex)
             {
-                __result = _itemParser.ReceivedDLCs.Contains(name);
+                _log.LogError($"Failed in {nameof(DLCIsPurchasedPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
             }
-
-            return false;
         }
     }
 }

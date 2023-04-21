@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCLib.World;
 using HarmonyLib;
@@ -19,7 +21,16 @@ namespace DLCQuestipelago.DLCUnlockPatch
         // public static void ActivateForest(TriggerVolume volume)
         private static void Postfix(TriggerVolume volume)
         {
-            DLCManager.Instance.UnlockPack("map");
+            try
+            {
+                DLCManager.Instance.UnlockPack("map");
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(TriggerUtilActivateForestPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

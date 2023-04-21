@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.Save;
 using HarmonyLib;
 
@@ -17,7 +19,16 @@ namespace DLCQuestipelago.Serialization
 
         private static void Postfix(DLCSaveManager __instance, ref bool __result)
         {
-            Plugin.Instance.ExitGame();
+            try
+            {
+                Plugin.Instance.ExitGame();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(ClearSaveGamePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
     }
 }

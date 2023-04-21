@@ -1,4 +1,6 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Diagnostics;
+using BepInEx.Logging;
 using DLCLib.HUD;
 using DLCLib.Render;
 using DLCQuestipelago.Archipelago;
@@ -24,9 +26,18 @@ namespace DLCQuestipelago.PlayerName
         //public void AddDialog(string name,string message,Animation animation,bool isSameSpeaker,bool forceLeftDialog)
         public static bool Prefix(DialogDisplay __instance, ref string name, ref string message, Animation animation, bool isSameSpeaker, bool forceLeftDialog)
         {
-            name = _nameChanger.ChangePlayerNameInString(name);
-            message = _nameChanger.ChangePlayerNameInString(message);
-            return true; // run original logic
+            try
+            {
+                name = _nameChanger.ChangePlayerNameInString(name);
+                message = _nameChanger.ChangePlayerNameInString(message);
+                return true; // run original logic
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(PlayerNameInDialogPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                Debugger.Break();
+                return true; // run original logic
+            }
         }
     }
 }

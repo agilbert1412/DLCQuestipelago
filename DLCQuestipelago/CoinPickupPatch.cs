@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Campaigns;
@@ -32,12 +34,21 @@ namespace DLCQuestipelago
         // public void AddCoin()
         private static void Postfix(Inventory __instance)
         {
-            if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
+            try
             {
-                return; // Let things happened as they have
-            }
+                if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
+                {
+                    return; // Let things happened as they have
+                }
 
-            CheckAllCoinsanityLocations(__instance);
+                CheckAllCoinsanityLocations(__instance);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof()}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
+                return;
+            }
         }
 
         public static void CheckAllCoinsanityLocations(Inventory inventory)

@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.NIS;
@@ -11,27 +13,34 @@ namespace DLCQuestipelago.Archipelago.Deathlink
     public static class RespawnAfterCutscenePatch
     {
         private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ManualLogSource log)
         {
             _log = log;
-            _archipelago = archipelago;
         }
 
         // protected void Complete()
         private static void Postfix(NISManager __instance)
         {
-            var player = SceneManager.Instance.CurrentScene.Player;
-            if (player.IsAlive)
+            try
             {
+                var player = SceneManager.Instance.CurrentScene.Player;
+                if (player.IsAlive)
+                {
+                    return;
+                }
+
+                var respawnPos = SceneManager.Instance.CurrentScene.CheckpointManager.GetRespawnPosition();
+                var playerRespawnMethod =
+                    typeof(Player).GetMethod("Respawn", BindingFlags.Instance | BindingFlags.NonPublic);
+                playerRespawnMethod.Invoke(player, new object[] { respawnPos });
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Failed in {nameof(RespawnAfterCutscenePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                Debugger.Break();
                 return;
             }
-
-            var respawnPos = SceneManager.Instance.CurrentScene.CheckpointManager.GetRespawnPosition();
-            var playerRespawnMethod =
-                typeof(Player).GetMethod("Respawn", BindingFlags.Instance | BindingFlags.NonPublic);
-            playerRespawnMethod.Invoke(player, new object[] { respawnPos });
         }
     }
 }
