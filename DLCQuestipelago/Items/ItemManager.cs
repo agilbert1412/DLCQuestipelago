@@ -60,7 +60,6 @@ namespace DLCQuestipelago.Items
 
             if (isNew)
             {
-
                 _log.LogMessage($"Item received: {receivedItem.ItemName}");
                 _notificationHandler.AddNotification(receivedItem.ItemName);
                 _itemsAlreadyProcessed.Add(receivedItem);
@@ -73,7 +72,7 @@ namespace DLCQuestipelago.Items
         private string GetPersistencyFileName()
         {
             var saveFileName = (string)GetSaveFilenameMethod.Invoke(DLCSaveManager.Instance, new object[0]);
-            var itemPersistencyFile = saveFileName + "_" + ITEM_PERSISTENCY_FILENAME;
+            var itemPersistencyFile = saveFileName.Replace(".xml", "") + "_" + ITEM_PERSISTENCY_FILENAME;
             return itemPersistencyFile; 
         }
 

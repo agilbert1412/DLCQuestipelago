@@ -29,7 +29,10 @@ namespace DLCQuestipelago.Serialization
                     return;
                 }
 
-                __result = $"{__result}_{connectionInfo.HostUrl}_{connectionInfo.Port}_{connectionInfo.SlotName}";
+                var parts = __result.Split('.');
+                var fileName = parts[0];
+                var extension = parts.Length > 1 ? parts[1] : ".xml";
+                __result = $"{fileName}_{connectionInfo.HostUrl}_{connectionInfo.Port}_{connectionInfo.SlotName}.{extension}";
             }
             catch (Exception ex)
             {

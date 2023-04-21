@@ -36,11 +36,6 @@ namespace DLCQuestipelago
         {
             try
             {
-                if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
-                {
-                    return; // Let things happened as they have
-                }
-
                 CheckAllCoinsanityLocations(__instance);
             }
             catch (Exception ex)
@@ -53,6 +48,11 @@ namespace DLCQuestipelago
 
         public static void CheckAllCoinsanityLocations(Inventory inventory)
         {
+            if (_archipelago.SlotData.Coinsanity == Coinsanity.None)
+            {
+                return; // Let things happened as they have
+            }
+
             var bundleSize = _archipelago.SlotData.CoinBundleSize;
             var maxCoins = SceneManager.Instance.CurrentScene.Map.TotalCoins;
             var currentCoins = inventory.TotalCoinsCollected;

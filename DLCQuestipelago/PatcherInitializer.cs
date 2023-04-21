@@ -132,6 +132,7 @@ namespace DLCQuestipelago
             PhysicsManagerPerformStepPatch.Initialize(log);
             PlayerUpdateAnimationsPatch.Initialize(log);
             DrawScenePatch.Initialize(log);
+            UpdateScenePatch.Initialize(log);
         }
     }
 }

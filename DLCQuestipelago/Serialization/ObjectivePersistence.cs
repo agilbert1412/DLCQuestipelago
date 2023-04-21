@@ -94,7 +94,11 @@ namespace DLCQuestipelago.Serialization
 
         private string GetObjectiveFileName(string key)
         {
+            const string savegame_name_constant_section = "_savegame_";
             var saveFileName = (string)GetSaveFilenameMethod.Invoke(DLCSaveManager.Instance, new object[0]);
+            var index = saveFileName.IndexOf(savegame_name_constant_section) + savegame_name_constant_section.Length;
+            saveFileName = saveFileName.Replace(".xml", "");
+            saveFileName = savegame_name_constant_section.Substring(index);
             var objective_suffix = string.Format(goalPersistencyFilename, key);
             var objectiveFileName = $"{saveFileName}_{objective_suffix}";
 

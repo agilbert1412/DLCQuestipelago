@@ -121,6 +121,7 @@ namespace DLCQuestipelago
                 return;
             }
 
+            _objectivePersistence.CheckGoalCompletion();
             _archipelago.APUpdate();
             // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
         }

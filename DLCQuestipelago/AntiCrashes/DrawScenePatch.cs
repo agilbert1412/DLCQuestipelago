@@ -62,6 +62,22 @@ namespace DLCQuestipelago.AntiCrashes
             {
                 _log.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
+                try
+                {
+                    var inBeginEndPairField = typeof(SpriteBatch).GetField("inBeginEndPair",
+                        BindingFlags.NonPublic | BindingFlags.Instance);
+                    var inBeginEndPair = (bool)inBeginEndPairField.GetValue(spriteBatch);
+                    if (inBeginEndPair)
+                    {
+                        spriteBatch.End();
+                    }
+                }
+                catch (Exception innerEx)
+                {
+                    _log.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} inner catch code, trying to reset the spritebatch:\n\t{ex}");
+                    Debugger.Break();
+                }
+
                 return false; // don't run original logic
             }
         }
