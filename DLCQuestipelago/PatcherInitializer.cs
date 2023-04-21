@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using DLCQuestipelago.AntiCrashes;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
@@ -34,8 +35,10 @@ namespace DLCQuestipelago
             InitializeAllObjectivePatches(log, objectivePersistence);
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
+            InitializeAllPersistencyPatches(log, archipelago);
             KillSheepPatch.Initialize(log, locationChecker);
             InitializeAwardmentPatches(log, locationChecker);
+            InitializeAntiCrashPatches(log);
         }
 
         private static void InitializeDualContentManagerPatches(ManualLogSource log)
@@ -120,6 +123,14 @@ namespace DLCQuestipelago
             NiceTryPatch.Initialize(log, locationChecker);
             NotExactlyNoblePatch.Initialize(log, locationChecker);
             StoryIsImportantPatch.Initialize(log, locationChecker);
+        }
+
+        private static void InitializeAntiCrashPatches(ManualLogSource log)
+        {
+            AudioManagerPausePatch.Initialize(log);
+            AudioManagerResumePatch.Initialize(log);
+            PhysicsManagerPerformStepPatch.Initialize(log);
+            PlayerUpdateAnimationsPatch.Initialize(log);
         }
     }
 }
