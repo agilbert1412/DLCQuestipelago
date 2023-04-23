@@ -32,7 +32,8 @@ namespace DLCQuestipelago.Serialization
                 var parts = __result.Split('.');
                 var fileName = parts[0];
                 var extension = parts.Length > 1 ? parts[1] : ".xml";
-                __result = $"{fileName}_{connectionInfo.HostUrl}_{connectionInfo.Port}_{connectionInfo.SlotName}.{extension}";
+                var url = connectionInfo.HostUrl.Replace(":", "").Replace("/", "").Replace("\\", "");
+                __result = $"{fileName}_{url}_{connectionInfo.Port}_{connectionInfo.SlotName}.{extension}";
             }
             catch (Exception ex)
             {
