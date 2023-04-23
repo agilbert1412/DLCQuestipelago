@@ -133,6 +133,7 @@ namespace DLCQuestipelago
             PlayerUpdateAnimationsPatch.Initialize(log);
             DrawScenePatch.Initialize(log);
             UpdateScenePatch.Initialize(log);
+            ScreenManagerDrawPatch.Initialize(log);
         }
     }
 }
