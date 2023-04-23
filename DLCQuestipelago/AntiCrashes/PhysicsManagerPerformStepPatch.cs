@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using BepInEx.Logging;
+using Core.Spatial;
+using DLCLib;
 using DLCLib.Physics;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -27,15 +29,19 @@ namespace DLCQuestipelago.AntiCrashes
         {
             try
             {
-                var dynamicPhysicalEntitiesField = typeof(PhysicsManager).GetField("dynamicPhysicalEntities", BindingFlags.NonPublic | BindingFlags.Instance);
+                var dynamicPhysicalEntitiesField = typeof(PhysicsManager).GetField("dynamicPhysicalEntities",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
 
-                foreach (var dynamicPhysicalEntity in (List<IPhysical>)dynamicPhysicalEntitiesField.GetValue(__instance))
+                foreach (var dynamicPhysicalEntity in
+                         (List<IPhysical>)dynamicPhysicalEntitiesField.GetValue(__instance))
                 {
                     var physicsObject1 = dynamicPhysicalEntity.GetPhysicsObject();
                     physicsObject1.Velocity += physicsObject1.Acceleration * dt;
                     if (!physicsObject1.IgnoreGravity)
                     {
-                        physicsObject1.Velocity += (physicsObject1.UseSlowGravity ? PhysicsManager.SLOW_GRAVITY : PhysicsManager.GRAVITY) * dt;
+                        physicsObject1.Velocity += (physicsObject1.UseSlowGravity
+                            ? PhysicsManager.SLOW_GRAVITY
+                            : PhysicsManager.GRAVITY) * dt;
                     }
 
                     if (physicsObject1.IsOnGround)
@@ -56,12 +62,14 @@ namespace DLCQuestipelago.AntiCrashes
                     physicsObject1.IsOnWall = false;
                 }
 
-                var doCollisionMethod = typeof(PhysicsManager).GetMethod("DoCollision", BindingFlags.NonPublic | BindingFlags.Instance);
-                foreach (var dynamicPhysicalEntity in (List<IPhysical>)dynamicPhysicalEntitiesField.GetValue(__instance))
+                var doCollisionMethod =
+                    typeof(PhysicsManager).GetMethod("DoCollision", BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var dynamicPhysicalEntity in
+                         (List<IPhysical>)dynamicPhysicalEntitiesField.GetValue(__instance))
                 {
                     var physicsObject = dynamicPhysicalEntity.GetPhysicsObject();
                     if (!physicsObject.IsActive) continue;
-                    doCollisionMethod.Invoke(__instance, new[] {physicsObject});
+                    doCollisionMethod.Invoke(__instance, new[] { physicsObject });
                     physicsObject.OffGroundTime += dt;
                     physicsObject.OffWallTime += dt;
                 }
@@ -70,9 +78,66 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
+                const string nodeDoesNotHaveParentError =
+                    "This node does not contain item - it should not receive this event!";
                 _log.LogError($"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
+
+                if (ex.Message.Equals(nodeDoesNotHaveParentError, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    CleanItemsToNodesRelationships(__instance);
+                }
+
                 return false; // don't run original logic
+            }
+        }
+
+        private static void CleanItemsToNodesRelationships(PhysicsManager physicsManager)
+        {
+            try
+            {
+                var dynamicPhysicalEntitiesField = typeof(PhysicsManager).GetField("dynamicPhysicalEntities",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var dynamicPhysicalEntities = (List<IPhysical>)dynamicPhysicalEntitiesField.GetValue(physicsManager);
+                foreach (var dynamicPhysicalEntity in dynamicPhysicalEntities)
+                {
+                    var physicsObject = dynamicPhysicalEntity.GetPhysicsObject();
+                    CleanItemToNodesRelationships(physicsObject);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(
+                    $"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(CleanItemsToNodesRelationships)}:\n\t{ex}");
+                Debugger.Break();
+                return; // don't run original logic
+            }
+        }
+
+        private static void CleanItemToNodesRelationships(PhysicsObject physicsObject)
+        {
+            try
+            {
+                var itemsField = typeof(QuadTreeNode<Entity>).GetField("items", BindingFlags.NonPublic | BindingFlags.Instance);
+                for (var i = physicsObject.Nodes.Count - 1; i >= 0; i--)
+                {
+                    var node = physicsObject.Nodes[i];
+                    var items = (List<QuadTreeItem<Entity>>)itemsField.GetValue(node);
+                    var indexOfItem = items.IndexOf(physicsObject);
+                    if (indexOfItem > -1)
+                    {
+                        continue;
+                    }
+
+                    physicsObject.Nodes.RemoveAt(i);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(
+                    $"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(CleanItemToNodesRelationships)}:\n\t{ex}");
+                Debugger.Break();
+                return; // don't run original logic
             }
         }
     }
