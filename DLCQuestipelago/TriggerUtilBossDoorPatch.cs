@@ -21,6 +21,7 @@ namespace DLCQuestipelago
         private const string SWORD_2 = "Really Big Sword Pack";
         private const string SWORD_3 = "Unfathomable Sword Pack";
 
+
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;
 
@@ -35,9 +36,9 @@ namespace DLCQuestipelago
         {
             try
             {
-                var hasSword1 = _archipelago.HasReceivedItem(SWORD_1, out _);
-                var hasSword2 = _archipelago.HasReceivedItem(SWORD_2, out _);
-                var hasSword3 = _archipelago.HasReceivedItem(SWORD_3, out _);
+                var hasSword1 = HasItemOrWillHaveItInSpecificLocations(SWORD_1, new[] { SWORD_1 });
+                var hasSword2 = HasItemOrWillHaveItInSpecificLocations(SWORD_2, new[] { SWORD_1, SWORD_2 });
+                var hasSword3 = HasItemOrWillHaveItInSpecificLocations(SWORD_3, new[] { SWORD_1, SWORD_2, SWORD_3 });
                 var canEnter = hasSword1 && hasSword2 && hasSword3;
 
                 if (canEnter)
@@ -73,6 +74,31 @@ namespace DLCQuestipelago
                 Debugger.Break();
                 return true; // run original logic
             }
+        }
+
+        private static bool HasItemOrWillHaveItInSpecificLocations(string item, string[] validLocations)
+        {
+            var hasItem = _archipelago.HasReceivedItem(SWORD_1, out _);
+            if (hasItem)
+            {
+                return true;
+            }
+
+            foreach (var validLocation in validLocations)
+            {
+                var scoutedLocation = _archipelago.ScoutSingleLocation(validLocation);
+                if (scoutedLocation == null)
+                {
+                    continue;
+                }
+
+                if (scoutedLocation.ItemName == item)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

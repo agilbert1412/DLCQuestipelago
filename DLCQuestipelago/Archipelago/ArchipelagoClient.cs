@@ -500,7 +500,7 @@ namespace DLCQuestipelago.Archipelago
             _console.LogInfo(deathLinkMessage);
         }
 
-        private ScoutedLocation ScoutSingleLocation(string locationName, bool createAsHint = false)
+        public ScoutedLocation ScoutSingleLocation(string locationName, bool createAsHint = false)
         {
             if (ScoutedLocations.ContainsKey(locationName))
             {
