@@ -63,7 +63,7 @@ namespace DLCQuestipelagoInstaller
             CopyFolderContent(modFolder, pluginFolder);
             Console.Write("Creating Connection File...");
             var apFileOriginalLocation = Path.Combine(pluginFolder, AP_CONNECTION_FILE);
-            File.Copy(apFileOriginalLocation, Path.Combine(moddedFolder, AP_CONNECTION_FILE));
+            File.Copy(apFileOriginalLocation, Path.Combine(moddedFolder, AP_CONNECTION_FILE), true);
             File.Delete(apFileOriginalLocation);
 
             Console.WriteLine();
@@ -169,7 +169,7 @@ namespace DLCQuestipelagoInstaller
                     Directory.CreateDirectory(destinationFileFolder);
                 }
 
-                File.Copy(file, destinationFile);
+                File.Copy(file, destinationFile, true);
             }
         }
 
