@@ -24,10 +24,12 @@ namespace DLCQuestipelago.AntiCrashes
     public static class UpdateScenePatch
     {
         private static ManualLogSource _log;
+        private static NodeCleaner _nodeCleaner;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ManualLogSource log, NodeCleaner nodeCleaner)
         {
             _log = log;
+            _nodeCleaner = nodeCleaner;
         }
 
         // public void Update(GameTime gameTime)
@@ -102,6 +104,13 @@ namespace DLCQuestipelago.AntiCrashes
             {
                 _log.LogError($"Failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
+
+                if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var physicsManager = (PhysicsManager)PhysicsManagerField.GetValue(__instance);
+                    _nodeCleaner.CleanItemsToNodesRelationships(physicsManager);
+                }
+
                 return false; // don't run original logic
             }
         }

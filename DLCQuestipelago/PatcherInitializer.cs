@@ -127,12 +127,13 @@ namespace DLCQuestipelago
 
         private static void InitializeAntiCrashPatches(ManualLogSource log)
         {
+            var nodeCleaner = new NodeCleaner(log);
             AudioManagerPausePatch.Initialize(log);
             AudioManagerResumePatch.Initialize(log);
-            PhysicsManagerPerformStepPatch.Initialize(log);
+            PhysicsManagerPerformStepPatch.Initialize(log, nodeCleaner);
             PlayerUpdateAnimationsPatch.Initialize(log);
             DrawScenePatch.Initialize(log);
-            UpdateScenePatch.Initialize(log);
+            UpdateScenePatch.Initialize(log, nodeCleaner);
             ScreenManagerDrawPatch.Initialize(log);
         }
     }

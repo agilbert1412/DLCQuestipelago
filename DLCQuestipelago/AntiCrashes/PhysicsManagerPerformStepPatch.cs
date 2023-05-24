@@ -18,10 +18,12 @@ namespace DLCQuestipelago.AntiCrashes
         private static readonly Vector2 MAX_VELOCITY = new Vector2(30f);
 
         private static ManualLogSource _log;
+        private static NodeCleaner _nodeCleaner;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ManualLogSource log, NodeCleaner nodeCleaner)
         {
             _log = log;
+            _nodeCleaner = nodeCleaner;
         }
 
         // protected void PerformStep(float dt)
@@ -78,66 +80,15 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                const string nodeDoesNotHaveParentError =
-                    "This node does not contain item - it should not receive this event!";
                 _log.LogError($"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
 
-                if (ex.Message.Equals(nodeDoesNotHaveParentError, StringComparison.InvariantCultureIgnoreCase))
+                if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    CleanItemsToNodesRelationships(__instance);
+                    _nodeCleaner.CleanItemsToNodesRelationships(__instance);
                 }
 
                 return false; // don't run original logic
-            }
-        }
-
-        private static void CleanItemsToNodesRelationships(PhysicsManager physicsManager)
-        {
-            try
-            {
-                var dynamicPhysicalEntitiesField = typeof(PhysicsManager).GetField("dynamicPhysicalEntities",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                var dynamicPhysicalEntities = (List<IPhysical>)dynamicPhysicalEntitiesField.GetValue(physicsManager);
-                foreach (var dynamicPhysicalEntity in dynamicPhysicalEntities)
-                {
-                    var physicsObject = dynamicPhysicalEntity.GetPhysicsObject();
-                    CleanItemToNodesRelationships(physicsObject);
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.LogError(
-                    $"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(CleanItemsToNodesRelationships)}:\n\t{ex}");
-                Debugger.Break();
-                return; // don't run original logic
-            }
-        }
-
-        private static void CleanItemToNodesRelationships(PhysicsObject physicsObject)
-        {
-            try
-            {
-                var itemsField = typeof(QuadTreeNode<Entity>).GetField("items", BindingFlags.NonPublic | BindingFlags.Instance);
-                for (var i = physicsObject.Nodes.Count - 1; i >= 0; i--)
-                {
-                    var node = physicsObject.Nodes[i];
-                    var items = (List<QuadTreeItem<Entity>>)itemsField.GetValue(node);
-                    var indexOfItem = items.IndexOf(physicsObject);
-                    if (indexOfItem > -1)
-                    {
-                        continue;
-                    }
-
-                    physicsObject.Nodes.RemoveAt(i);
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.LogError(
-                    $"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(CleanItemToNodesRelationships)}:\n\t{ex}");
-                Debugger.Break();
-                return; // don't run original logic
             }
         }
     }
