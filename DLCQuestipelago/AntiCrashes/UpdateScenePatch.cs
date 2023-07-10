@@ -102,17 +102,36 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
-                Debugger.Break();
 
-                if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))
+                var gracefullyRecovered = TryToRepairItemsNodesState(__instance, ex);
+                if (DrawScenePatch.IsRecognizedEnumerationModifiedError(ex) && gracefullyRecovered)
                 {
-                    var physicsManager = (PhysicsManager)PhysicsManagerField.GetValue(__instance);
-                    _nodeCleaner.CleanItemsToNodesRelationships(physicsManager);
+                    _log.LogWarning($"PhysicsEngine failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)} but DLCQuestipelago was able to recover gracefully");
+                }
+                else
+                {
+                    _log.LogError($"Failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                    if (gracefullyRecovered)
+                    {
+                        _log.LogInfo($"DLCQuestipelago was able to recover gracefully from the error");
+                    }
                 }
 
                 return false; // don't run original logic
             }
+        }
+
+        private static bool TryToRepairItemsNodesState(Scene scene, Exception ex)
+        {
+            Debugger.Break();
+
+            if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var physicsManager = (PhysicsManager)PhysicsManagerField.GetValue(scene);
+                _nodeCleaner.CleanItemsToNodesRelationships(physicsManager);
+            }
+
+            return true;
         }
 
 

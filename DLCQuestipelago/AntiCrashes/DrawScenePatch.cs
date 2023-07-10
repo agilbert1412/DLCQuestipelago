@@ -60,26 +60,67 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
-                Debugger.Break();
-                try
+                var gracefullyRecovered = TryToRepairSpriteBatchState(spriteBatch);
+                if (IsRecognizedEnumerationModifiedError(ex) && gracefullyRecovered)
                 {
-                    var inBeginEndPairField = typeof(SpriteBatch).GetField("inBeginEndPair",
-                        BindingFlags.NonPublic | BindingFlags.Instance);
-                    var inBeginEndPair = (bool)inBeginEndPairField.GetValue(spriteBatch);
-                    if (inBeginEndPair)
-                    {
-                        spriteBatch.End();
-                    }
+                    _log.LogWarning($"DrawEngine failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} but DLCQuestipelago was able to recover gracefully");
                 }
-                catch (Exception innerEx)
+                else
                 {
-                    _log.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} inner catch code, trying to reset the spritebatch:\n\t{ex}");
-                    Debugger.Break();
+                    _log.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                    if (gracefullyRecovered)
+                    {
+                        _log.LogInfo($"DLCQuestipelago was able to recover gracefully from the error");
+                    }
                 }
 
                 return false; // don't run original logic
             }
+        }
+
+        private static bool TryToRepairSpriteBatchState(SpriteBatch spriteBatch)
+        {
+            Debugger.Break();
+            try
+            {
+                var inBeginEndPairField = typeof(SpriteBatch).GetField("inBeginEndPair",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var inBeginEndPair = (bool)inBeginEndPairField.GetValue(spriteBatch);
+                if (inBeginEndPair)
+                {
+                    spriteBatch.End();
+                }
+
+                return true;
+            }
+            catch (Exception innerEx)
+            {
+                _log.LogError(
+                    $"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} inner catch code, trying to reset the spritebatch:\n\t{innerEx}");
+                Debugger.Break();
+                return false;
+            }
+        }
+
+        public static bool IsRecognizedEnumerationModifiedError(Exception ex)
+        {
+            if (ex is not InvalidOperationException invalidOperationException)
+            {
+                return false;
+            }
+
+            const string moveNextRare = "Enumerator.MoveNextRare()";
+            const string collectionWasModified = "Collection was modified";
+            const string enumerationMayNotExecute = "enumeration operation may not execute";
+
+            if (!invalidOperationException.StackTrace.Contains(moveNextRare) ||
+                !invalidOperationException.Message.Contains(collectionWasModified) ||
+                !invalidOperationException.Message.Contains(enumerationMayNotExecute))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
