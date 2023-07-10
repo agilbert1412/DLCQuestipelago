@@ -112,10 +112,12 @@ namespace DLCQuestipelago.AntiCrashes
             const string moveNextRare = "Enumerator.MoveNextRare()";
             const string collectionWasModified = "Collection was modified";
             const string enumerationMayNotExecute = "enumeration operation may not execute";
+            var stackTrace = invalidOperationException.StackTrace.ToLower();
+            var message = invalidOperationException.Message.ToLower();
 
-            if (!invalidOperationException.StackTrace.Contains(moveNextRare) ||
-                !invalidOperationException.Message.Contains(collectionWasModified) ||
-                !invalidOperationException.Message.Contains(enumerationMayNotExecute))
+            if (!stackTrace.Contains(moveNextRare.ToLower()) ||
+                !message.Contains(collectionWasModified.ToLower()) ||
+                !message.Contains(enumerationMayNotExecute.ToLower()))
             {
                 return false;
             }
