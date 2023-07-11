@@ -11,6 +11,7 @@ using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
 using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
+using DLCQuestipelago.Shop;
 
 namespace DLCQuestipelago
 {
@@ -23,6 +24,7 @@ namespace DLCQuestipelago
             StatsScreenInvalidateAttemptPatch.Initialize(log);
             DLCPackPurchasePatch.Initialize(log, locationChecker);
             DLCIsPurchasedPatch.Initialize(log, itemManager.ItemParser);
+            DLCDetailPanelPatch.Initialize(log, archipelago);
             CoinPickupPatch.Initialize(log, archipelago, locationChecker);
             InventoryCoinsGetPatch.Initialize(log, archipelago);
             GrooveGiveMattockPatch.Initialize(log, locationChecker);

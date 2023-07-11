@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace DLCQuestipelago
+namespace DLCQuestipelago.Shop
 {
     [HarmonyPatch(typeof(StoreScreen))]
     [HarmonyPatch("SetupEntries")]
@@ -91,8 +91,8 @@ namespace DLCQuestipelago
                     (purchasedMode || pack.Data.IsBossDLC == showBossDLCOnly) &&
                     (availableMode || pack.State == DLCPackStateEnum.Purchased))*/
                 if (purchasedMode && _locationChecker.IsLocationChecked(pack.Data.DisplayName) ||
-                    (availableMode && !showBossDLCOnly && _locationChecker.IsLocationMissing(pack.Data.DisplayName) && pack.State != DLCPackStateEnum.Locked) ||
-                    (availableMode && showBossDLCOnly && pack.State != DLCPackStateEnum.Purchased) && pack.State != DLCPackStateEnum.Locked)
+                    availableMode && !showBossDLCOnly && _locationChecker.IsLocationMissing(pack.Data.DisplayName) && pack.State != DLCPackStateEnum.Locked ||
+                    availableMode && showBossDLCOnly && pack.State != DLCPackStateEnum.Purchased && pack.State != DLCPackStateEnum.Locked)
                 {
                     var entry = new DLCPackMenuEntry(font, dlcSpriteSheet, pack, menuOrder);
                     entry.ParentScreen = storeScreen;

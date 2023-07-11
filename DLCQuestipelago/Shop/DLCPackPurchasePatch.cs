@@ -7,7 +7,7 @@ using DLCQuestipelago.Items;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 
-namespace DLCQuestipelago
+namespace DLCQuestipelago.Shop
 {
     [HarmonyPatch(typeof(DLCPack))]
     [HarmonyPatch("Purchase")]
@@ -48,7 +48,7 @@ namespace DLCQuestipelago
                     {
                         typeof(DLCPurchaseEventUtil).InvokeMember(__instance.Data.PurchaseEvent,
                             BindingFlags.InvokeMethod,
-                            (Binder)null, null, new object[0]);
+                            null, null, new object[0]);
                     }
                 }
 

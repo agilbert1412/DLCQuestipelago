@@ -5,7 +5,7 @@ using DLCLib.DLC;
 using DLCQuestipelago.Items;
 using HarmonyLib;
 
-namespace DLCQuestipelago
+namespace DLCQuestipelago.Shop
 {
     [HarmonyPatch(typeof(DLCManager))]
     [HarmonyPatch(nameof(DLCManager.IsPurchased))]
