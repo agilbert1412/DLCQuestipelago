@@ -17,67 +17,140 @@ namespace DLCQuestipelagoInstaller
 
         public static void Main()
         {
+            try
+            {
+                PerformSetup();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The installer has encountered a critical error.\nMessage: '{ex.Message}'\nStack Trace: {ex.StackTrace}");
+            }
+            finally
+            {
+                Console.ReadKey();
+            }
+        }
+
+        private static void PerformSetup()
+        {
             Console.WriteLine("Welcome to the DLCQuestipelago Installer Wizard");
             Console.WriteLine();
             Console.WriteLine("This setup will install both the BepInEx Modloader and the DLCQuestipelago mod for DLCQuest");
             Console.WriteLine();
+
             var currentFolder = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            var moddedFolder = ChooseDefaultInstallFolder(currentFolder);
+            moddedFolder = AskForCustomInstallFolder(moddedFolder);
+
+            Console.WriteLine();
+
+            UnblockEveryFile();
+
+            Console.WriteLine();
+
+            SetupModdedFolder(moddedFolder);
+            SetupGame(moddedFolder);
+            SetupModLoader(currentFolder, moddedFolder);
+            SetupModAndConnectionFile(moddedFolder, currentFolder);
+
+            Console.WriteLine();
+
+            Console.WriteLine($"Your modded DLCQuest is now available at {moddedFolder}. To Run it, Launch \"{BEPINEX_EXECUTABLE}\".");
+
+            SetupDesktopShortcut(moddedFolder);
+
+            Console.WriteLine("Setup Complete. Press any key to exit.");
+        }
+
+        private static string ChooseDefaultInstallFolder(string? currentFolder)
+        {
             var installFolder = Path.Combine(currentFolder, "..");
             var moddedFolder = Path.Combine(installFolder, DEFAULT_MODDED_FOLDER_NAME);
             moddedFolder = Path.GetFullPath(moddedFolder);
+            return moddedFolder;
+        }
 
+        private static string AskForCustomInstallFolder(string moddedFolder)
+        {
             Console.WriteLine($"Current Install Location is \"{moddedFolder}\"");
-            Console.WriteLine("If this is okay, simply press Enter. Otherwise, please enter the path to your preferred directory:");
+            Console.WriteLine(
+                "If this is okay, simply press Enter. Otherwise, please enter the path to your preferred directory:");
             var preferredFolder = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(preferredFolder))
             {
                 moddedFolder = preferredFolder.Trim('"');
             }
-            Console.WriteLine();
 
+            return moddedFolder;
+        }
+
+        private static void UnblockEveryFile()
+        {
             Console.WriteLine("Unblocking every file...");
             if (!RunPowerShell("unblock-win.ps1", out var error))
             {
-                Console.WriteLine($"Could not unblock the mod files. Windows may have flagged them as malicious. You will need to unblock them manually by going to each relevant file -> properties -> unblock.");
+                Console.WriteLine(
+                    $"Could not unblock the mod files. Windows may have flagged them as malicious. You will need to unblock them manually by going to each relevant file -> properties -> unblock.");
                 Console.WriteLine($"The installer will proceed anyway.");
                 Console.WriteLine($"Error Message: {error}");
             }
-            Console.WriteLine();
+        }
 
-            if (!Directory.Exists(moddedFolder))
+        private static void SetupModdedFolder(string moddedFolder)
+        {
+            if (Directory.Exists(moddedFolder))
             {
-                Console.WriteLine("Creating Install Directory...");
-                Directory.CreateDirectory(moddedFolder);
+                return;
             }
 
-            var bepInExFolder = Path.Combine(currentFolder, BEPINEX_MODLOADER_FOLDER);
-            var modFolder = Path.Combine(currentFolder, DLCQUESTIPELAGO_PLUGIN_FOLDER);
-            var dlcQuestFolder = FindDLCQuest();
+            Console.WriteLine("Creating Install Directory...");
+            Directory.CreateDirectory(moddedFolder);
+        }
 
+        private static void SetupGame(string moddedFolder)
+        {
             Console.WriteLine("Copying DLC Quest Game...");
+            var dlcQuestFolder = FindDLCQuest();
             CopyFolderContent(dlcQuestFolder, moddedFolder);
+        }
+
+        private static void SetupModLoader(string currentFolder, string moddedFolder)
+        {
             Console.WriteLine("Creating BepInEx ModLoader Files...");
+            var bepInExFolder = Path.Combine(currentFolder, BEPINEX_MODLOADER_FOLDER);
             CopyFolderContent(bepInExFolder, moddedFolder);
+        }
+
+        private static void SetupModAndConnectionFile(string moddedFolder, string currentFolder)
+        {
+            var modFolder = Path.Combine(currentFolder, DLCQUESTIPELAGO_PLUGIN_FOLDER);
             var pluginFolder = Path.Combine(moddedFolder, "BepInEx", "plugins", "DLCQuestipelago");
+            SetupMod(modFolder, pluginFolder);
+            SetupConnectionFile(pluginFolder, moddedFolder);
+        }
+
+        private static void SetupMod(string modFolder, string pluginFolder)
+        {
             Console.WriteLine("Installing DLCQuestipelago Mod...");
             CopyFolderContent(modFolder, pluginFolder);
+        }
+
+        private static void SetupConnectionFile(string pluginFolder, string moddedFolder)
+        {
             Console.Write("Creating Connection File...");
             var apFileOriginalLocation = Path.Combine(pluginFolder, AP_CONNECTION_FILE);
             File.Copy(apFileOriginalLocation, Path.Combine(moddedFolder, AP_CONNECTION_FILE), true);
             File.Delete(apFileOriginalLocation);
+        }
 
-            Console.WriteLine();
-
-            Console.WriteLine($"Your modded DLCQuest is now available at {moddedFolder}. To Run it, Launch \"{BEPINEX_EXECUTABLE}\".");
+        private static void SetupDesktopShortcut(string moddedFolder)
+        {
             Console.WriteLine("Do you wish to Create a Desktop Shortcut? [yes/no]");
             var createShortcutAnswer = Console.ReadLine() ?? "";
             if (createShortcutAnswer.Length > 0 && createShortcutAnswer.ToLower().First() == 'y')
             {
                 CreateDesktopShortcut(moddedFolder);
             }
-
-            Console.WriteLine("Setup Complete. Press any key to exit.");
-            Console.ReadKey();
         }
 
         private static string FindDLCQuest()
