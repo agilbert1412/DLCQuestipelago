@@ -119,9 +119,9 @@ namespace DLCQuestipelago.Shop
 
                 var itemName = scoutedLocation.ItemName;
                 var ownerName = scoutedLocation.PlayerName;
-                var hasCanadianPack = Singleton<DLCManager>.Instance.IsPurchased("canadian", false);
+                var hasCanadianPack = _archipelago.HasReceivedItem("Canadian Dialog Pack", out _);
                 var canadianSuffix = hasCanadianPack ? ", sorry" : "";
-                var refundsSuffix = $" There are no refunds for this item{canadianSuffix}.";
+                var refundsSuffix = $"There are no refunds for this item{canadianSuffix}.";
                 var description = $"{ownerName}'s {itemName}\n{refundsSuffix}";
                 description = hasCanadianPack ? TurnCanadian(description) : description;
                 var descriptionTextField = typeof(DLCDetailPanel).GetField("descriptionText", BindingFlags.NonPublic | BindingFlags.Instance);
