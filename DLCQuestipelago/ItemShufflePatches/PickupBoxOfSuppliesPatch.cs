@@ -40,8 +40,8 @@ namespace DLCQuestipelago.ItemShufflePatches
                 var scene = SceneManager.Instance.CurrentScene;
                 DLCAudioManager.Instance.PlaySound("pickup_dlc");
                 scene.RemoveFromScene(__instance);
-                var recordPickupMethod =
-                    typeof(Scene).GetMethod("RecordPickup", BindingFlags.NonPublic | BindingFlags.Instance);
+                var sceneType = typeof(Scene);
+                var recordPickupMethod = sceneType.GetMethod("RecordPickup", BindingFlags.NonPublic | BindingFlags.Instance);
                 recordPickupMethod.Invoke(scene, new object[] { __instance });
                 return false; // don't run original logic
             }

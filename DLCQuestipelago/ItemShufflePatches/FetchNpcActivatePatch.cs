@@ -38,8 +38,7 @@ namespace DLCQuestipelago.ItemShufflePatches
                 }
 
                 var hasSupplies = _archipelago.HasReceivedItem("Box of Various Supplies", out _);
-                if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager
-                        .FETCH_QUEST_ACTIVATED_STR) && !__instance.FetchQuestStarted)
+                if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager.FETCH_QUEST_ACTIVATED_STR) && !__instance.FetchQuestStarted)
                 {
                     __result = _conversationStarter.StartConversation(__instance, "fetchqueststart");
                     if (hasSupplies)
@@ -47,8 +46,7 @@ namespace DLCQuestipelago.ItemShufflePatches
                         SceneManager.Instance.CurrentScene.HUDManager.ObjectiveDisplay.MarkObjectivesComplete();
                     }
                 }
-                else if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager
-                             .FETCH_QUEST_COMPLETE_STR))
+                else if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager.FETCH_QUEST_COMPLETE_STR))
                 {
                     // It was going here
                     __result = _conversationStarter.StartConversation(__instance, "fetchquestcomplete");
