@@ -74,6 +74,11 @@ namespace DLCQuestipelago.Items
 
             if (unlockedDLC != null)
             {
+                if (ReceivedDLCs.Contains(unlockedDLC.Data.Name))
+                {
+                    return true;
+                }
+
                 ReceivedDLCs.Add(unlockedDLC.Data.Name);
                 if (unlockedDLC.Data.PurchaseEvent == null || unlockedDLC.Data.PurchaseEvent.Equals(string.Empty) ||
                     unlockedDLC.Data.IsBossDLC)
