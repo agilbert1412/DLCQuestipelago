@@ -5,6 +5,7 @@ using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.FakeEndingBehavior;
+using DLCQuestipelago.Gifting;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Items.Traps;
 using DLCQuestipelago.ItemShufflePatches;
@@ -17,7 +18,7 @@ namespace DLCQuestipelago
 {
     public static class PatcherInitializer
     {
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence)
+        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence, GiftSender giftSender)
         {
             InitializeDualContentManagerPatches(log);
             FrameUpdatePatch.Initialize(log);
@@ -38,7 +39,7 @@ namespace DLCQuestipelago
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
             InitializeAllPersistencyPatches(log);
-            KillSheepPatch.Initialize(log, locationChecker);
+            KillSheepPatch.Initialize(log, locationChecker, giftSender);
             InitializeAwardmentPatches(log, locationChecker);
             InitializeAntiCrashPatches(log);
         }

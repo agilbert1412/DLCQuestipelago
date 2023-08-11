@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using DLCQuestipelago.Gifting;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -24,9 +25,12 @@ namespace DLCQuestipelago.Archipelago
         private ArchipelagoSession _session;
         private DeathLinkService _deathLinkService;
         private Harmony _harmony;
+
         private ArchipelagoConnectionInfo _connectionInfo;
 
         private Action _itemReceivedFunction;
+
+        public ArchipelagoSession Session => _session;
 
         public bool IsConnected { get; private set; }
         public SlotData SlotData { get; private set; }

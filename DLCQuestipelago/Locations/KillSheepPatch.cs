@@ -4,6 +4,8 @@ using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
+using DLCQuestipelago.Extensions;
+using DLCQuestipelago.Gifting;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 
@@ -15,13 +17,15 @@ namespace DLCQuestipelago.Locations
     {
         private static ManualLogSource _log;
         private static LocationChecker _locationChecker;
+        private static GiftSender _giftSender;
         private static Dictionary<Vector2, int> _sheepIds;
         private static Dictionary<int, string> _sheepNames;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(ManualLogSource log, LocationChecker locationChecker, GiftSender giftSender)
         {
             _log = log;
             _locationChecker = locationChecker;
+            _giftSender = giftSender;
             _sheepIds = new Dictionary<Vector2, int>
             {
                 {new Vector2(177f, 29.5f), 0},
@@ -71,6 +75,9 @@ namespace DLCQuestipelago.Locations
                 var sheepLocationName = _sheepNames[id];
                 _log.LogInfo($"SheepKilled Sheep #{id} at {spawnPosition} ({sheepLocationName})");
                 _locationChecker.AddCheckedLocation(sheepLocationName);
+
+                _giftSender.SendZombieSheepGift((int)spawnPosition.X, (int)spawnPosition.Y).FireAndForget();
+
                 return true; // run original logic;
             }
             catch (Exception ex)

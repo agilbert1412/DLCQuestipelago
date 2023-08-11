@@ -13,6 +13,8 @@ using System.IO;
 using System.Reflection;
 using BepInEx.NET.Common;
 using DLCQuestipelago.DualContentManager;
+using DLCQuestipelago.Extensions;
+using DLCQuestipelago.Gifting;
 
 namespace DLCQuestipelago
 {
@@ -32,6 +34,8 @@ namespace DLCQuestipelago
         private ObjectivePersistence _objectivePersistence;
         private ArchipelagoNotificationsHandler _notificationHandler;
 
+        private GiftHandler _giftHandler;
+
         public bool IsInGame { get; private set; }
 
         public override void Load()
@@ -42,6 +46,7 @@ namespace DLCQuestipelago
             _harmony = new Harmony(PluginInfo.PLUGIN_NAME);
             _harmony.PatchAll();
 
+            TaskExtensions.Initialize(Log);
             _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
             _notificationHandler = new ArchipelagoNotificationsHandler(Log, _archipelago);
             DLCContentManagerInitializePatch.Initialize(Log, _notificationHandler);
@@ -50,6 +55,13 @@ namespace DLCQuestipelago
 
             CampaignSelectPatch.Initialize(Log, _archipelago);
             Log.LogInfo($"{PluginInfo.PLUGIN_NAME} is loaded!");
+        }
+
+        public override bool Unload()
+        {
+            _giftHandler?.CloseGiftBox();
+            _giftHandler = null;
+            return base.Unload();
         }
 
         public void SaveAndQuit()
@@ -82,6 +94,7 @@ namespace DLCQuestipelago
             // _chatForwarder.ListenToChatMessages(_archipelago);
             Log.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");// Type !!help for client commands");
             WritePersistentArchipelagoData();
+            _giftHandler = new GiftHandler(Log, _archipelago);
         }
 
         private void ReadPersistentArchipelagoData()
@@ -137,7 +150,7 @@ namespace DLCQuestipelago
             _locationChecker.SendAllLocationChecks();
             _itemManager.ReceiveAllNewItems();
 
-            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence);
+            PatcherInitializer.Initialize(Log, _archipelago, _locationChecker, _itemManager, _objectivePersistence, _giftHandler.Sender);
 
             IsInGame = true;
             player.AllowPerformZeldaItem = true;
@@ -153,6 +166,7 @@ namespace DLCQuestipelago
             var inputAirField = typeof(Player).GetField("PLAYER_INPUT_SCALE_AIR", BindingFlags.NonPublic | BindingFlags.Static);
             inputAirField.SetValue(null, 30f * 1.5f);
 #endif
+            _giftHandler.OpenGiftBox();
     }
 
         public void SaveGame()
@@ -177,6 +191,7 @@ namespace DLCQuestipelago
 
         public void ExitGame()
         {
+            _giftHandler.CloseGiftBox();
             _itemManager = null;
             _locationChecker = null;
             _objectivePersistence = null;
