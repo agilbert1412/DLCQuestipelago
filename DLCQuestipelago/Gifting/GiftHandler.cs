@@ -4,6 +4,7 @@ using Archipelago.Gifting.Net;
 using Archipelago.MultiClient.Net;
 using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
+using DLCQuestipelago.Extensions;
 
 namespace DLCQuestipelago.Gifting
 {
@@ -22,19 +23,20 @@ namespace DLCQuestipelago.Gifting
 
         public GiftSender Sender => _giftSender;
 
-        public GiftHandler(ManualLogSource log, ArchipelagoClient client)
+        public GiftHandler(ManualLogSource log, ArchipelagoClient archipelago)
         {
             _log = log;
-            _session = client.Session;
+            _session = archipelago.Session;
             _giftService = new GiftingService(_session);
-            _giftSender = new GiftSender(_log, client, _giftService);
+            _giftSender = new GiftSender(_log, archipelago, _giftService);
             _giftReceiver = new GiftReceiver(_log, _giftService);
+            archipelago.SetGiftHandler(this);
         }
 
         public void OpenGiftBox()
         {
             _giftService.OpenGiftBox(false, parsableTraits);
-            _giftService.SubscribeToNewGifts(NewGiftNotification);
+            // _giftService.SubscribeToNewGifts(NewGiftNotification);
         }
 
         public void CloseGiftBox()
@@ -45,6 +47,11 @@ namespace DLCQuestipelago.Gifting
         public void NewGiftNotification(Dictionary<Guid, Gift> gifts)
         {
             _giftReceiver.ReceiveNewGifts(gifts);
+        }
+
+        public void NewGiftNotification()
+        {
+            _giftReceiver.ReceiveNewGifts().FireAndForget();
         }
     }
 }

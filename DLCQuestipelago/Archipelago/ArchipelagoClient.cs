@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using DLCLib;
 using DLCQuestipelago.Gifting;
 
 namespace DLCQuestipelago.Archipelago
@@ -24,6 +25,7 @@ namespace DLCQuestipelago.Archipelago
         private ManualLogSource _console;
         private ArchipelagoSession _session;
         private DeathLinkService _deathLinkService;
+        private GiftHandler _giftHandler;
         private Harmony _harmony;
 
         private ArchipelagoConnectionInfo _connectionInfo;
@@ -186,6 +188,11 @@ namespace DLCQuestipelago.Archipelago
                 Debugger.Break();
                 return; // run original logic
             }
+        }
+
+        internal void SetGiftHandler(GiftHandler giftHandler)
+        {
+            _giftHandler = giftHandler;
         }
 
         public void SendMessage(string text)
@@ -651,7 +658,32 @@ namespace DLCQuestipelago.Archipelago
 
         public void APUpdate()
         {
-            MakeSureConnected(60);
+            if (!MakeSureConnected(60))
+            {
+                return;
+            }
+
+            UpdateReceiveGifts();
+        }
+
+        private const int SECONDS_BETWEEN_CHECK_GIFTS = 10;
+        private const int FRAMES_BEFORE_CHECK_GIFTS = SECONDS_BETWEEN_CHECK_GIFTS * 60;
+        private int _frame = 0;
+
+        private void UpdateReceiveGifts()
+        {
+            if (_giftHandler == null)
+            {
+                return;
+            }
+
+            _frame = (_frame + 1) % 600;
+            if (_frame != 0)
+            {
+                return;
+            }
+
+            _giftHandler.NewGiftNotification();
         }
     }
 }

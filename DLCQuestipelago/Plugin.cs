@@ -122,7 +122,7 @@ namespace DLCQuestipelago
 
         private void WritePersistentData(object data, string path)
         {
-            var jsonObject = JsonConvert.SerializeObject(data);
+            var jsonObject = JsonConvert.SerializeObject(data, Formatting.Indented, new GiftingModJsonConverter());
             File.WriteAllText(path, jsonObject);
         }
 

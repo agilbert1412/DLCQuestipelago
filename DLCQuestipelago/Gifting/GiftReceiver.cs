@@ -22,9 +22,9 @@ namespace DLCQuestipelago.Gifting
             _processedGifts = new HashSet<Guid>();
         }
 
-        public void ReceiveNewGifts()
+        public async Task ReceiveNewGifts()
         {
-            var allGifts = _giftService.CheckGiftBox();
+            var allGifts = await _giftService.CheckGiftBoxAsync();
             ReceiveNewGifts(allGifts);
         }
 
