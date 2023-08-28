@@ -22,9 +22,9 @@ namespace DLCQuestipelago.Extensions
             {
                 await task;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // log errors
+                _log.LogError($"Exception occurred in FireAndForget task: {ex}");
             }
         }
     }

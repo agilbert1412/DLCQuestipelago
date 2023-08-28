@@ -5,6 +5,7 @@ using Archipelago.MultiClient.Net;
 using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Extensions;
+using DLCQuestipelago.Items;
 
 namespace DLCQuestipelago.Gifting
 {
@@ -12,7 +13,7 @@ namespace DLCQuestipelago.Gifting
     {
         private static readonly string[] parsableTraits = new[]
         {
-            "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster
+            "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster, GiftFlag.Trap, GiftFlag.Speed
         };
 
         private readonly ManualLogSource _log;
@@ -23,13 +24,13 @@ namespace DLCQuestipelago.Gifting
 
         public GiftSender Sender => _giftSender;
 
-        public GiftHandler(ManualLogSource log, ArchipelagoClient archipelago)
+        public GiftHandler(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
         {
             _log = log;
             _session = archipelago.Session;
             _giftService = new GiftingService(_session);
             _giftSender = new GiftSender(_log, archipelago, _giftService);
-            _giftReceiver = new GiftReceiver(_log, _giftService);
+            _giftReceiver = new GiftReceiver(_log, _giftService, notificationHandler, trapManager, speedChanger);
             archipelago.SetGiftHandler(this);
         }
 

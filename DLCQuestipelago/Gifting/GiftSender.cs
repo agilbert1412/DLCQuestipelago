@@ -16,9 +16,9 @@ namespace DLCQuestipelago.Gifting
 {
     public class GiftSender
     {
-        private static readonly HashSet<string> _treeTraits = new() { "Tree", "Material", "Resource", "Wood", "Lumber" };
-        private static readonly HashSet<string> _rockTraits = new() { "Rock", "Boulder", "Material", "Resource", "Stone", "Ore" };
-        private static readonly HashSet<string> _vineTraits = new() { "Vine", "Material", "Resource", "Grass", "Fiber" };
+        private static readonly HashSet<string> _treeTraits = new() { "Tree", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Wood, "Lumber" };
+        private static readonly HashSet<string> _rockTraits = new() { "Rock", "Boulder", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Stone, GiftFlag.Ore };
+        private static readonly HashSet<string> _vineTraits = new() { "Vine", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Grass, "Fiber" };
         private static readonly HashSet<string> _zombieSheepTraits = new() { "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster, GiftFlag.Trap };
 
         private readonly ManualLogSource _log;
@@ -39,6 +39,7 @@ namespace DLCQuestipelago.Gifting
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
+                _log.LogInfo($"No player found that can receive a Tree Gift");
                 return;
             }
             var giftItem = new GiftItem("Tree", 1, 0);
@@ -54,6 +55,7 @@ namespace DLCQuestipelago.Gifting
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
+                _log.LogInfo($"No player found that can receive a Rock Gift");
                 return;
             }
             var giftItem = new GiftItem("Rock", 1, 0);
@@ -69,6 +71,7 @@ namespace DLCQuestipelago.Gifting
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
+                _log.LogInfo($"No player found that can receive a Vine Gift");
                 return;
             }
             var giftItem = new GiftItem("Vine", 1, 0);
@@ -79,11 +82,12 @@ namespace DLCQuestipelago.Gifting
 
         public async Task SendZombieSheepGift(int x, int y)
         {
-            _log.LogInfo($"Trying to send a Zombie Sheep Gift");
+            _log.LogInfo($"Trying to send a Zombie Sheep Trap");
             var stringTraits = new HashSet<string>(_zombieSheepTraits);
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
+                _log.LogInfo($"No player found that can receive a Zombie Sheep Trap");
                 return;
             }
             var giftItem = new GiftItem("Zombie Sheep", 1, 0);
@@ -109,13 +113,13 @@ namespace DLCQuestipelago.Gifting
             var isTrap = traits.Contains(GiftFlag.Trap);
             if (isTrap)
             {
-                return await SendTrap(traits, playersOtherTeams, myTeam);
+                return await GetPlayersThatCanReceiveTrap(traits, playersOtherTeams, myTeam);
             }
 
-            return await SendGift(traits, myTeam, playersOtherTeams);
+            return await GetPlayersThatCanReceiveGift(traits, myTeam, playersOtherTeams);
         }
 
-        private async Task<List<PlayerInfo>> SendTrap(HashSet<string> traits, IEnumerable<int> playersOtherTeams, int myTeam)
+        private async Task<List<PlayerInfo>> GetPlayersThatCanReceiveTrap(HashSet<string> traits, IEnumerable<int> playersOtherTeams, int myTeam)
         {
             if (Plugin.Instance.APConnectionInfo.GiftingPreference.HasFlag(GiftingMode.TrapsToEnemies))
             {
@@ -135,7 +139,7 @@ namespace DLCQuestipelago.Gifting
             return new List<PlayerInfo>();
         }
 
-        private async Task<List<PlayerInfo>> SendGift(HashSet<string> traits, int myTeam, IEnumerable<int> playersOtherTeams)
+        private async Task<List<PlayerInfo>> GetPlayersThatCanReceiveGift(HashSet<string> traits, int myTeam, IEnumerable<int> playersOtherTeams)
         {
             if (Plugin.Instance.APConnectionInfo.GiftingPreference.HasFlag(GiftingMode.GiftsToAllies))
             {

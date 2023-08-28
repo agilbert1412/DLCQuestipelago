@@ -33,6 +33,8 @@ namespace DLCQuestipelago
         private ItemManager _itemManager;
         private ObjectivePersistence _objectivePersistence;
         private ArchipelagoNotificationsHandler _notificationHandler;
+        private TrapManager _trapManager;
+        private SpeedChanger _speedChanger;
 
         private GiftHandler _giftHandler;
 
@@ -49,6 +51,8 @@ namespace DLCQuestipelago
             TaskExtensions.Initialize(Log);
             _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
             _notificationHandler = new ArchipelagoNotificationsHandler(Log, _archipelago);
+            _speedChanger = new SpeedChanger(Log);
+            _trapManager = new TrapManager(_archipelago);
             DLCContentManagerInitializePatch.Initialize(Log, _notificationHandler);
             ConnectToArchipelago();
             IsInGame = false;
@@ -94,7 +98,7 @@ namespace DLCQuestipelago
             // _chatForwarder.ListenToChatMessages(_archipelago);
             Log.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");// Type !!help for client commands");
             WritePersistentArchipelagoData();
-            _giftHandler = new GiftHandler(Log, _archipelago);
+            _giftHandler = new GiftHandler(Log, _archipelago, _notificationHandler, _trapManager, _speedChanger);
         }
 
         private void ReadPersistentArchipelagoData()
@@ -142,7 +146,7 @@ namespace DLCQuestipelago
         {
             var player = SceneManager.Instance.CurrentScene.Player;
             player.AllowPerformZeldaItem = false;
-            _itemManager = new ItemManager(Log, _archipelago, _notificationHandler);
+            _itemManager = new ItemManager(Log, _archipelago, _notificationHandler, _trapManager);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(Log, _archipelago);
 
@@ -158,14 +162,12 @@ namespace DLCQuestipelago
             player.RefreshAnimations();
 
             CoinPickupPatch.CheckAllCoinsanityLocations(player.Inventory);
+
+            _speedChanger.ResetPlayerSpeedToDefault();
 #if DEBUG
-            // private static float PLAYER_INPUT_SCALE_GROUND = 45f;
-            // private static float PLAYER_INPUT_SCALE_AIR = 30f;
-            var inputGroundField = typeof(Player).GetField("PLAYER_INPUT_SCALE_GROUND", BindingFlags.NonPublic | BindingFlags.Static);
-            inputGroundField.SetValue(null, 45f * 1.5f);
-            var inputAirField = typeof(Player).GetField("PLAYER_INPUT_SCALE_AIR", BindingFlags.NonPublic | BindingFlags.Static);
-            inputAirField.SetValue(null, 30f * 1.5f);
+            _speedChanger.AddMultiplierToPlayerSpeed(1.5f);
 #endif
+
             _giftHandler.OpenGiftBox();
     }
 

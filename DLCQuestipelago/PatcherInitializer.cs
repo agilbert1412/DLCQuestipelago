@@ -6,6 +6,7 @@ using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.FakeEndingBehavior;
 using DLCQuestipelago.Gifting;
+using DLCQuestipelago.Gifting.Patches;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Items.Traps;
 using DLCQuestipelago.ItemShufflePatches;
@@ -39,9 +40,18 @@ namespace DLCQuestipelago
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
             InitializeAllPersistencyPatches(log);
-            KillSheepPatch.Initialize(log, locationChecker, giftSender);
+            InitializeKillAndDestroyPatches(log, locationChecker, giftSender);
             InitializeAwardmentPatches(log, locationChecker);
             InitializeAntiCrashPatches(log);
+        }
+
+        private static void InitializeKillAndDestroyPatches(ManualLogSource log, LocationChecker locationChecker,
+            GiftSender giftSender)
+        {
+            DestroyBushPatch.Initialize(log, giftSender);
+            DestroyRockPatch.Initialize(log, giftSender);
+            DestroyVinePatch.Initialize(log, giftSender);
+            KillSheepPatch.Initialize(log, locationChecker, giftSender);
         }
 
         private static void InitializeDualContentManagerPatches(ManualLogSource log)

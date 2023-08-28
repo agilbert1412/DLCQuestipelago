@@ -51,7 +51,7 @@ namespace DLCQuestipelago
             }
         }
 
-        public void AddNotification(string itemName)
+        public void AddItemNotification(string itemName)
         {
             var isCoin = itemName is InventoryCoinsGetPatch.BASIC_CAMPAIGN_COIN_NAME
                 or InventoryCoinsGetPatch.LFOD_CAMPAIGN_COIN_NAME;
@@ -146,16 +146,45 @@ namespace DLCQuestipelago
 
         private void AddNotification(string description, Texture2D texture, Rectangle icon)
         {
-            var newNotification = CreateNotification(description, texture, icon);
+            var newNotification = CreateNewItemNotification(description, texture, icon);
             NotificationManager.Instance.AddNotification(newNotification);
         }
 
-        private Notification CreateNotification(string description, Texture2D texture, Rectangle icon)
+        private Notification CreateNewItemNotification(string description, Texture2D texture, Rectangle icon)
         {
             return new Notification()
             {
                 Title = "New Archipelago Item Received!",
                 Description = description,
+                Texture = texture,
+                SourceRectangle = icon,
+                Tint = Color.White,
+                CueName = "toast_up"
+            };
+        }
+
+        public void AddGiftNotification(string giftName, bool isTrap)
+        {
+            var iconPackName = isTrap ? "The Zombie Pack" : "Double Jump Pack";
+            var dlcPack = _dlcPacks.Where(x => x.Data.DisplayName == iconPackName).ToArray();
+            var iconName = dlcPack.First().Data.IconName;
+            _dualAssetManager.FindIcon(iconName, out var texture, out var rectangle);
+            AddGiftNotification(giftName, texture, rectangle, isTrap);
+        }
+
+        private void AddGiftNotification(string description, Texture2D texture, Rectangle icon, bool isTrap)
+        {
+            var newNotification = CreateGiftNotification(description, texture, icon, isTrap);
+            NotificationManager.Instance.AddNotification(newNotification);
+        }
+
+        private Notification CreateGiftNotification(string giftName, Texture2D texture, Rectangle icon, bool isTrap)
+        {
+            var itemName = isTrap ? "Trap" : "Gift";
+            return new Notification()
+            {
+                Title = $"New {itemName} Received!",
+                Description = giftName,
                 Texture = texture,
                 SourceRectangle = icon,
                 Tint = Color.White,

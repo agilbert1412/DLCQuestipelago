@@ -1,4 +1,5 @@
-﻿using DLCLib.Campaigns;
+﻿using System;
+using DLCLib.Campaigns;
 using DLCLib.Character;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
@@ -17,19 +18,15 @@ namespace DLCQuestipelago.Items
 {
     public class ItemParser
     {
-        public const string ZOMBIE_SHEEP = "Zombie Sheep";
-        private const string TEMPORARY_SPIKE = "Temporary Spike";
-        private const string LOADING_SCREEN = "Loading Screen";
-
-        public static readonly string[] TrapItems = new[] { ZOMBIE_SHEEP, TEMPORARY_SPIKE, LOADING_SCREEN };
-
         private ArchipelagoClient _archipelago;
+        private readonly TrapManager _trapManager;
         public HashSet<string> ReceivedDLCs { get; }
 
-        public ItemParser(ArchipelagoClient archipelago)
+        public ItemParser(ArchipelagoClient archipelago, TrapManager trapManager)
         {
             ReceivedDLCs = new HashSet<string>();
             _archipelago = archipelago;
+            _trapManager = trapManager;
         }
 
         private static Scene CurrentScene => SceneManager.Instance.CurrentScene;
@@ -54,7 +51,7 @@ namespace DLCQuestipelago.Items
                 return;
             }
 
-            if (TryHandleTrap(itemName, isNew))
+            if (_trapManager.TryHandleTrap(itemName, isNew))
             {
                 return;
             }
@@ -138,71 +135,6 @@ namespace DLCQuestipelago.Items
             }
 
             return false;
-        }
-
-        private bool TryHandleTrap(string itemName, bool isNew)
-        {
-            if (!isNew)
-            {
-                return false;
-            }
-
-            if (itemName == ZOMBIE_SHEEP)
-            {
-                SpawnZombieSheepOnPlayer();
-                return true;
-            }
-            if (itemName == TEMPORARY_SPIKE)
-            {
-                SpawnTemporarySpikeAroundPlayer();
-                return true;
-            }
-            if (itemName == LOADING_SCREEN)
-            {
-                TriggerLoadingScreen();
-                return true;
-            }
-
-            return false;
-        }
-
-        public static void SpawnZombieSheepOnPlayer()
-        {
-            var zombieSheep = new ZombieSheepTrap(Plugin.DualContentManager);
-            zombieSheep.LoadContent();
-            zombieSheep.Respawn(Player.Position);
-            var addZombieSheepSpawningEffectMethod =
-                typeof(EffectsManager).GetMethod("AddZombieSheepSpawningEffect",
-                    BindingFlags.Instance | BindingFlags.NonPublic);
-            addZombieSheepSpawningEffectMethod.Invoke(CurrentScene.EffectsManager, new object[] { Player.Position });
-        }
-
-        private static void SpawnTemporarySpikeAroundPlayer()
-        {
-            var spikePosition = Player.Position;
-            var spike = new TemporarySpike(spikePosition, Spike.DirectionEnum.Up, 3);
-            spike.LoadContent();
-            var delay = CurrentScene.IsBossMode ? 8f : 3f;
-            CurrentScene.Interpolators.Create(0.0f, 1f, delay, null, (_) => CurrentScene.AddToScene(spike));
-        }
-
-        private void TriggerLoadingScreen()
-        {
-            DLCAudioManager.Instance.AudioSystem.PauseMusic();
-            CurrentScene.IsLoading = true;
-            CurrentScene.IsPauseAllowed = false;
-            CurrentScene.HUDManager.LoadingDisplay.Visible = true;
-            CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(0.0f);
-            var length = _archipelago.HasReceivedItem("Day One Patch Pack", out _) ? 2f : 5f;
-            CurrentScene.Interpolators.Create(0.0f, 1f, length, step => CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(step.Value), FinishLoadingScreen);
-        }
-
-        private static void FinishLoadingScreen(Interpolator interpolator)
-        {
-            DLCAudioManager.Instance.AudioSystem.ResumeMusic();
-            CurrentScene.IsLoading = false;
-            CurrentScene.IsPauseAllowed = true;
-            CurrentScene.HUDManager.LoadingDisplay.Visible = false;
         }
 
         private static void GivePlayerDlcQuestSword()

@@ -28,12 +28,12 @@ namespace DLCQuestipelago.Items.Traps
         {
             try
             {
-                var numberOfSheepReceived = _archipelago.GetReceivedItemCount(ItemParser.ZOMBIE_SHEEP);
+                var numberOfSheepReceived = _archipelago.GetReceivedItemCount(TrapManager.ZOMBIE_SHEEP);
                 var sheepChance = (double)numberOfSheepReceived / 300.0;
 
                 if (_random.NextDouble() < sheepChance)
                 {
-                    ItemParser.SpawnZombieSheepOnPlayer();
+                    TrapManager.SpawnZombieSheepOnPlayer();
                     return false; // don't run original logic
                 }
 

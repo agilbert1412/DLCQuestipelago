@@ -21,13 +21,13 @@ namespace DLCQuestipelago.Items
         private HashSet<ReceivedItem> _itemsAlreadyProcessed;
         private HashSet<ReceivedItem> _itemsAlreadyProcessedThisRun;
 
-        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler)
+        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager)
         {
             _log = log;
             _archipelago = archipelago;
             _notificationHandler = notificationHandler;
 
-            ItemParser = new ItemParser(archipelago);
+            ItemParser = new ItemParser(archipelago, trapManager);
             _itemsAlreadyProcessed = LoadItemsAlreadyProcessedFromCampaign();
             _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
         }
@@ -61,7 +61,7 @@ namespace DLCQuestipelago.Items
             if (isNew)
             {
                 _log.LogMessage($"Item received: {receivedItem.ItemName}");
-                _notificationHandler.AddNotification(receivedItem.ItemName);
+                _notificationHandler.AddItemNotification(receivedItem.ItemName);
                 _itemsAlreadyProcessed.Add(receivedItem);
             }
         }
