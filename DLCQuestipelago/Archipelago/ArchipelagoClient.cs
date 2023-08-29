@@ -288,6 +288,11 @@ namespace DLCQuestipelago.Archipelago
             }
         }
 
+        public int GetTeam()
+        {
+            return _session.ConnectionInfo.Team;
+        }
+
         public Dictionary<string, long> GetAllCheckedLocations()
         {
             if (!MakeSureConnected())
