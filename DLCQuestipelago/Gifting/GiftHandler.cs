@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Archipelago.Gifting.Net;
+using Archipelago.Gifting.Net.Gifts.Versions.Current;
+using Archipelago.Gifting.Net.Service;
+using Archipelago.Gifting.Net.Traits;
 using Archipelago.MultiClient.Net;
 using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
@@ -45,7 +47,7 @@ namespace DLCQuestipelago.Gifting
             _giftService.CloseGiftBox();
         }
 
-        public void NewGiftNotification(Dictionary<Guid, Gift> gifts)
+        public void NewGiftNotification(Dictionary<string, Gift> gifts)
         {
             _giftReceiver.ReceiveNewGifts(gifts);
         }

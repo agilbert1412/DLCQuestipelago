@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Archipelago.Gifting.Net;
+using Archipelago.Gifting.Net.Gifts.Versions.Current;
+using Archipelago.Gifting.Net.Service;
+using Archipelago.Gifting.Net.Traits;
 using BepInEx.Logging;
 using DLCLib;
 using DLCQuestipelago.Items;
@@ -17,7 +18,7 @@ namespace DLCQuestipelago.Gifting
         private readonly ArchipelagoNotificationsHandler _notificationHandler;
         private readonly TrapManager _trapManager;
         private readonly SpeedChanger _speedChanger;
-        private HashSet<Guid> _processedGifts;
+        private HashSet<string> _processedGifts;
 
         public GiftReceiver(ManualLogSource log, IGiftingService giftService, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
         {
@@ -26,7 +27,7 @@ namespace DLCQuestipelago.Gifting
             _notificationHandler = notificationHandler;
             _trapManager = trapManager;
             _speedChanger = speedChanger;
-            _processedGifts = new HashSet<Guid>();
+            _processedGifts = new HashSet<string>();
         }
 
         public async Task ReceiveNewGifts()
@@ -35,7 +36,7 @@ namespace DLCQuestipelago.Gifting
             ReceiveNewGifts(allGifts);
         }
 
-        public void ReceiveNewGifts(Dictionary<Guid, Gift> gifts)
+        public void ReceiveNewGifts(Dictionary<string, Gift> gifts)
         {
             if (!gifts.Any())
             {
@@ -89,8 +90,8 @@ namespace DLCQuestipelago.Gifting
             }
 
             _log.LogInfo($"Processing a new Zombie Sheep Gift [ID: {gift.ID}]");
-            ProcessZombieSheep(gift.Item.Amount);
-            _notificationHandler.AddGiftNotification(gift.Item.Name, true);
+            ProcessZombieSheep(gift.Amount);
+            _notificationHandler.AddGiftNotification(gift.ItemName, true);
             return true;
 
         }
@@ -103,15 +104,15 @@ namespace DLCQuestipelago.Gifting
             }
 
             _log.LogInfo($"Processing a new Random Trap Gift [ID: {gift.ID}]");
-            ProcessRandomTrap(gift.Item.Amount);
-            _notificationHandler.AddGiftNotification(gift.Item.Name, true);
+            ProcessRandomTrap(gift.Amount);
+            _notificationHandler.AddGiftNotification(gift.ItemName, true);
             return true;
 
         }
 
         private static bool GiftIsZombieSheep(Gift gift)
         {
-            var isZombieSheep = gift.Item.Name.Equals("Zombie Sheep", StringComparison.InvariantCultureIgnoreCase);
+            var isZombieSheep = gift.ItemName.Equals("Zombie Sheep", StringComparison.InvariantCultureIgnoreCase);
             var isTrap = GiftIsTrap(gift);
             var zombieSheepTraits = new[] { "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster };
             var hasZombieSheepTrait = gift.Traits.Any(x => zombieSheepTraits.Contains(x.Trait));
@@ -148,9 +149,9 @@ namespace DLCQuestipelago.Gifting
             }
 
             _log.LogInfo($"Processing a new Speed Boost Gift [ID: {gift.ID}]");
-            var amount = speedTraits.Sum(speedTrait => (float)(gift.Item.Amount * speedTrait.Quality));
+            var amount = speedTraits.Sum(speedTrait => (float)(gift.Amount * speedTrait.Quality));
             ProcessSpeedBoost(amount);
-            _notificationHandler.AddGiftNotification(gift.Item.Name, false);
+            _notificationHandler.AddGiftNotification(gift.ItemName, false);
             return true;
 
         }

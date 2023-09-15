@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Reflection;
 using BepInEx.Logging;
-using Core.Audio;
 using DLCLib;
 using DLCLib.Effects;
 using HarmonyLib;

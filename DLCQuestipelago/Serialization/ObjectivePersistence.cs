@@ -4,7 +4,6 @@ using BepInEx.Logging;
 using DLCLib.Save;
 using DLCQuestipelago.Archipelago;
 using EasyStorage;
-using Newtonsoft.Json;
 
 namespace DLCQuestipelago.Serialization
 {

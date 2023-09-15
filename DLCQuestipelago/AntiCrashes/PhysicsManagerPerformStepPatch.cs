@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using BepInEx.Logging;
-using Core.Spatial;
-using DLCLib;
 using DLCLib.Physics;
 using HarmonyLib;
 using Microsoft.Xna.Framework;

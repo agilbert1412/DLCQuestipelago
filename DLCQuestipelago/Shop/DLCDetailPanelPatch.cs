@@ -4,12 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
-using Core;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.HUD;
 using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Items;
 using HarmonyLib;
 using HUD;
 

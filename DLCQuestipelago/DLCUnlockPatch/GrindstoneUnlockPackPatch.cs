@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
 using Core;
 using DLCLib;
@@ -15,11 +14,9 @@ using DLCLib.Physics;
 using DLCLib.Render;
 using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Extensions;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json.Linq;
 using Timer = Core.Timer;
 
 namespace DLCQuestipelago.DLCUnlockPatch

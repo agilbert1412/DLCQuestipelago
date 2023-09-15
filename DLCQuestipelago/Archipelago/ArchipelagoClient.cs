@@ -14,7 +14,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
-using DLCLib;
 using DLCQuestipelago.Gifting;
 
 namespace DLCQuestipelago.Archipelago

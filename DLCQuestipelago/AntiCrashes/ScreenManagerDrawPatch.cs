@@ -4,13 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
-using Core.Audio;
-using DLCLib;
-using DLCLib.Effects;
 using GameStateManagement;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DLCQuestipelago.AntiCrashes
 {

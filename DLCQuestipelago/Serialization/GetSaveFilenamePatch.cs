@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib.Save;
-using DLCQuestipelago.Archipelago;
 using HarmonyLib;
 
 namespace DLCQuestipelago.Serialization

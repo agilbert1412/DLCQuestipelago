@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Archipelago.Gifting.Net;
-using Archipelago.MultiClient.Net;
+using Archipelago.Gifting.Net.Gifts;
+using Archipelago.Gifting.Net.Service;
+using Archipelago.Gifting.Net.Traits;
 using Archipelago.MultiClient.Net.Helpers;
 using BepInEx.Logging;
 using DLCLib;

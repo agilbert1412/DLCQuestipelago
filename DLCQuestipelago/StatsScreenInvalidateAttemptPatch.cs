@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib.Screens;
-using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
 using HarmonyLib;
 
 namespace DLCQuestipelago
