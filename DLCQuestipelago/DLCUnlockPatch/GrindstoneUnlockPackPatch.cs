@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
 using Core;
 using DLCLib;
@@ -17,6 +18,7 @@ using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 using Timer = Core.Timer;
 
 namespace DLCQuestipelago.DLCUnlockPatch
@@ -102,7 +104,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
         }
 
-        private static void Postfix(Grindstone __instance, ref bool __result)
+        public static void Postfix(Grindstone __instance, ref bool __result)
         {
             try
             {
@@ -182,6 +184,12 @@ namespace DLCQuestipelago.DLCUnlockPatch
             var grindsRemaining = MAX_GRINDS - (int)_grindCountField.GetValue(grindstone);
             var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY, out _);
             var joulesNeeded = grindsRemaining * JOULES_PER_GRIND * 100;
+
+            if (joulesNeeded <= 0)
+            {
+                return;
+            }
+
             if (!hasTimeIsMoney)
             {
                 joulesNeeded *= 1000;
@@ -210,14 +218,15 @@ namespace DLCQuestipelago.DLCUnlockPatch
 
         private static void GetEnergyLinkJoulesAmount(Action<Task<BigInteger?>> callback)
         {
-            var value = _archipelago.Session.DataStorage[Scope.Global, _energyLinkKey];
+            DataStorageElement value = null;
             try
             {
+                value = _archipelago.Session.DataStorage[Scope.Global, _energyLinkKey];
                 value.GetAsync<BigInteger?>().ContinueWith(callback);
             }
             catch (Exception ex)
             {
-                _log.LogError($"Error Reading BigInteger from DataStorage key [{_energyLinkKey}]. Value: {value}");
+                _log.LogError($"Error Reading BigInteger from DataStorage key [{_energyLinkKey}]. Value: {value ?? "unknown"}. Message: {ex.Message}");
             }
         }
     }
