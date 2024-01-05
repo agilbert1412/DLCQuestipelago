@@ -33,6 +33,11 @@ namespace DLCQuestipelago.Locations
             return !IsLocationChecked(locationName);
         }
 
+        public bool IsLocationMissingAndExists(string locationName)
+        {
+            return _archipelago.LocationExists(locationName) && IsLocationMissing(locationName);
+        }
+
         public void RememberCheckedLocation(string locationName)
         {
             if (_checkedLocations.ContainsKey(locationName))

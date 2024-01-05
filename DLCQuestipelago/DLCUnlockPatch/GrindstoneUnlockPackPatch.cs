@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
@@ -81,19 +82,20 @@ namespace DLCQuestipelago.DLCUnlockPatch
             try
             {
                 __instance.Enable();
-                if (_locationChecker.IsLocationMissing("Sword"))
+                if (_locationChecker.IsLocationMissingAndExists("Sword"))
                 {
                     _isCompleteProperty.SetValue(__instance, false);
                 }
 
+                var session = _archipelago.GetSession();
                 var isComplete = (bool)_isCompleteProperty.GetValue(__instance);
                 if (isComplete)
                 {
-                    GrindOnceEvenIfCompleted(__instance);
+                    GrindOnceEvenIfCompleted(session, __instance);
                     return false;
                 }
 
-                TryToFinishGrindingUsingEnergyLink(__instance);
+                TryToFinishGrindingUsingEnergyLink(session, __instance);
                 return true;
             }
             catch (Exception ex)
@@ -122,24 +124,29 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
         }
 
-        private static void GrindOnceEvenIfCompleted(Grindstone grindstone)
+        private static void GrindOnceEvenIfCompleted(ArchipelagoSession session, Grindstone grindstone)
         {
             var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY, out _);
             var hasDayOnePatch = _archipelago.HasReceivedItem(DAY_ONE_PATCH, out _);
             if (hasDayOnePatch)
             {
-                ThreadPool.QueueUserWorkItem((o) => SendOneGrindToEnergyLink(hasTimeIsMoney));
+                ThreadPool.QueueUserWorkItem((o) => SendOneGrindToEnergyLink(session, hasTimeIsMoney));
             }
             else
             {
-                SendOneGrindToEnergyLink(hasTimeIsMoney);
+                SendOneGrindToEnergyLink(session, hasTimeIsMoney);
             }
 
             PlayGrindAnimation(grindstone, hasTimeIsMoney);
         }
 
-        private static void SendOneGrindToEnergyLink(bool hasTimeIsMoney)
+        private static void SendOneGrindToEnergyLink(ArchipelagoSession session, bool hasTimeIsMoney)
         {
+            if (session == null)
+            {
+                return;
+            }
+
             var joulesPerGrind = JOULES_PER_GRIND;
 
             if (hasTimeIsMoney)
@@ -148,7 +155,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
 
             _log.LogInfo($"Already finished grinding, sending {joulesPerGrind} joules into the EnergyLink");
-            _archipelago.Session.DataStorage[Scope.Global, _energyLinkKey] += joulesPerGrind;
+            session.DataStorage[Scope.Global, _energyLinkKey] += joulesPerGrind;
         }
 
         private static void PlayGrindAnimation(Grindstone grindstone, bool hasTimeIsMoney)
@@ -179,26 +186,26 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
         }
 
-        private static void TryToFinishGrindingUsingEnergyLink(Grindstone grindstone)
+        private static void TryToFinishGrindingUsingEnergyLink(ArchipelagoSession session, Grindstone grindstone)
         {
             var grindsRemaining = MAX_GRINDS - (int)_grindCountField.GetValue(grindstone);
-            var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY, out _);
             var joulesNeeded = grindsRemaining * JOULES_PER_GRIND * 100;
 
-            if (joulesNeeded <= 0)
+            if (joulesNeeded <= 0 || session == null)
             {
                 return;
             }
 
+            var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY, out _);
             if (!hasTimeIsMoney)
             {
                 joulesNeeded *= 1000;
             }
             
-            GetEnergyLinkJoulesAmount((amount) => FinishGrindingWithEnergyLink(grindstone, amount.Result, joulesNeeded));
+            GetEnergyLinkJoulesAmount(session, (amount) => FinishGrindingWithEnergyLink(session, grindstone, amount.Result, joulesNeeded));
         }
 
-        private static void FinishGrindingWithEnergyLink(Grindstone grindstone, BigInteger? currentAmountJoules, long joulesNeeded)
+        private static void FinishGrindingWithEnergyLink(ArchipelagoSession session, Grindstone grindstone, BigInteger? currentAmountJoules, long joulesNeeded)
         {
             if (currentAmountJoules == null)
             {
@@ -211,17 +218,17 @@ namespace DLCQuestipelago.DLCUnlockPatch
                 return;
             }
 
-            _archipelago.Session.DataStorage[Scope.Global, _energyLinkKey] -= joulesNeeded;
+            session.DataStorage[Scope.Global, _energyLinkKey] -= joulesNeeded;
             _log.LogInfo($"Used up {joulesNeeded} from the EnergyLink to finish the grindstone!");
             _grindCountField.SetValue(grindstone, 10000);
         }
 
-        private static void GetEnergyLinkJoulesAmount(Action<Task<BigInteger?>> callback)
+        private static void GetEnergyLinkJoulesAmount(ArchipelagoSession session, Action<Task<BigInteger?>> callback)
         {
             DataStorageElement value = null;
             try
             {
-                value = _archipelago.Session.DataStorage[Scope.Global, _energyLinkKey];
+                value = session.DataStorage[Scope.Global, _energyLinkKey];
                 value.GetAsync<BigInteger?>().ContinueWith(callback);
             }
             catch (Exception ex)

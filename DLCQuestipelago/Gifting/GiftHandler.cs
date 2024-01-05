@@ -29,7 +29,7 @@ namespace DLCQuestipelago.Gifting
         public GiftHandler(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
         {
             _log = log;
-            _session = archipelago.Session;
+            _session = archipelago.GetSession();
             _giftService = new GiftingService(_session);
             _giftSender = new GiftSender(_log, archipelago, _giftService);
             _giftReceiver = new GiftReceiver(_log, _giftService, notificationHandler, trapManager, speedChanger);

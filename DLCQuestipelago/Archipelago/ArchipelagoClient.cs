@@ -458,6 +458,17 @@ namespace DLCQuestipelago.Archipelago
             return locationName;
         }
 
+        public bool LocationExists(string locationName)
+        {
+            if (!MakeSureConnected())
+            {
+                return false;
+            }
+
+            var id = GetLocationId(locationName);
+            return _session.Locations.AllLocations.Contains(id);
+        }
+
         public long GetLocationId(string locationName, string gameName = GAME_NAME)
         {
             var locationId = -1L;
