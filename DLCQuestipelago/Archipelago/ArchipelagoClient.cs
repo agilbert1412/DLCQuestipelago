@@ -31,7 +31,7 @@ namespace DLCQuestipelago.Archipelago
 
         private Action _itemReceivedFunction;
 
-        public ArchipelagoSession Session => _session;
+        private ArchipelagoSession Session => _session;
 
         public bool IsConnected { get; private set; }
         public SlotData SlotData { get; private set; }
@@ -129,6 +129,16 @@ namespace DLCQuestipelago.Archipelago
 
             InitializeDeathLink();
             // MultiRandom = new Random(SlotData.Seed);
+        }
+
+        public ArchipelagoSession GetSession()
+        {
+            if (!MakeSureConnected())
+            {
+                return null;
+            }
+
+            return Session;
         }
 
         public void Sync()

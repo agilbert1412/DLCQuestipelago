@@ -107,8 +107,14 @@ namespace DLCQuestipelago.Gifting
 
         private async Task<List<PlayerInfo>> GetPlayersThatCanReceive(HashSet<string> traits)
         {
-            var myTeam = _archipelago.Session.ConnectionInfo.Team;
-            var playersOtherTeams = _archipelago.Session.Players.Players.Keys.Where(team => team != myTeam);
+            var session = _archipelago.GetSession();
+            if (session == null)
+            {
+                return new List<PlayerInfo>();
+            }
+
+            var myTeam = session.ConnectionInfo.Team;
+            var playersOtherTeams = session.Players.Players.Keys.Where(team => team != myTeam);
             var isTrap = traits.Contains(GiftFlag.Trap);
             if (isTrap)
             {
@@ -165,9 +171,15 @@ namespace DLCQuestipelago.Gifting
         private async Task<List<PlayerInfo>> GetEnemyGiftTargets(HashSet<string> traits, IEnumerable<int> playersOtherTeams)
         {
             var validTargets = new List<PlayerInfo>();
+            var session = _archipelago.GetSession();
+            if (session == null)
+            {
+                return validTargets;
+            }
+
             foreach (var team in playersOtherTeams)
             {
-                foreach (var player in _archipelago.Session.Players.Players[team])
+                foreach (var player in session.Players.Players[team])
                 {
                     var canGift = await _giftService.CanGiftToPlayerAsync(player.Slot, team, traits);
                     if (canGift)
@@ -183,9 +195,15 @@ namespace DLCQuestipelago.Gifting
         private async Task<List<PlayerInfo>> GetFriendlyGiftTargets(HashSet<string> traits, int myTeam)
         {
             var friendlyTargets = new List<PlayerInfo>();
-            foreach (var player in _archipelago.Session.Players.Players[myTeam])
+            var session = _archipelago.GetSession();
+            if (session == null)
             {
-                var canGift = player.Slot != _archipelago.Session.ConnectionInfo.Slot;
+                return friendlyTargets;
+            }
+
+            foreach (var player in session.Players.Players[myTeam])
+            {
+                var canGift = player.Slot != session.ConnectionInfo.Slot;
                 canGift = canGift && await _giftService.CanGiftToPlayerAsync(player.Slot, myTeam, traits);
                 if (canGift)
                 {
