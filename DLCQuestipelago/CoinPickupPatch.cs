@@ -53,7 +53,7 @@ namespace DLCQuestipelago
                 return; // Let things happened as they have
             }
 
-            var bundleSize = _archipelago.SlotData.CoinBundleSize;
+            var bundleSize = _archipelago.SlotData.GetRealCoinBundleSize();
             var maxCoins = SceneManager.Instance.CurrentScene.Map.TotalCoins;
             var currentCoins = inventory.TotalCoinsCollected;
             var campaignLocation = CampaignManager.Instance.Campaign is LFODCampaign ? LFOD_CAMPAIGN_NAME : BASIC_CAMPAIGN_NAME;
@@ -63,11 +63,19 @@ namespace DLCQuestipelago
             _locationChecker.AddCheckedLocation(checkedCoinLocations);
         }
 
-        public static string[] GetAllCheckedCoinLocations(int totalCoinsPickedUp, int bundleSize, int maxCoins, string campaignName)
+        public static string[] GetAllCheckedCoinLocations(int totalCoinsPickedUp, double bundleSize, int maxCoins, string campaignName)
         {
             if (totalCoinsPickedUp <= 0)
             {
                 return new string[0];
+            }
+
+            if (bundleSize < 1)
+            {
+                return Enumerable.Range(1, totalCoinsPickedUp * 10)
+                    .Where(x => x <= maxCoins * 10)
+                    .Select(x => $"{campaignName} {x / 10.0} Coin Piece")
+                    .ToArray();
             }
 
             var checkedCoinLocations = Enumerable.Range(1, totalCoinsPickedUp)

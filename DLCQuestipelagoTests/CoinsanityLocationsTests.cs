@@ -42,5 +42,26 @@ namespace DLCQuestipelagoTests
             var expectedLocations = expected.Select(x => $"{campaignName} {x} Coin");
             coinLocations.Should().BeEquivalentTo(expectedLocations);
         }
+
+        [TestCase(0, 3, new double[0])]
+        [TestCase(2, 3, new double[]
+        {
+            0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
+            1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2
+        })]
+        [TestCase(4, 3, new double[]
+        {
+            0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
+            1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2,
+            2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3
+        })]
+        public void GenerateCampaignCoinsPiecesArray_ShouldReturnExpectedResult(int current, int max, double[] expected)
+        {
+            const double step = 0.1;
+            var campaignName = "Test Campaign:";
+            var coinLocations = CoinPickupPatch.GetAllCheckedCoinLocations(current, step, max, campaignName);
+            var expectedLocations = expected.Select(x => $"{campaignName} {x} Coin Piece");
+            coinLocations.Should().BeEquivalentTo(expectedLocations);
+        }
     }
 }

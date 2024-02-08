@@ -54,10 +54,10 @@ namespace DLCQuestipelago
 
         public void AddItemNotification(string itemName)
         {
-            var isCoin = itemName is InventoryCoinsGetPatch.BASIC_CAMPAIGN_COIN_NAME
-                or InventoryCoinsGetPatch.LFOD_CAMPAIGN_COIN_NAME
-                or InventoryCoinsGetPatch.BASIC_CAMPAIGN_COIN_PIECE_NAME
-                or InventoryCoinsGetPatch.LFOD_CAMPAIGN_COIN_PIECE_NAME;
+            var isCoin = itemName is CoinsanityUtils.BASIC_CAMPAIGN_COIN_NAME
+                or CoinsanityUtils.LFOD_CAMPAIGN_COIN_NAME
+                or CoinsanityUtils.BASIC_CAMPAIGN_COIN_PIECE_NAME
+                or CoinsanityUtils.LFOD_CAMPAIGN_COIN_PIECE_NAME;
             if (isCoin)
             {
                 AddCoinNotification(itemName);
