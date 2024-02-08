@@ -89,6 +89,12 @@ namespace DLCQuestipelago.Items
         {
             if (CampaignManager.Instance.Campaign is DLCQuestCampaign)
             {
+                if (itemName == "DLC Quest: Progressive Weapon")
+                {
+                    GivePlayerDlcQuestNextWeapon();
+                    return true;
+                }
+
                 if (itemName == "Sword")
                 {
                     GivePlayerDlcQuestSword();
@@ -103,6 +109,12 @@ namespace DLCQuestipelago.Items
             }
             else
             {
+                if (itemName == "Live Freemium or Die: Progressive Weapon")
+                {
+                    GivePlayerLFODNextWeapon();
+                    return true;
+                }
+
                 if (itemName == "Wooden Sword")
                 {
                     GivePlayerWoodenSword();
@@ -123,7 +135,7 @@ namespace DLCQuestipelago.Items
 
                 if (itemName == "Pickaxe")
                 {
-                    GrooveNPC.GiveMattock(true);
+                    GivePlayerPickaxe();
                     return true;
                 }
             }
@@ -144,12 +156,39 @@ namespace DLCQuestipelago.Items
             AwardmentManager.Instance.Award("packingheat");
         }
 
+        private static void GivePlayerDlcQuestNextWeapon()
+        {
+            if (!Player.Inventory.HasSword)
+            {
+                GivePlayerDlcQuestSword();
+                return;
+            }
+
+            GivePlayerGun();
+        }
+
         private static void GivePlayerWoodenSword()
         {
             Player.Inventory.HasSword = true;
             Player.RefreshAnimations();
             ZeldaMethod.Invoke(Player, new object[] { "boss_sword_0", "Sword", 2f });
             AwardmentManager.Instance.Award("storyprogress");
+        }
+
+        private static void GivePlayerPickaxe()
+        {
+            GrooveNPC.GiveMattock(true);
+        }
+
+        private static void GivePlayerLFODNextWeapon()
+        {
+            if (!Player.Inventory.HasSword)
+            {
+                GivePlayerWoodenSword();
+                return;
+            }
+
+            GivePlayerPickaxe();
         }
 
         private static void GivePlayerBoxOfSupplies()

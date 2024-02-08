@@ -3,6 +3,7 @@ using System.Reflection;
 using Core;
 using DLCLib;
 using DLCLib.Audio;
+using DLCLib.DLC;
 using DLCLib.Effects;
 using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
@@ -15,8 +16,9 @@ namespace DLCQuestipelago.Items
         public const string ZOMBIE_SHEEP = "Zombie Sheep";
         private const string TEMPORARY_SPIKE = "Temporary Spike";
         private const string LOADING_SCREEN = "Loading Screen";
+        private const string NAME_CHANGE = "Name Change";
 
-        public static readonly string[] TrapItems = new[] { ZOMBIE_SHEEP, TEMPORARY_SPIKE, LOADING_SCREEN };
+        public static readonly string[] TrapItems = new[] { ZOMBIE_SHEEP, TEMPORARY_SPIKE, LOADING_SCREEN, NAME_CHANGE };
 
         private static Scene CurrentScene => SceneManager.Instance.CurrentScene;
         private static Player Player => CurrentScene.Player;
@@ -50,6 +52,12 @@ namespace DLCQuestipelago.Items
             if (itemName == LOADING_SCREEN)
             {
                 TriggerLoadingScreen();
+                return true;
+            }
+
+            if (itemName == NAME_CHANGE)
+            {
+                DLCPurchaseEventUtil.PurchaseNameChange();
                 return true;
             }
 
