@@ -157,7 +157,7 @@ namespace DLCQuestipelago
 
             IsInGame = true;
             player.AllowPerformZeldaItem = true;
-            InventoryCoinsGetPatch.UpdateCoinsUI();
+            CoinsanityUtils.UpdateCoinsUI();
             player.RefreshAnimations();
 
             CoinPickupPatch.CheckAllCoinsanityLocations(player.Inventory);
@@ -209,7 +209,7 @@ namespace DLCQuestipelago
 
             _itemManager.ReceiveAllNewItems();
 
-            InventoryCoinsGetPatch.UpdateCoinsUI();
+            CoinsanityUtils.UpdateCoinsUI();
             SceneManager.Instance.CurrentScene.Player.RefreshAnimations();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -54,7 +55,9 @@ namespace DLCQuestipelago
         public void AddItemNotification(string itemName)
         {
             var isCoin = itemName is InventoryCoinsGetPatch.BASIC_CAMPAIGN_COIN_NAME
-                or InventoryCoinsGetPatch.LFOD_CAMPAIGN_COIN_NAME;
+                or InventoryCoinsGetPatch.LFOD_CAMPAIGN_COIN_NAME
+                or InventoryCoinsGetPatch.BASIC_CAMPAIGN_COIN_PIECE_NAME
+                or InventoryCoinsGetPatch.LFOD_CAMPAIGN_COIN_PIECE_NAME;
             if (isCoin)
             {
                 AddCoinNotification(itemName);
@@ -68,23 +71,34 @@ namespace DLCQuestipelago
         private void AddCoinNotification(string itemName)
         {
             var campaign = itemName.Split(':')[0];
-            var numCoinsPerBundle = _archipelago.SlotData.CoinBundleSize;
+            var coinBundleSize = _archipelago.SlotData.CoinBundleSize;
 
-            var notificationToChange = GetExistingNotificationForCoins(campaign, numCoinsPerBundle);
+            var notificationToChange = GetExistingNotificationForCoins(campaign, coinBundleSize);
 
             if (notificationToChange != null)
             {
-                ModifyExistingCoinNotification(notificationToChange, numCoinsPerBundle, campaign);
+                ModifyExistingCoinNotification(notificationToChange, coinBundleSize, campaign);
                 return;
             }
 
-            CreateNewCoinNotification(numCoinsPerBundle, campaign);
+            CreateNewCoinNotification(coinBundleSize, campaign);
         }
 
         private static void ModifyExistingCoinNotification(Notification notificationToChange, int numCoinsPerBundle, string campaign)
         {
-            var words = notificationToChange.Description.Split(' ');
-            var numCoins = int.Parse(words[words.Length - 2]) + numCoinsPerBundle;
+            var existingDescription = notificationToChange.Description;
+            var indexOfCoin = existingDescription.IndexOf("Coin", StringComparison.InvariantCultureIgnoreCase);
+            var firstPart = existingDescription.Substring(0, indexOfCoin);
+            var words = firstPart.Split(' ');
+            var numCoins = int.Parse(words[words.Length - 1]);
+            if (numCoins <= 0)
+            {
+                numCoins += 1;
+            }
+            else
+            {
+                numCoins += numCoinsPerBundle;
+            }
             notificationToChange.Description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
         }
 
@@ -93,19 +107,37 @@ namespace DLCQuestipelago
             var spriteSheet = SceneManager.Instance.CurrentScene.HUDManager.SpriteSheet;
             var texture = spriteSheet.Texture;
             var icon = spriteSheet.SourceRectangle("hud_coin");
-            var description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
-            AddNotification(description, texture, icon);
+            if (numCoins <= 0)
+            {
+                var description = GetNotificationDescriptionForNumberOfCoinPieces(1, campaign);
+                AddNotification(description, texture, icon);
+            }
+            else
+            {
+                var description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
+                AddNotification(description, texture, icon);
+            }
+        }
+
+        private static string GetNotificationDescriptionForNumberOfCoinPieces(int numCoinPieces, string campaign)
+        {
+            return GetNotificationDescriptionForNumericItem(campaign, "Coin Piece", numCoinPieces);
         }
 
         private static string GetNotificationDescriptionForNumberOfCoins(int numCoins, string campaign)
         {
-            const string pattern = "{0}: {1} Coin{2}";
-            var pluralModifier = numCoins > 1 ? "s" : "";
-            var description = string.Format(pattern, campaign, numCoins, pluralModifier);
+            return GetNotificationDescriptionForNumericItem(campaign, "Coin", numCoins);
+        }
+
+        private static string GetNotificationDescriptionForNumericItem(string campaign, string item, int number)
+        {
+            const string pattern = "{0}: {1} {2}{3}";
+            var pluralModifier = number > 1 ? "s" : "";
+            var description = string.Format(pattern, campaign, number, item, pluralModifier);
             return description;
         }
 
-        private static Notification GetExistingNotificationForCoins(string campaign, int numCoinsPerBundle)
+        private static Notification GetExistingNotificationForCoins(string campaign, int coinBundleSize)
         {
             var notificationsField = typeof(NotificationManager).GetField("notifications", BindingFlags.NonPublic | BindingFlags.Instance);
             var notifications = (Queue<Notification>)notificationsField.GetValue(NotificationManager.Instance);
@@ -118,8 +150,9 @@ namespace DLCQuestipelago
             foreach (var existingNotification in notifications.Skip(1))
             {
                 var existingDescription = existingNotification.Description;
-                var endsWithCoin = existingDescription.EndsWith("Coin") || existingDescription.EndsWith("Coins");
-                if (existingDescription.StartsWith(campaign) && endsWithCoin)
+                var validEndings = new[] { "Coin", "Coin Piece" };
+                var isCoinNotification = validEndings.Any(x => existingDescription.EndsWith(x) || existingDescription.EndsWith($"{x}s"));
+                if (existingDescription.StartsWith(campaign) && isCoinNotification)
                 {
                     return existingNotification;
                 }

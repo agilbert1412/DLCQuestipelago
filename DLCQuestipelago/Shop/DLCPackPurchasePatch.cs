@@ -64,7 +64,7 @@ namespace DLCQuestipelago.Shop
 
         private static void Postfix(DLCPack __instance)
         {
-            InventoryCoinsGetPatch.UpdateCoinsUI();
+            CoinsanityUtils.UpdateCoinsUI();
         }
     }
 }

@@ -21,6 +21,16 @@ namespace DLCQuestipelago.Archipelago
         public string SlotName { get; private set; }
         public Coinsanity Coinsanity { get; private set; }
         public int CoinBundleSize { get; private set; }
+
+        public double GetRealCoinBundleSize()
+        {
+            if (Coinsanity == Coinsanity.None)
+            {
+                return 20;
+            }
+
+            return CoinBundleSize <= 0 ? 0.1 : CoinBundleSize;
+        }
         public Ending Ending { get; private set; }
         public Campaign Campaign { get; private set; }
         public ItemShuffle ItemShuffle { get; private set; }
