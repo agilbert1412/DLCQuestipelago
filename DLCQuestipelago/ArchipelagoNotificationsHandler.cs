@@ -89,17 +89,18 @@ namespace DLCQuestipelago
             var existingDescription = notificationToChange.Description;
             var indexOfCoin = existingDescription.IndexOf("Coin", StringComparison.InvariantCultureIgnoreCase);
             var firstPart = existingDescription.Substring(0, indexOfCoin);
-            var words = firstPart.Split(' ');
+            var words = firstPart.Split(new [] {' '}, StringSplitOptions.RemoveEmptyEntries);
             var numCoins = int.Parse(words[words.Length - 1]);
-            if (numCoins <= 0)
+            if (numCoinsPerBundle <= 0)
             {
                 numCoins += 1;
+                notificationToChange.Description = GetNotificationDescriptionForNumberOfCoinPieces(numCoins, campaign);
             }
             else
             {
                 numCoins += numCoinsPerBundle;
+                notificationToChange.Description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
             }
-            notificationToChange.Description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
         }
 
         private void CreateNewCoinNotification(int numCoins, string campaign)

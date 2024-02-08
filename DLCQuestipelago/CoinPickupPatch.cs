@@ -74,7 +74,7 @@ namespace DLCQuestipelago
             {
                 return Enumerable.Range(1, totalCoinsPickedUp * 10)
                     .Where(x => x <= maxCoins * 10)
-                    .Select(x => $"{campaignName} {x / 10.0} Coin Piece")
+                    .Select(x => $"{campaignName} {x} Coin Piece")
                     .ToArray();
             }
 
