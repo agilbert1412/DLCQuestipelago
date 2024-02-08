@@ -9,7 +9,8 @@ namespace DLCQuestipelago.PlayerName
         private const int MAX_ALIAS_LENGTH = 16;
         private const string vanilla_name = "Player";
         private const string vanilla_name_changed = "xXx~P14y3R[69]SN1PA{117}~xXx";
-        private static readonly string[] _decorators = new[] { "x", "X", "x~", "X~", "xx", "XX", "Xx", "xX", "xx~", "XX~", "Xx~", "xX~", "xXx", "XxX", "xXx~", "XxX~" };
+        private static readonly string[] _decorators = new[] { "x", "X", "~", "*", "-", "_", "|", "/", @"\" };
+        // private static readonly string[] _decorators = new[] { "x", "X", "x~", "X~", "xx", "XX", "Xx", "xX", "xx~", "XX~", "Xx~", "xX~", "xXx", "XxX", "xXx~", "XxX~" };
 
         private ArchipelagoClient _archipelago;
 
@@ -50,14 +51,28 @@ namespace DLCQuestipelago.PlayerName
             if (validDecorators.Any())
             {
                 var longValidDecorators = validDecorators.Where(x => x.Length == validDecorators.Last().Length).ToArray();
-                var random = new Random(int.Parse(_archipelago.SlotData.Seed));
+                var random = new Random();
                 var chosenIndex = random.Next(0, longValidDecorators.Length);
                 chosenDecorator = longValidDecorators[chosenIndex];
             }
 
             var prefixDecorator = chosenDecorator;
-            var suffixDecorator = new string(chosenDecorator.Reverse().ToArray());
+            var suffixDecorator = GetSuffixDecorator(prefixDecorator);
             return $"{prefixDecorator}{TurnLeet(name)}{suffixDecorator}";
+        }
+
+        private static string GetSuffixDecorator(string prefixDecorator)
+        {
+            var suffixDecorator = new string(prefixDecorator.Reverse().ToArray());
+            if (prefixDecorator == @"\")
+            {
+                suffixDecorator = "/";
+            }
+            if (prefixDecorator == "/")
+            {
+                suffixDecorator = @"\";
+            }
+            return suffixDecorator;
         }
 
         public string TurnLeet(string text)

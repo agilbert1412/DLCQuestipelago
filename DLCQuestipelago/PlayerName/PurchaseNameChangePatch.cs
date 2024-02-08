@@ -27,7 +27,8 @@ namespace DLCQuestipelago.PlayerName
         private static string ApName => _archipelago.GetPlayerAlias(_archipelago.SlotData.SlotName) ?? _archipelago.SlotData.SlotName;
         private static string NewName1 => string.Format(NEW_NAME_1, ApName);
         private static string NewName2 => NEW_NAME_2;
-        private static string FinalName => _nameChanger.ChangeName(ApName);
+
+        private static string _currentFinalName = "";
 
         public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, NameChanger nameChanger)
         {
@@ -69,16 +70,16 @@ namespace DLCQuestipelago.PlayerName
 
         private static void NameChangeFailed2_Accepted(object sender, PlayerIndexEventArgs e)
         {
-            var newName = FinalName;
+            var newName = _nameChanger.ChangeName(ApName);
+            _currentFinalName = newName;
             var promptPrefix = NewName2 + " is already taken!";
             CreateAndAnimateNameChangePrompt(promptPrefix, newName, NameChangeFinal_Accepted);
         }
 
         private static void NameChangeFinal_Accepted(object sender, PlayerIndexEventArgs e)
         {
-            var screen = new MessageBoxScreen("Name change accepted!\n\nWelcome #" +
-                                              FinalName + "#\n");
-            _archipelago.SendMessage($"!alias {FinalName}");
+            var screen = new MessageBoxScreen("Name change accepted!\n\nWelcome #" + _currentFinalName + "#\n");
+            _archipelago.SendMessage($"!alias {_currentFinalName}");
             screen.SetInputs(null, new MenuInput(new List<Buttons>()
             {
                 Buttons.A,
