@@ -536,6 +536,72 @@ namespace DLCQuestipelago.Archipelago
             _console.LogInfo(deathLinkMessage);
         }
 
+        public Dictionary<string, ScoutedLocation> ScoutManyLocations(IEnumerable<string> locationNames)
+        {
+            var scoutResult = new Dictionary<string, ScoutedLocation>();
+            if (!MakeSureConnected())
+            {
+                _console.LogInfo($"Could not scout locations {locationNames}");
+                return scoutResult;
+            }
+
+            var namesToScout = new List<string>();
+            var idsToScout = new List<long>();
+            foreach (var locationName in locationNames)
+            {
+                if (ScoutedLocations.ContainsKey(locationName))
+                {
+                    scoutResult.Add(locationName, ScoutedLocations[locationName]);
+                    continue;
+                }
+
+                var locationId = GetLocationId(locationName);
+                if (locationId == -1)
+                {
+                    _console.LogInfo($"Could get location id for \"{locationName}\".");
+                    continue;
+                }
+
+                namesToScout.Add(locationName);
+                idsToScout.Add(locationId);
+            }
+
+            if (!idsToScout.Any())
+            {
+                return scoutResult;
+            }
+
+            LocationInfoPacket scoutResponse;
+            try
+            {
+                scoutResponse = ScoutLocations(idsToScout.ToArray(), false);
+                if (scoutResponse.Locations.Length < 1)
+                {
+                    _console.LogInfo($"Could not scout location ids \"{idsToScout}\".");
+                    return scoutResult;
+                }
+            }
+            catch (Exception e)
+            {
+                _console.LogInfo($"Could not scout location ids \"{idsToScout}\". Message: {e.Message}");
+                return scoutResult;
+            }
+
+            for (var i = 0; i < idsToScout.Count; i++)
+            {
+                var itemScouted = scoutResponse.Locations[i];
+                var itemName = GetItemName(itemScouted.Item);
+                var playerSlotName = _session.Players.GetPlayerName(itemScouted.Player);
+
+                var scoutedLocation = new ScoutedLocation(namesToScout[i], itemName, playerSlotName, idsToScout[i], itemScouted.Item, itemScouted.Player);
+
+                ScoutedLocations.Add(namesToScout[i], scoutedLocation);
+                scoutResult.Add(namesToScout[i], scoutedLocation);
+            }
+
+            return scoutResult;
+        }
+
         public ScoutedLocation ScoutSingleLocation(string locationName, bool createAsHint = false)
         {
             if (ScoutedLocations.ContainsKey(locationName))
@@ -585,6 +651,13 @@ namespace DLCQuestipelago.Archipelago
         private LocationInfoPacket ScoutLocation(long locationId, bool createAsHint)
         {
             var scoutTask = _session.Locations.ScoutLocationsAsync(createAsHint, locationId);
+            scoutTask.Wait();
+            return scoutTask.Result;
+        }
+
+        private LocationInfoPacket ScoutLocations(long[] locationIds, bool createAsHint)
+        {
+            var scoutTask = _session.Locations.ScoutLocationsAsync(createAsHint, locationIds);
             scoutTask.Wait();
             return scoutTask.Result;
         }

@@ -26,7 +26,7 @@ namespace DLCQuestipelago
             StatsScreenInvalidateAttemptPatch.Initialize(log);
             DLCPackPurchasePatch.Initialize(log, locationChecker);
             DLCIsPurchasedPatch.Initialize(log, itemManager.ItemParser);
-            DLCDetailPanelPatch.Initialize(log, archipelago);
+            StoreScreenSelectionChangedPatch.Initialize(log, archipelago);
             CoinPickupPatch.Initialize(log, archipelago, locationChecker);
             InventoryCoinsGetPatch.Initialize(log, archipelago);
             HandleCoinChangedPatch.Initialize(log, archipelago);

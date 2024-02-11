@@ -25,7 +25,7 @@ namespace DLCQuestipelago.Items
             _archipelago = archipelago;
         }
 
-        //public override void OnPickup(Player player)
+        //public int Coins { get; set; }
         private static bool Prefix(Inventory __instance, ref int __result)
         {
             try
