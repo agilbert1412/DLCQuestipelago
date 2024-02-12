@@ -123,6 +123,10 @@ namespace DLCQuestipelago.Shop
                 // protected List<DLCMenuEntry> dlcMenuEntries;
                 var dlcMenuEntriesField = typeof(StoreScreen).GetField("dlcMenuEntries", BindingFlags.NonPublic | BindingFlags.Instance);
                 var menuEntries = (List<DLCMenuEntry>)dlcMenuEntriesField.GetValue(__instance);
+                if (currentIndex >= menuEntries.Count)
+                {
+                    return;
+                }
                 var selectedDLCData = (menuEntries[currentIndex] as DLCPackMenuEntry)?.Pack?.Data;
                 var selectedDLCName = selectedDLCData?.DisplayName;
 

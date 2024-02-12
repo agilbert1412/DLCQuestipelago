@@ -539,7 +539,7 @@ namespace DLCQuestipelago.Archipelago
         public Dictionary<string, ScoutedLocation> ScoutManyLocations(IEnumerable<string> locationNames)
         {
             var scoutResult = new Dictionary<string, ScoutedLocation>();
-            if (!MakeSureConnected())
+            if (!MakeSureConnected() || locationNames == null || !locationNames.Any())
             {
                 _console.LogInfo($"Could not scout locations {locationNames}");
                 return scoutResult;
@@ -589,6 +589,11 @@ namespace DLCQuestipelago.Archipelago
 
             for (var i = 0; i < idsToScout.Count; i++)
             {
+                if (scoutResponse.Locations.Length <= i)
+                {
+                    break;
+                }
+
                 var itemScouted = scoutResponse.Locations[i];
                 var itemName = GetItemName(itemScouted.Item);
                 var playerSlotName = _session.Players.GetPlayerName(itemScouted.Player);
