@@ -67,6 +67,10 @@ namespace DLCQuestipelago.Items
             {
                 if (ReceivedDLCs.Contains(unlockedDLC.Data.Name))
                 {
+                    if (itemName.Contains("Name Change"))
+                    {
+                        DLCPurchaseEventUtil.PurchaseNameChange();
+                    }
                     return true;
                 }
 
