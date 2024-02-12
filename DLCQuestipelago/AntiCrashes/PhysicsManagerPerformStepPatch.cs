@@ -79,7 +79,7 @@ namespace DLCQuestipelago.AntiCrashes
             catch (Exception ex)
             {
                 _log.LogError($"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(Prefix)}:\n\t{ex}");
-                Debugger.Break();
+                // Debugger.Break();
 
                 if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))
                 {

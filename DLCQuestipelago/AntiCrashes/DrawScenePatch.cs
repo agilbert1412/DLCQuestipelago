@@ -79,7 +79,7 @@ namespace DLCQuestipelago.AntiCrashes
 
         private static bool TryToRepairSpriteBatchState(SpriteBatch spriteBatch)
         {
-            Debugger.Break();
+            // Debugger.Break();
             try
             {
                 var inBeginEndPairField = typeof(SpriteBatch).GetField("inBeginEndPair",

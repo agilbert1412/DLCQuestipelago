@@ -122,7 +122,7 @@ namespace DLCQuestipelago.AntiCrashes
 
         private static bool TryToRepairItemsNodesState(Scene scene, Exception ex)
         {
-            Debugger.Break();
+            // Debugger.Break();
 
             if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))
             {
