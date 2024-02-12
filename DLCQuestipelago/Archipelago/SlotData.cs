@@ -7,7 +7,10 @@ namespace DLCQuestipelago.Archipelago
     public class SlotData
     {
         private const string COINSANITY_KEY = "coinsanity";
-        private const string COINSANITY_BUNDLE_KEY = "coinbundlerange";
+        private static readonly string[] COINSANITY_BUNDLE_KEYS = new[] { "coinbundlerange", "coin_bundle_range",
+                                                                          "coinbundlequantity", "coin_bundle_quantity",
+                                                                          "coinsanityrange", "coinsanity_range", "coin_sanity_range" };
+        private const string PERMANENT_COINS_KEY = "permanent_coins";
         private const string ENDING_KEY = "ending_choice";
         private const string CAMPAIGN_KEY = "campaign";
         private const string ITEM_SHUFFLE_KEY = "item_shuffle";
@@ -31,6 +34,7 @@ namespace DLCQuestipelago.Archipelago
 
             return CoinBundleSize <= 0 ? 0.1 : CoinBundleSize;
         }
+        public bool PermanentCoins { get; private set; }
         public Ending Ending { get; private set; }
         public Campaign Campaign { get; private set; }
         public ItemShuffle ItemShuffle { get; private set; }
@@ -45,13 +49,28 @@ namespace DLCQuestipelago.Archipelago
             _console = console;
 
             Coinsanity = GetSlotSetting(COINSANITY_KEY, Coinsanity.None);
-            CoinBundleSize = GetSlotSetting(COINSANITY_BUNDLE_KEY, 20);
+            CoinBundleSize = GetSlotSetting(COINSANITY_BUNDLE_KEYS, 20);
+            PermanentCoins = GetSlotSetting(PERMANENT_COINS_KEY, false);
             Ending = GetSlotSetting(ENDING_KEY, Ending.TrueEnding);
             Campaign = GetSlotSetting(CAMPAIGN_KEY, Campaign.LiveFreemiumOrDie);
             ItemShuffle = GetSlotSetting(ITEM_SHUFFLE_KEY, ItemShuffle.Shuffled);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
             Seed = GetSlotSetting(SEED_KEY, "0");
             MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
+        }
+
+        private int GetSlotSetting(IEnumerable<string> keys, int defaultValue)
+        {
+            foreach (var key in keys)
+            {
+                var value = GetSlotSetting(key, defaultValue);
+                if (value != defaultValue)
+                {
+                    return value;
+                }
+            }
+
+            return defaultValue;
         }
 
         private T GetSlotSetting<T>(string key, T defaultValue) where T : struct, Enum, IConvertible
