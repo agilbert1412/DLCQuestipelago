@@ -44,7 +44,7 @@ namespace DLCQuestipelago.Shop
                     return false; // don't run original logic
                 }
 
-                __result = true;
+                __result = false;
                 return false; // don't run original logic
             }
             catch (Exception ex)
