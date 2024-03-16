@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Core;
 using DLCLib;
 using DLCLib.Campaigns;
 using DLCLib.DLC;
@@ -31,6 +32,10 @@ namespace DLCQuestipelago.Items
 
         public static double GetCurrentCoins(ArchipelagoClient archipelago)
         {
+            if (archipelago.SlotData.Coinsanity == Coinsanity.None)
+            {
+                return Singleton<SceneManager>.Instance.CurrentScene.Player.Inventory.Coins;
+            }
             var receivedCoinBundles = archipelago.GetReceivedItemCount(GetRelevantCoinName(archipelago));
             var obtainedCoins = receivedCoinBundles * archipelago.SlotData.GetRealCoinBundleSize();
             var spentCoins = DLCManager.Instance.Packs.Values.Where(x => x.State == DLCPackStateEnum.Purchased)
