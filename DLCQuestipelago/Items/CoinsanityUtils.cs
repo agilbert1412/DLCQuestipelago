@@ -38,6 +38,12 @@ namespace DLCQuestipelago.Items
             }
             var receivedCoinBundles = archipelago.GetReceivedItemCount(GetRelevantCoinName(archipelago));
             var obtainedCoins = receivedCoinBundles * archipelago.SlotData.GetRealCoinBundleSize();
+
+            if (archipelago.SlotData.PermanentCoins)
+            {
+                return obtainedCoins;
+            }
+
             var spentCoins = DLCManager.Instance.Packs.Values.Where(x => x.State == DLCPackStateEnum.Purchased)
                 .Sum(x => x.Data.Cost);
             var currentCoins = obtainedCoins - spentCoins;
