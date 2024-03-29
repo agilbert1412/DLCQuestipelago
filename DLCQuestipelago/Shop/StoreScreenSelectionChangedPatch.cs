@@ -205,7 +205,7 @@ namespace DLCQuestipelago.Shop
             playerCoinAmountText.ClearString();
             playerCoinAmountText.Append(numberCoins.ToString());
 
-            if (_archipelago.SlotData.CoinBundleSize >= 1 || useBossCoins)
+            if (_archipelago.SlotData.Coinsanity == Coinsanity.None || _archipelago.SlotData.CoinBundleSize > 0 || useBossCoins)
             {
                 return;
             }

@@ -25,7 +25,7 @@ namespace DLCQuestipelago.Coins
 
         public static void ReplaceBrokenCoins(ManualLogSource log, ArchipelagoClient archipelago)
         {
-            if (archipelago.SlotData.CoinBundleSize >= 1)
+            if (archipelago.SlotData.Coinsanity == Coinsanity.None || archipelago.SlotData.CoinBundleSize > 0)
             {
                 return;
             }

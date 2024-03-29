@@ -21,9 +21,10 @@ namespace DLCQuestipelago.Items
 
         private static string GetRelevantCoinName(ArchipelagoClient archipelago)
         {
+            var isWholeCoins = archipelago.SlotData.Coinsanity == Coinsanity.None || archipelago.SlotData.CoinBundleSize > 0;
             return CampaignManager.Instance.Campaign is DLCQuestCampaign
-                ? (archipelago.SlotData.CoinBundleSize > 0 ? BASIC_CAMPAIGN_COIN_NAME : BASIC_CAMPAIGN_COIN_PIECE_NAME)
-                : (archipelago.SlotData.CoinBundleSize > 0 ? LFOD_CAMPAIGN_COIN_NAME : LFOD_CAMPAIGN_COIN_PIECE_NAME);
+                ? (isWholeCoins ? BASIC_CAMPAIGN_COIN_NAME : BASIC_CAMPAIGN_COIN_PIECE_NAME)
+                : (isWholeCoins ? LFOD_CAMPAIGN_COIN_NAME : LFOD_CAMPAIGN_COIN_PIECE_NAME);
         }
 
         public static double GetCurrentCoins(ArchipelagoClient archipelago)
