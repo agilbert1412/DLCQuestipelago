@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using BepInEx.Logging;
+using Core;
+using DLCLib;
 using DLCLib.HUD;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
@@ -27,7 +29,7 @@ namespace DLCQuestipelago.Items
         {
             try
             {
-                if (!Plugin.Instance.IsInGame || _archipelago == null)
+                if (!Plugin.Instance.IsInGame || _archipelago == null || Singleton<SceneManager>.Instance.CurrentScene.IsBossMode)
                 {
                     return;
                 }

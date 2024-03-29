@@ -2,13 +2,8 @@
 using System.Diagnostics;
 using BepInEx.Logging;
 using DLCLib;
-using DLCLib.Campaigns;
-using DLCLib.DLC;
-using DLCLib.HUD;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
-using System.Linq;
-using System.Reflection;
 
 namespace DLCQuestipelago.Items
 {

@@ -2,6 +2,7 @@
 using DLCQuestipelago.AntiCrashes;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
+using DLCQuestipelago.Coins;
 using DLCQuestipelago.DLCUnlockPatch;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.FakeEndingBehavior;
@@ -45,6 +46,7 @@ namespace DLCQuestipelago
             InitializeKillAndDestroyPatches(log, locationChecker, giftSender);
             InitializeAwardmentPatches(log, locationChecker);
             InitializeAntiCrashPatches(log);
+            CoinsAppearancePatch.ReplaceBrokenCoins(log, archipelago);
         }
 
         private static void InitializeKillAndDestroyPatches(ManualLogSource log, LocationChecker locationChecker,

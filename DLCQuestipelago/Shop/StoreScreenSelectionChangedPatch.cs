@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
 using Core;
 using DLCDataTypes;
 using DLCLib;
-using DLCLib.DLC;
 using DLCLib.HUD;
 using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Items;
+using DLCQuestipelago.Textures;
 using HarmonyLib;
 using HUD;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DLCQuestipelago.Shop
 {
@@ -23,6 +26,7 @@ namespace DLCQuestipelago.Shop
     {
         private static ManualLogSource _log;
         private static ArchipelagoClient _archipelago;
+        private static Texture2D _coinPileTexture;
 
         private static Dictionary<string, string> _canadianDictionary;
 
@@ -30,6 +34,7 @@ namespace DLCQuestipelago.Shop
         {
             _log = log;
             _archipelago = archipelago;
+            _coinPileTexture = TexturesLoader.GetTexture(log, Path.Combine("Coins", "pile.png"));
 
             InitializeCanadianDictionary();
         }
@@ -199,6 +204,17 @@ namespace DLCQuestipelago.Shop
 
             playerCoinAmountText.ClearString();
             playerCoinAmountText.Append(numberCoins.ToString());
+
+            if (_archipelago.SlotData.CoinBundleSize >= 1 || useBossCoins)
+            {
+                return;
+            }
+
+            // protected HUDIcon playerCoinIcon;
+            var playerCoinIconField = typeof(DLCDetailPanel).GetField("playerCoinIcon", BindingFlags.NonPublic | BindingFlags.Instance);
+            var playerCoinIcon = (HUDIcon)playerCoinIconField.GetValue(detailPanel);
+            playerCoinIcon.Texture = _coinPileTexture;
+            playerCoinIcon.SourceRectangle = new Rectangle(0, 0, 64, 64);
         }
 
         private static string TurnCanadian(string text)

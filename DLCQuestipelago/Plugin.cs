@@ -148,6 +148,7 @@ namespace DLCQuestipelago
             _itemManager = new ItemManager(Log, _archipelago, _notificationHandler, _trapManager);
             _locationChecker = new LocationChecker(Log, _archipelago, new List<string>());
             _objectivePersistence = new ObjectivePersistence(Log, _archipelago);
+            _notificationHandler.InitializeTextures();
 
             _locationChecker.VerifyNewLocationChecksWithArchipelago();
             _locationChecker.SendAllLocationChecks();

@@ -19,7 +19,6 @@ using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Locations;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json.Linq;
 using Timer = Core.Timer;
 
 namespace DLCQuestipelago.DLCUnlockPatch

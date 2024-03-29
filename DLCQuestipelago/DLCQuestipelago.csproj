@@ -67,6 +67,7 @@
   <ItemGroup>
     <Folder Include="DebugPatches\" />
     <Folder Include="IdTables\" />
+    <Folder Include="Textures\Coins\" />	    
     <Folder Include="Properties\" />
   </ItemGroup>
   
@@ -75,6 +76,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="IdTables\dlc_quest_location_table.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Textures\Coins\cracked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Textures\Coins\piece.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Textures\Coins\pile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XNA\Microsoft.Xna.Framework.dll">
@@ -111,6 +121,9 @@
 		<Copy SourceFiles="$(OutputPath)SpriteSheetRuntime.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_item_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_location_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)Textures\Coins\cracked.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)Textures\Coins\piece.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)Textures\Coins\pile.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />
 		<Message Text="Copied mod files" Importance="High" />
 	</Target>
 

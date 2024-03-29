@@ -10,9 +10,11 @@ using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.Items;
+using DLCQuestipelago.Textures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Notifications;
+using SpriteSheetRuntime;
 
 namespace DLCQuestipelago
 {
@@ -23,11 +25,21 @@ namespace DLCQuestipelago
         private DLCDualContentManager _dualContentManager;
         private DLCDualAssetManager _dualAssetManager;
         private List<DLCPack> _dlcPacks;
+        private SpriteSheet spriteSheet => SceneManager.Instance.CurrentScene.HUDManager.SpriteSheet;
+        private Texture2D spriteSheetTexture => spriteSheet.Texture;
+        private Texture2D coinPieceTexture;
+        private Texture2D coinPileTexture;
 
         public ArchipelagoNotificationsHandler(ManualLogSource log, ArchipelagoClient archipelago)
         {
             _log = log;
             _archipelago = archipelago;
+        }
+
+        public void InitializeTextures()
+        {
+            coinPieceTexture = TexturesLoader.GetTexture(_log, Path.Combine("Coins", "piece.png"));
+            coinPileTexture = TexturesLoader.GetTexture(_log, Path.Combine("Coins", "pile.png"));
         }
 
         public void LoadDlcPacks(DLCDualContentManager dualContentManager, DLCDualAssetManager dualAssetManager)
@@ -84,7 +96,7 @@ namespace DLCQuestipelago
             CreateNewCoinNotification(coinBundleSize, campaign);
         }
 
-        private static void ModifyExistingCoinNotification(Notification notificationToChange, int numCoinsPerBundle, string campaign)
+        private void ModifyExistingCoinNotification(Notification notificationToChange, int numCoinsPerBundle, string campaign)
         {
             var existingDescription = notificationToChange.Description;
             var indexOfCoin = existingDescription.IndexOf("Coin", StringComparison.InvariantCultureIgnoreCase);
@@ -94,6 +106,7 @@ namespace DLCQuestipelago
             if (numCoinsPerBundle <= 0)
             {
                 numCoins += 1;
+                notificationToChange.Texture = coinPileTexture;
                 notificationToChange.Description = GetNotificationDescriptionForNumberOfCoinPieces(numCoins, campaign);
             }
             else
@@ -105,18 +118,18 @@ namespace DLCQuestipelago
 
         private void CreateNewCoinNotification(int numCoins, string campaign)
         {
-            var spriteSheet = SceneManager.Instance.CurrentScene.HUDManager.SpriteSheet;
-            var texture = spriteSheet.Texture;
-            var icon = spriteSheet.SourceRectangle("hud_coin");
+            // texture.SaveAsPng(new FileStream("Coin.png", FileMode.Create), texture.Width, texture.Height);
             if (numCoins <= 0)
             {
+                var textureRectangle = new Rectangle(0, 0, 64, 64);
                 var description = GetNotificationDescriptionForNumberOfCoinPieces(1, campaign);
-                AddNotification(description, texture, icon);
+                AddNotification(description, coinPieceTexture, textureRectangle);
             }
             else
             {
+                var textureRectangle = spriteSheet.SourceRectangle("hud_coin");
                 var description = GetNotificationDescriptionForNumberOfCoins(numCoins, campaign);
-                AddNotification(description, texture, icon);
+                AddNotification(description, spriteSheetTexture, textureRectangle);
             }
         }
 
@@ -178,20 +191,20 @@ namespace DLCQuestipelago
             return true;
         }
 
-        private void AddNotification(string description, Texture2D texture, Rectangle icon)
+        private void AddNotification(string description, Texture2D texture, Rectangle textureRectangle)
         {
-            var newNotification = CreateNewItemNotification(description, texture, icon);
+            var newNotification = CreateNewItemNotification(description, texture, textureRectangle);
             NotificationManager.Instance.AddNotification(newNotification);
         }
 
-        private Notification CreateNewItemNotification(string description, Texture2D texture, Rectangle icon)
+        private Notification CreateNewItemNotification(string description, Texture2D texture, Rectangle textureRectangle)
         {
             return new Notification()
             {
                 Title = "New Archipelago Item Received!",
                 Description = description,
                 Texture = texture,
-                SourceRectangle = icon,
+                SourceRectangle = textureRectangle,
                 Tint = Color.White,
                 CueName = "toast_up"
             };
