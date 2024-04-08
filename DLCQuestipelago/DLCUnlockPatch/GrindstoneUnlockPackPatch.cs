@@ -7,17 +7,9 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using BepInEx.Logging;
-using Core;
-using DLCLib;
-using DLCLib.Audio;
-using DLCLib.DLC;
-using DLCLib.Physics;
-using DLCLib.Render;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
+using DLCQuestipelago.Archipelago.EnergyLink;
 using DLCQuestipelago.Locations;
-using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Timer = Core.Timer;
 
@@ -154,7 +146,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
 
             _log.LogInfo($"Already finished grinding, sending {joulesPerGrind} joules into the EnergyLink");
-            session.DataStorage[Scope.Global, _energyLinkKey] += joulesPerGrind;
+            session.SendEnergy(_energyLinkKey, joulesPerGrind);
         }
 
         private static void PlayGrindAnimation(Grindstone grindstone, bool hasTimeIsMoney)
@@ -217,7 +209,8 @@ namespace DLCQuestipelago.DLCUnlockPatch
                 return;
             }
 
-            session.DataStorage[Scope.Global, _energyLinkKey] -= joulesNeeded;
+            session.DrainEnergy(_energyLinkKey, joulesNeeded);
+
             _log.LogInfo($"Used up {joulesNeeded} from the EnergyLink to finish the grindstone!");
             _grindCountField.SetValue(grindstone, 10000);
         }
