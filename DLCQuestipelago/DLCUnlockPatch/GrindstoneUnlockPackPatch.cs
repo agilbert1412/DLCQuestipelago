@@ -7,20 +7,10 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using Archipelago.MultiClient.Net.Packets;
-using BepInEx.Logging;
-using Core;
-using DLCLib;
-using DLCLib.Audio;
-using DLCLib.DLC;
-using DLCLib.Physics;
-using DLCLib.Render;
-using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
+using DLCQuestipelago.Archipelago.EnergyLink;
 using DLCQuestipelago.Locations;
-using HarmonyLib;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 using Timer = Core.Timer;
 
 namespace DLCQuestipelago.DLCUnlockPatch
@@ -156,16 +146,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
 
             _log.LogInfo($"Already finished grinding, sending {joulesPerGrind} joules into the EnergyLink");
-            session.Socket.SendPacket(new EnergyLinkSetPacket
-            {
-                Key = _energyLinkKey,
-                DefaultValue = 0,
-                Slot = session.ConnectionInfo.Slot,
-                Operations = new OperationSpecification[]
-                {
-                    new() { OperationType = OperationType.Add, Value = joulesPerGrind }
-                }
-            });
+            session.SendEnergy(_energyLinkKey, joulesPerGrind);
         }
 
         private static void PlayGrindAnimation(Grindstone grindstone, bool hasTimeIsMoney)
@@ -228,16 +209,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
                 return;
             }
 
-            session.Socket.SendPacket(new EnergyLinkSetPacket
-            {
-                Key = _energyLinkKey,
-                DefaultValue = 0,
-                Slot = session.ConnectionInfo.Slot,
-                Operations = new OperationSpecification[]
-                {
-                    new() { OperationType = OperationType.Add, Value = -joulesNeeded }
-                }
-            });
+            session.DrainEnergy(_energyLinkKey, joulesNeeded);
 
             _log.LogInfo($"Used up {joulesNeeded} from the EnergyLink to finish the grindstone!");
             _grindCountField.SetValue(grindstone, 10000);
@@ -256,11 +228,5 @@ namespace DLCQuestipelago.DLCUnlockPatch
                 _log.LogError($"Error Reading BigInteger from DataStorage key [{_energyLinkKey}]. Value: {value ?? "unknown"}. Message: {ex.Message}");
             }
         }
-    }
-
-    class EnergyLinkSetPacket : SetPacket
-    {
-        [JsonProperty("slot")]
-        public int Slot { get; set; }
     }
 }
