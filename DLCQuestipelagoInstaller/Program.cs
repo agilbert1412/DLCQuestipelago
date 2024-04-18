@@ -166,7 +166,15 @@ namespace DLCQuestipelagoInstaller
             }
 
             var steamInstallPath = (string)steamInstallRegistryNode;
-            var dlcQuestInstall = Path.Combine(steamInstallPath, "steamapps", "common", "DLC Quest");
+            var libraryFolders = from line in File.ReadAllLines(Path.Combine(steamInstallPath, "steamapps", "libraryfolders.vdf"))
+                                 where line.Contains("\"path\"")
+                                 let parts = line.Split('"', 3, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                 where parts.Length > 1
+                                 select Path.Combine(parts[1].Replace(@"\\", @"\"), "steamapps", "common");
+            var dlcQuestInstall = (from libraryFolder in libraryFolders
+                                   from gameFolder in Directory.GetDirectories(libraryFolder)
+                                   where gameFolder.EndsWith("DLC Quest", StringComparison.InvariantCultureIgnoreCase)
+                                   select gameFolder).FirstOrDefault();
             return IsDLCQuestInstall(dlcQuestInstall) ? dlcQuestInstall : GetManualPathToDLCQuest();
         }
 
