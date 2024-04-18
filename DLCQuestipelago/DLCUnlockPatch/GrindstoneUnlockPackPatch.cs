@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using BepInEx.Logging;
+using Core;
+using DLCLib;
+using DLCLib.Audio;
+using DLCLib.DLC;
+using DLCLib.Physics;
+using DLCLib.Render;
+using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.EnergyLink;
 using DLCQuestipelago.Locations;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Timer = Core.Timer;
 
