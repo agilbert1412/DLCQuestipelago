@@ -12,6 +12,9 @@ namespace DLCQuestipelago.Items
 {
     public class ItemParser
     {
+        private const string DLC_QUEST_WEAPON = "DLC Quest: Progressive Weapon";
+        private const string LFOD_WEAPON = "Live Freemium or Die: Progressive Weapon";
+
         private ArchipelagoClient _archipelago;
         private readonly TrapManager _trapManager;
         public HashSet<string> ReceivedDLCs { get; }
@@ -35,12 +38,12 @@ namespace DLCQuestipelago.Items
 
         public void ProcessItem(string itemName, bool isNew)
         {
-            if (TryHandleDLC(itemName, isNew))
+            if (TryHandleDLC(itemName))
             {
                 return;
             }
 
-            if (TryHandleItem(itemName, isNew))
+            if (TryHandleItem(itemName))
             {
                 return;
             }
@@ -51,7 +54,7 @@ namespace DLCQuestipelago.Items
             }
         }
 
-        private bool TryHandleDLC(string itemName, bool isNew)
+        private bool TryHandleDLC(string itemName)
         {
             DLCPack unlockedDLC = null;
             foreach (var x in DLCManager.Instance.Packs)
@@ -89,39 +92,39 @@ namespace DLCQuestipelago.Items
             return false;
         }
 
-        private static bool TryHandleItem(string itemName, bool isNew)
+        private bool TryHandleItem(string itemName)
         {
             if (CampaignManager.Instance.Campaign is DLCQuestCampaign)
             {
-                if (itemName == "DLC Quest: Progressive Weapon")
+                if (itemName == DLC_QUEST_WEAPON)
                 {
-                    GivePlayerDlcQuestNextWeapon();
+                    SetCorrectDlcQuestWeapon();
                     return true;
                 }
 
                 if (itemName == "Sword")
                 {
-                    GivePlayerDlcQuestSword();
+                    SetPlayerDlcQuestSword(true);
                     return true;
                 }
 
                 if (itemName == "Gun")
                 {
-                    GivePlayerGun();
+                    SetPlayerGun(true);
                     return true;
                 }
             }
             else
             {
-                if (itemName == "Live Freemium or Die: Progressive Weapon")
+                if (itemName == LFOD_WEAPON)
                 {
-                    GivePlayerLFODNextWeapon();
+                    SetCorrectLFODWeapon();
                     return true;
                 }
 
                 if (itemName == "Wooden Sword")
                 {
-                    GivePlayerWoodenSword();
+                    SetPlayerWoodenSword(true);
                     return true;
                 }
 
@@ -139,7 +142,7 @@ namespace DLCQuestipelago.Items
 
                 if (itemName == "Pickaxe")
                 {
-                    GivePlayerPickaxe();
+                    SetPlayerPickaxe(true);
                     return true;
                 }
             }
@@ -147,52 +150,85 @@ namespace DLCQuestipelago.Items
             return false;
         }
 
-        private static void GivePlayerDlcQuestSword()
+        private static void SetPlayerDlcQuestSword(bool hasSword)
         {
-            Player.Inventory.HasSword = true;
+            Player.Inventory.HasSword = hasSword;
             Player.RefreshAnimations();
         }
 
-        private static void GivePlayerGun()
+        private static void SetPlayerGun(bool hasGun)
         {
-            Player.Inventory.HasGun = true;
+            Player.Inventory.HasGun = hasGun;
             Player.RefreshAnimations();
-            AwardmentManager.Instance.Award("packingheat");
-        }
-
-        private static void GivePlayerDlcQuestNextWeapon()
-        {
-            if (!Player.Inventory.HasSword)
+            if (hasGun)
             {
-                GivePlayerDlcQuestSword();
-                return;
+                AwardmentManager.Instance.Award("packingheat");
             }
-
-            GivePlayerGun();
         }
 
-        private static void GivePlayerWoodenSword()
+        private void SetCorrectDlcQuestWeapon()
         {
-            Player.Inventory.HasSword = true;
-            Player.RefreshAnimations();
-            ZeldaMethod.Invoke(Player, new object[] { "boss_sword_0", "Sword", 2f });
-            AwardmentManager.Instance.Award("storyprogress");
-        }
-
-        private static void GivePlayerPickaxe()
-        {
-            GrooveNPC.GiveMattock(true);
-        }
-
-        private static void GivePlayerLFODNextWeapon()
-        {
-            if (!Player.Inventory.HasSword)
+            var numWeaponsReceived = _archipelago.GetReceivedItemCount(DLC_QUEST_WEAPON);
+            switch (numWeaponsReceived)
             {
-                GivePlayerWoodenSword();
-                return;
+                case <= 0:
+                    SetPlayerDlcQuestSword(false);
+                    SetPlayerGun(false);
+                    return;
+                case 1:
+                    SetPlayerDlcQuestSword(true);
+                    SetPlayerGun(false);
+                    return;
+                default:
+                    SetPlayerDlcQuestSword(true);
+                    SetPlayerGun(true);
+                    break;
             }
+        }
 
-            GivePlayerPickaxe();
+        private static void SetPlayerWoodenSword(bool hasWoodenSword)
+        {
+            Player.Inventory.HasSword = hasWoodenSword;
+            Player.RefreshAnimations();
+            if (hasWoodenSword)
+            {
+                ZeldaMethod.Invoke(Player, new object[] { "boss_sword_0", "Sword", 2f });
+                AwardmentManager.Instance.Award("storyprogress");
+            }
+        }
+
+        private static void SetPlayerPickaxe(bool hasPickaxe)
+        {
+            if (hasPickaxe)
+            {
+                GrooveNPC.GiveMattock(true);
+            }
+            else
+            {
+                Player.Inventory.HasMattock = false;
+                Player.AttachedWeapon = null;
+                Player.RefreshAnimations();
+            }
+        }
+
+        private void SetCorrectLFODWeapon()
+        {
+            var numWeaponsReceived = _archipelago.GetReceivedItemCount(LFOD_WEAPON);
+            switch (numWeaponsReceived)
+            {
+                case <= 0:
+                    SetPlayerWoodenSword(false);
+                    SetPlayerPickaxe(false);
+                    return;
+                case 1:
+                    SetPlayerWoodenSword(true);
+                    SetPlayerPickaxe(false);
+                    return;
+                default:
+                    SetPlayerWoodenSword(true);
+                    SetPlayerPickaxe(true);
+                    break;
+            }
         }
 
         private static void GivePlayerBoxOfSupplies()
