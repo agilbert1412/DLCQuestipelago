@@ -166,15 +166,14 @@ namespace DLCQuestipelagoInstaller
             }
 
             var steamInstallPath = (string)steamInstallRegistryNode;
-            var libraryFolders = from line in File.ReadAllLines(Path.Combine(steamInstallPath, "steamapps", "libraryfolders.vdf"))
-                                 where line.Contains("\"path\"")
-                                 let parts = line.Split('"', 3, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                                 where parts.Length > 1
-                                 select Path.Combine(parts[1].Replace(@"\\", @"\"), "steamapps", "common");
-            var dlcQuestInstall = (from libraryFolder in libraryFolders
-                                   from gameFolder in Directory.GetDirectories(libraryFolder)
-                                   where gameFolder.EndsWith("DLC Quest", StringComparison.InvariantCultureIgnoreCase)
-                                   select gameFolder).FirstOrDefault();
+            var libraryFolders = File.ReadAllLines(Path.Combine(steamInstallPath, "steamapps", "libraryfolders.vdf"))
+                                     .Where(line => line.Contains("\"path\""))
+                                     .Select(line => line.Split('"', 3, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                                     .Where(parts => parts.Length > 1)
+                                     .Select(parts => Path.Combine(parts[1].Replace(@"\\", @"\"), "steamapps", "common"));
+            var dlcQuestInstall = libraryFolders.SelectMany(libraryFolder => Directory.GetDirectories(libraryFolder))
+                                                .Where(gameFolder => gameFolder.EndsWith("DLC Quest", StringComparison.InvariantCultureIgnoreCase))
+                                                .FirstOrDefault();
             return IsDLCQuestInstall(dlcQuestInstall) ? dlcQuestInstall : GetManualPathToDLCQuest();
         }
 
