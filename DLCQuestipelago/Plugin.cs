@@ -44,8 +44,17 @@ namespace DLCQuestipelago
             Log.LogInfo($"Loading {PluginInfo.PLUGIN_NAME}...");
             Instance = this;
 
-            _harmony = new Harmony(PluginInfo.PLUGIN_NAME);
-            _harmony.PatchAll();
+            try
+            {
+                _harmony = new Harmony(PluginInfo.PLUGIN_NAME);
+                _harmony.PatchAll();
+            }
+            catch (FileNotFoundException fnfe)
+            {
+                if (fnfe.FileName.Contains("Microsoft.Xna.Framework"))
+                    Log.LogError($"Cannot load {PluginInfo.PLUGIN_NAME}: Microsoft XNA Framework 4.0 is not installed. Please run DLC Quest from Steam, then try again.");
+                throw;
+            }
 
             TaskExtensions.Initialize(Log);
             _archipelago = new ArchipelagoClient(Log, _harmony, OnItemReceived);
