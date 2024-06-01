@@ -86,9 +86,8 @@ namespace DLCQuestipelago.Items
             var zombieSheep = new ZombieSheepTrap(Plugin.DualContentManager);
             zombieSheep.LoadContent();
             zombieSheep.Respawn(Player.Position);
-            var addZombieSheepSpawningEffectMethod =
-                typeof(EffectsManager).GetMethod("AddZombieSheepSpawningEffect",
-                    BindingFlags.Instance | BindingFlags.NonPublic);
+            var addZombieSheepSpawningEffectMethod = typeof(EffectsManager).GetMethod("AddZombieSheepSpawningEffect",
+                BindingFlags.Instance | BindingFlags.NonPublic);
             addZombieSheepSpawningEffectMethod.Invoke(CurrentScene.EffectsManager, new object[] { Player.Position });
         }
 

@@ -29,6 +29,7 @@ namespace DLCQuestipelago.Items.Traps
             try
             {
                 var numberOfSheepReceived = _archipelago.GetReceivedItemCount(TrapManager.ZOMBIE_SHEEP);
+                numberOfSheepReceived = Math.Min(25, numberOfSheepReceived);
                 var sheepChance = (double)numberOfSheepReceived / 300.0;
 
                 if (_random.NextDouble() < sheepChance)
