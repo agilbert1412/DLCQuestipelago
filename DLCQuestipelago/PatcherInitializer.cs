@@ -42,7 +42,7 @@ namespace DLCQuestipelago
             InitializeAllObjectivePatches(log, objectivePersistence);
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
-            InitializeAllPersistencyPatches(log);
+            InitializeAllPersistencyPatches(log, archipelago);
             InitializeKillAndDestroyPatches(log, locationChecker, giftSender);
             InitializeAwardmentPatches(log, locationChecker);
             InitializeAntiCrashPatches(log);
@@ -124,11 +124,11 @@ namespace DLCQuestipelago
             PurchaseNameChangePatch.Initialize(log, archipelago, nameChanger);
         }
 
-        private static void InitializeAllPersistencyPatches(ManualLogSource log)
+        private static void InitializeAllPersistencyPatches(ManualLogSource log, ArchipelagoClient archipelago)
         {
             ClearSaveGamePatch.Initialize(log);
             ContinueGamePatch.Initialize(log);
-            GetSaveFilenamePatch.Initialize(log);
+            GetSaveFilenamePatch.Initialize(log, archipelago);
             QuitToMainMenuPatch.Initialize(log);
             SaveGameDataPatch.Initialize(log);
             StartNewGamePatch.Initialize(log);
