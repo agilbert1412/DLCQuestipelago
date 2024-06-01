@@ -33,8 +33,7 @@ namespace DLCQuestipelago
                     return false; // don't run original logic
                 }
 
-                if (_archipelago.SlotData.Campaign == Campaign.LiveFreemiumOrDie &&
-                    selectedCampaignName == BASIC_CAMPAIGN)
+                if (_archipelago.SlotData.Campaign == Campaign.LiveFreemiumOrDie && selectedCampaignName == BASIC_CAMPAIGN)
                 {
                     return false; // don't run original logic
                 }

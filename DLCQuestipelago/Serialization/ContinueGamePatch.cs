@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using BepInEx.Logging;
+using DLCLib;
+using DLCLib.Campaigns;
 using DLCLib.Screens;
 using GameStateManagement;
 using HarmonyLib;
@@ -29,6 +31,19 @@ namespace DLCQuestipelago.Serialization
                 }
 
                 Plugin.Instance.EnterGame();
+
+                if (!CampaignManager.Instance.Campaign.SpawnOnlyAtCheckpoint)
+                {
+                    return;
+                }
+
+                var scene = SceneManager.Instance?.CurrentScene;
+                if (scene == null)
+                {
+                    return;
+                }
+
+                scene.Player.Teleport(scene.CheckpointManager.GetRespawnPosition());
             }
             catch (Exception ex)
             {
