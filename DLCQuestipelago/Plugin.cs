@@ -107,6 +107,7 @@ namespace DLCQuestipelago
             Log.LogMessage($"Connected to Archipelago as {_archipelago.SlotData.SlotName}.");// Type !!help for client commands");
             WritePersistentArchipelagoData();
             _giftHandler = new GiftHandler(Log, _archipelago, _notificationHandler, _trapManager, _speedChanger);
+            PatcherInitializer.InitializeEarly(Log, _archipelago);
         }
 
         private void ReadPersistentArchipelagoData()

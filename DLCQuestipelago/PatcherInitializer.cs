@@ -20,6 +20,11 @@ namespace DLCQuestipelago
 {
     public static class PatcherInitializer
     {
+        public static void InitializeEarly(ManualLogSource log, ArchipelagoClient archipelago)
+        {
+            InitializeAllPersistencyPatches(log, archipelago);
+        }
+
         public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence, GiftSender giftSender)
         {
             InitializeDualContentManagerPatches(log);
@@ -42,7 +47,6 @@ namespace DLCQuestipelago
             InitializeAllObjectivePatches(log, objectivePersistence);
             InitializeFakeEndingDisconnectPatches(log, archipelago);
             InitializeNameChangePatches(log, archipelago);
-            InitializeAllPersistencyPatches(log, archipelago);
             InitializeKillAndDestroyPatches(log, locationChecker, giftSender);
             InitializeAwardmentPatches(log, locationChecker);
             InitializeAntiCrashPatches(log);
