@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
 using DLCDataTypes;
 using DLCLib;
 using DLCLib.DLC;
@@ -11,6 +10,8 @@ using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Textures;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Notifications;
@@ -20,8 +21,8 @@ namespace DLCQuestipelago
 {
     public class ArchipelagoNotificationsHandler
     {
-        private ManualLogSource _log;
-        private ArchipelagoClient _archipelago;
+        private ILogger _logger;
+        private DLCQArchipelagoClient _archipelago;
         private DLCDualContentManager _dualContentManager;
         private DLCDualAssetManager _dualAssetManager;
         private List<DLCPack> _dlcPacks;
@@ -30,16 +31,16 @@ namespace DLCQuestipelago
         private Texture2D coinPieceTexture;
         private Texture2D coinPileTexture;
 
-        public ArchipelagoNotificationsHandler(ManualLogSource log, ArchipelagoClient archipelago)
+        public ArchipelagoNotificationsHandler(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
         public void InitializeTextures()
         {
-            coinPieceTexture = TexturesLoader.GetTexture(_log, Path.Combine("Coins", "piece.png"));
-            coinPileTexture = TexturesLoader.GetTexture(_log, Path.Combine("Coins", "pile.png"));
+            coinPieceTexture = TexturesLoader.GetTexture(_logger, Path.Combine("Coins", "piece.png"));
+            coinPileTexture = TexturesLoader.GetTexture(_logger, Path.Combine("Coins", "pile.png"));
         }
 
         public void LoadDlcPacks(DLCDualContentManager dualContentManager, DLCDualAssetManager dualAssetManager)

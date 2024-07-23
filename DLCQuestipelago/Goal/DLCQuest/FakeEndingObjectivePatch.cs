@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.Scripts;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Goal.DLCQuest
 {
@@ -11,12 +11,12 @@ namespace DLCQuestipelago.Goal.DLCQuest
     [HarmonyPatch(nameof(EndGame.OnFakeEndingCreditsComplete))]
     public static class FakeEndingObjectivePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ObjectivePersistence _objectivePersistence;
 
-        public static void Initialize(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        public static void Initialize(ILogger logger, ObjectivePersistence objectivePersistence)
         {
-            _log = log;
+            _logger = logger;
             _objectivePersistence = objectivePersistence;
         }
 
@@ -34,7 +34,7 @@ namespace DLCQuestipelago.Goal.DLCQuest
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(FakeEndingObjectivePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(FakeEndingObjectivePatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Items;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Shop
 {
@@ -12,12 +12,12 @@ namespace DLCQuestipelago.Shop
     [HarmonyPatch(nameof(Inventory.MakePurchase))]
     public static class InventoryMakePurchasePatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
@@ -49,7 +49,7 @@ namespace DLCQuestipelago.Shop
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(InventoryMakePurchasePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(InventoryMakePurchasePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

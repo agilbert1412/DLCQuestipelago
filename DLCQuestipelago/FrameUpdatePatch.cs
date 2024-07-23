@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago
@@ -10,11 +10,11 @@ namespace DLCQuestipelago
     [HarmonyPatch("Update")]
     public static class FrameUpdatePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // protected override void Update(GameTime gameTime)
@@ -26,7 +26,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(FrameUpdatePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(FrameUpdatePatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

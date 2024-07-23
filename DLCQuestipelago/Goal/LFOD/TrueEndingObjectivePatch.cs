@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Goal.LFOD
 {
@@ -11,12 +11,12 @@ namespace DLCQuestipelago.Goal.LFOD
     [HarmonyPatch(nameof(BossFight.PerformFinalAttack))]
     public static class TrueEndingObjectivePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ObjectivePersistence _objectivePersistence;
 
-        public static void Initialize(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        public static void Initialize(ILogger logger, ObjectivePersistence objectivePersistence)
         {
-            _log = log;
+            _logger = logger;
             _objectivePersistence = objectivePersistence;
         }
 
@@ -34,7 +34,7 @@ namespace DLCQuestipelago.Goal.LFOD
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(TrueEndingObjectivePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(TrueEndingObjectivePatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

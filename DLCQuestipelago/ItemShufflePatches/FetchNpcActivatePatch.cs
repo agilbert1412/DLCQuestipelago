@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
 using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.ItemShufflePatches
 {
@@ -14,14 +14,14 @@ namespace DLCQuestipelago.ItemShufflePatches
     [HarmonyPatch(nameof(FetchNPC.Activate))]
     public static class FetchNpcActivatePatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
         private static ConversationStarter _conversationStarter;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago, LocationChecker locationChecker, ConversationStarter conversationStarter)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _locationChecker = locationChecker;
             _conversationStarter = conversationStarter;
@@ -69,7 +69,7 @@ namespace DLCQuestipelago.ItemShufflePatches
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(FetchNpcActivatePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(FetchNpcActivatePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

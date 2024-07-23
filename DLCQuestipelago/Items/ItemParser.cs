@@ -1,12 +1,12 @@
 ﻿using DLCLib.Campaigns;
 using DLCLib.Character;
 using DLCLib.DLC;
-using DLCQuestipelago.Archipelago;
 using System.Collections.Generic;
 using System.Reflection;
 using Awardments;
 using DLCLib;
 using DLCLib.Conversation;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
 
 namespace DLCQuestipelago.Items
 {

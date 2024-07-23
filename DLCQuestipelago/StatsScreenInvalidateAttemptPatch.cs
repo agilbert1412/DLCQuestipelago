@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Screens;
 using HarmonyLib;
 
@@ -10,11 +10,11 @@ namespace DLCQuestipelago
     [HarmonyPatch("IsValidAttempt")]
     public static class StatsScreenInvalidateAttemptPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // protected bool IsValidAttempt()
@@ -27,7 +27,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(StatsScreenInvalidateAttemptPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(StatsScreenInvalidateAttemptPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

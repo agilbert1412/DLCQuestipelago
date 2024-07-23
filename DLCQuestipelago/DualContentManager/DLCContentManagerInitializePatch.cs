@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.DualContentManager
 {
@@ -10,12 +10,12 @@ namespace DLCQuestipelago.DualContentManager
     [HarmonyPatch(nameof(DLCContentManager.Initialize))]
     public static class DLCContentManagerInitializePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ArchipelagoNotificationsHandler _notificationHandler;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoNotificationsHandler notificationsHandler)
+        public static void Initialize(ILogger logger, ArchipelagoNotificationsHandler notificationsHandler)
         {
-            _log = log;
+            _logger = logger;
             _notificationHandler = notificationsHandler;
         }
 
@@ -24,13 +24,13 @@ namespace DLCQuestipelago.DualContentManager
         {
             try
             {
-                Plugin.DualContentManager = new DLCDualContentManager(serviceProvider, rootDirectory, _log);
-                Plugin.DualAssetManager = new DLCDualAssetManager(_log, Plugin.DualContentManager);
+                Plugin.DualContentManager = new DLCDualContentManager(serviceProvider, rootDirectory, _logger);
+                Plugin.DualAssetManager = new DLCDualAssetManager(_logger, Plugin.DualContentManager);
                 _notificationHandler.LoadDlcPacks(Plugin.DualContentManager, Plugin.DualAssetManager);
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(DLCContentManagerInitializePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(DLCContentManagerInitializePatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

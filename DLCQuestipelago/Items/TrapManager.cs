@@ -6,8 +6,8 @@ using DLCLib.Audio;
 using DLCLib.DLC;
 using DLCLib.Effects;
 using DLCLib.World.Props;
-using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Items.Traps;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
 
 namespace DLCQuestipelago.Items
 {

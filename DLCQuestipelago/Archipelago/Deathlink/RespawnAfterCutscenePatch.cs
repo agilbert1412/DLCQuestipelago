@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
 using DLCLib.NIS;
 using HarmonyLib;
@@ -12,11 +12,11 @@ namespace DLCQuestipelago.Archipelago.Deathlink
     [HarmonyPatch("Complete")]
     public static class RespawnAfterCutscenePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // protected void Complete()
@@ -37,7 +37,7 @@ namespace DLCQuestipelago.Archipelago.Deathlink
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(RespawnAfterCutscenePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(RespawnAfterCutscenePatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

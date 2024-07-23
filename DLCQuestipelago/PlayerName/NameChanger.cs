@@ -12,9 +12,9 @@ namespace DLCQuestipelago.PlayerName
         private static readonly string[] _decorators = new[] { "x", "X", "~", "*", "-", "_", "|", "/", @"\" };
         // private static readonly string[] _decorators = new[] { "x", "X", "x~", "X~", "xx", "XX", "Xx", "xX", "xx~", "XX~", "Xx~", "xX~", "xXx", "XxX", "xXx~", "XxX~" };
 
-        private ArchipelagoClient _archipelago;
+        private DLCQArchipelagoClient _archipelago;
 
-        public NameChanger(ArchipelagoClient archipelago)
+        public NameChanger(DLCQArchipelagoClient archipelago)
         {
             _archipelago = archipelago;
         }

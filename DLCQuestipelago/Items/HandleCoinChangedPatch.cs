@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.HUD;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
 using HUD;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Items
 {
@@ -15,12 +15,12 @@ namespace DLCQuestipelago.Items
     [HarmonyPatch(nameof(CoinDisplay.HandleCoinChanged))]
     public static class HandleCoinChangedPatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
@@ -52,7 +52,7 @@ namespace DLCQuestipelago.Items
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(HandleCoinChangedPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(HandleCoinChangedPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

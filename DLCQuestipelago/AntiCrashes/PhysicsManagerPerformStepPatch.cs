@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using BepInEx.Logging;
 using DLCLib.Physics;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.AntiCrashes
@@ -14,12 +14,12 @@ namespace DLCQuestipelago.AntiCrashes
     {
         private static readonly Vector2 MAX_VELOCITY = new Vector2(30f);
 
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static NodeCleaner _nodeCleaner;
 
-        public static void Initialize(ManualLogSource log, NodeCleaner nodeCleaner)
+        public static void Initialize(ILogger logger, NodeCleaner nodeCleaner)
         {
-            _log = log;
+            _logger = logger;
             _nodeCleaner = nodeCleaner;
         }
 
@@ -77,7 +77,7 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(PhysicsManagerPerformStepPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 // Debugger.Break();
 
                 if (ex.Message.Equals(NodeCleaner.NODE_DOES_NOT_HAVE_PARENT_ERROR, StringComparison.InvariantCultureIgnoreCase))

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.Input;
@@ -9,6 +8,7 @@ using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago.PlayerName
@@ -20,8 +20,8 @@ namespace DLCQuestipelago.PlayerName
         private static string NEW_NAME_1 = "{0} 2";
         private static string NEW_NAME_2 = "Axe_y";
 
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static NameChanger _nameChanger;
 
         private static string ApName => _archipelago.GetPlayerAlias(_archipelago.SlotData.SlotName) ?? _archipelago.SlotData.SlotName;
@@ -30,9 +30,9 @@ namespace DLCQuestipelago.PlayerName
 
         private static string _currentFinalName = "";
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, NameChanger nameChanger)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago, NameChanger nameChanger)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _nameChanger = nameChanger;
         }
@@ -55,7 +55,7 @@ namespace DLCQuestipelago.PlayerName
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(PurchaseNameChangePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(PurchaseNameChangePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

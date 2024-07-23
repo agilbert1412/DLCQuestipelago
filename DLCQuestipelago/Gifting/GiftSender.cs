@@ -7,9 +7,9 @@ using Archipelago.Gifting.Net.Gifts;
 using Archipelago.Gifting.Net.Service;
 using Archipelago.Gifting.Net.Traits;
 using Archipelago.MultiClient.Net.Helpers;
-using BepInEx.Logging;
 using DLCLib;
 using DLCQuestipelago.Archipelago;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Gifting
 {
@@ -20,27 +20,28 @@ namespace DLCQuestipelago.Gifting
         private static readonly HashSet<string> _vineTraits = new() { "Vine", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Grass, "Fiber" };
         private static readonly HashSet<string> _zombieSheepTraits = new() { "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster, GiftFlag.Trap };
 
-        private readonly ManualLogSource _log;
-        private ArchipelagoClient _archipelago;
+        private readonly ILogger _logger;
+        private DLCQArchipelagoClient _archipelago;
         private IGiftingService _giftService;
 
-        public GiftSender(ManualLogSource log, ArchipelagoClient archipelago, IGiftingService giftService)
+        public GiftSender(ILogger logger, DLCQArchipelagoClient archipelago, IGiftingService giftService)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _giftService = giftService;
         }
 
         public async Task SendTreeGift(int x, int y)
         {
-            _log.LogInfo($"Trying to send a Tree Gift");
+            _logger.LogInfo($"Trying to send a Tree Gift");
             var stringTraits = new HashSet<string>(_treeTraits);
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
-                _log.LogInfo($"No player found that can receive a Tree Gift");
+                _logger.LogInfo($"No player found that can receive a Tree Gift");
                 return;
             }
+
             var giftItem = new GiftItem("Tree", 1, 0);
             var traits = stringTraits.Select(x => new GiftTrait(x, 1, 1)).ToArray();
 
@@ -49,12 +50,12 @@ namespace DLCQuestipelago.Gifting
 
         public async Task SendRockGift(int x, int y)
         {
-            _log.LogInfo($"Trying to send a Rock Gift");
+            _logger.LogInfo($"Trying to send a Rock Gift");
             var stringTraits = new HashSet<string>(_rockTraits);
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
-                _log.LogInfo($"No player found that can receive a Rock Gift");
+                _logger.LogInfo($"No player found that can receive a Rock Gift");
                 return;
             }
             var giftItem = new GiftItem("Rock", 1, 0);
@@ -65,12 +66,12 @@ namespace DLCQuestipelago.Gifting
 
         public async Task SendVineGift(int x, int y)
         {
-            _log.LogInfo($"Trying to send a Vine Gift");
+            _logger.LogInfo($"Trying to send a Vine Gift");
             var stringTraits = new HashSet<string>(_vineTraits);
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
-                _log.LogInfo($"No player found that can receive a Vine Gift");
+                _logger.LogInfo($"No player found that can receive a Vine Gift");
                 return;
             }
             var giftItem = new GiftItem("Vine", 1, 0);
@@ -81,12 +82,12 @@ namespace DLCQuestipelago.Gifting
 
         public async Task SendZombieSheepGift(int x, int y)
         {
-            _log.LogInfo($"Trying to send a Zombie Sheep Trap");
+            _logger.LogInfo($"Trying to send a Zombie Sheep Trap");
             var stringTraits = new HashSet<string>(_zombieSheepTraits);
             var validTargetPlayers = await GetPlayersThatCanReceive(stringTraits);
             if (!validTargetPlayers.Any())
             {
-                _log.LogInfo($"No player found that can receive a Zombie Sheep Trap");
+                _logger.LogInfo($"No player found that can receive a Zombie Sheep Trap");
                 return;
             }
             var giftItem = new GiftItem("Zombie Sheep", 1, 0);
@@ -101,7 +102,7 @@ namespace DLCQuestipelago.Gifting
                                     (int)StopwatchComponent.Instance.GetElapsedTime().TotalMilliseconds);
             var targetIndex = random.Next(0, validTargetPlayers.Count);
             var target = validTargetPlayers[targetIndex];
-            _log.LogInfo($"Target: {target.Name}");
+            _logger.LogInfo($"Target: {target.Name}");
             await SendGiftAsync(giftItem, traits, target);
         }
 
@@ -219,11 +220,11 @@ namespace DLCQuestipelago.Gifting
             var result = await _giftService.SendGiftAsync(giftItem, traits, target.Name, target.Team);
             if (result)
             {
-                _log.LogInfo($"Successfully send a gift to {target.Name}");
+                _logger.LogInfo($"Successfully send a gift to {target.Name}");
             }
             else
             {
-                _log.LogWarning($"Failed at sending a trap gift to {target.Name}");
+                _logger.LogWarning($"Failed at sending a trap gift to {target.Name}");
             }
         }
 
@@ -233,7 +234,7 @@ namespace DLCQuestipelago.Gifting
             Debug.Assert(result, $"Failed at sending a trap gift to {target.Name}");
             if (result)
             {
-                _log.LogInfo($"Successfully send a gift to {target.Name}");
+                _logger.LogInfo($"Successfully send a gift to {target.Name}");
             }
         }
     }

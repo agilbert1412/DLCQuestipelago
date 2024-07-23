@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
 using DLCLib.Campaigns;
 using DLCLib.Screens;
@@ -13,11 +13,11 @@ namespace DLCQuestipelago.Serialization
     [HarmonyPatch("continueGameEntry_Selected")]
     public static class ContinueGamePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // private void continueGameEntry_Selected(object sender, PlayerIndexEventArgs e)
@@ -47,7 +47,7 @@ namespace DLCQuestipelago.Serialization
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(ContinueGamePatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(ContinueGamePatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

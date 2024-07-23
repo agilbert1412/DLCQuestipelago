@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.HUD;
@@ -10,6 +9,7 @@ using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Textures;
 using HUD;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -23,15 +23,15 @@ namespace DLCQuestipelago.Coins
         private static FieldInfo _idleAnimField;
         private static FieldInfo _animPlayerField;
 
-        public static void ReplaceBrokenCoins(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void ReplaceBrokenCoins(ILogger logger, DLCQArchipelagoClient archipelago)
         {
             if (archipelago.SlotData.Coinsanity == Coinsanity.None || archipelago.SlotData.CoinBundleSize > 0)
             {
                 return;
             }
 
-            _brokenCoinTexture = TexturesLoader.GetTexture(log, Path.Combine("Coins", "cracked.png"));
-            _coinPileTexture = TexturesLoader.GetTexture(log, Path.Combine("Coins", "pile.png"));
+            _brokenCoinTexture = TexturesLoader.GetTexture(logger, Path.Combine("Coins", "cracked.png"));
+            _coinPileTexture = TexturesLoader.GetTexture(logger, Path.Combine("Coins", "pile.png"));
 
             // protected HUDIcon coinIcon;
             _coinIconField = typeof(CoinDisplay).GetField("coinIcon", BindingFlags.NonPublic | BindingFlags.Instance);

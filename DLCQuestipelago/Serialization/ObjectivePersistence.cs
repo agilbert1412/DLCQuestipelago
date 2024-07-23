@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Reflection;
-using BepInEx.Logging;
 using DLCLib.Save;
 using DLCQuestipelago.Archipelago;
 using EasyStorage;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Serialization
 {
@@ -21,8 +21,8 @@ namespace DLCQuestipelago.Serialization
 
         private const string TRUE = "true";
 
-        private ManualLogSource _log;
-        private ArchipelagoClient _archipelago;
+        private ILogger _logger;
+        private DLCQArchipelagoClient _archipelago;
 
 
         private static readonly MethodInfo GetSaveFilenameMethod =
@@ -30,9 +30,9 @@ namespace DLCQuestipelago.Serialization
         private static readonly FieldInfo SaveDeviceField =
             typeof(DLCSaveManager).GetField("saveDevice", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public ObjectivePersistence(ManualLogSource log, ArchipelagoClient archipelago)
+        public ObjectivePersistence(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
@@ -118,7 +118,7 @@ namespace DLCQuestipelago.Serialization
                     writer.Flush();
                 }
             });
-            _log.LogMessage($"Objective Complete: {key}");
+            _logger.LogMessage($"Objective Complete: {key}");
             CheckGoalCompletion();
         }
 

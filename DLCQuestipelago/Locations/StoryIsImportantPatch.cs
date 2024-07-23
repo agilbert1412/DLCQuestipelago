@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using Awardments;
-using BepInEx.Logging;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Locations
 {
@@ -11,12 +12,12 @@ namespace DLCQuestipelago.Locations
     public static class StoryIsImportantPatch
     {
         private const string ACHIEVEMENT_NAME = $"Story is Important";
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, LocationChecker locationChecker)
         {
-            _log = log;
+            _logger = logger;
             _locationChecker = locationChecker;
         }
 
@@ -25,12 +26,12 @@ namespace DLCQuestipelago.Locations
         {
             try
             {
-                _log.LogInfo(ACHIEVEMENT_NAME);
+                _logger.LogInfo(ACHIEVEMENT_NAME);
                 _locationChecker.AddCheckedLocation(ACHIEVEMENT_NAME);
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(StoryIsImportantPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(StoryIsImportantPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

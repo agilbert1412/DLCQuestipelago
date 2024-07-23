@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.Scripts.LFOD;
-using DLCQuestipelago.Archipelago;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.FakeEndingBehavior
 {
@@ -11,12 +11,12 @@ namespace DLCQuestipelago.FakeEndingBehavior
     [HarmonyPatch(nameof(FakeEnding.OnFakeEndingComplete))]
     public static class FakeEndingDisconnectPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
@@ -29,7 +29,7 @@ namespace DLCQuestipelago.FakeEndingBehavior
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(FakeEndingDisconnectPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(FakeEndingDisconnectPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

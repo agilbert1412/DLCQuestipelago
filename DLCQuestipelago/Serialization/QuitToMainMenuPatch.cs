@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Screens;
 using HarmonyLib;
 
@@ -10,11 +10,11 @@ namespace DLCQuestipelago.Serialization
     [HarmonyPatch("QuitToCampaignScreen")]
     public static class QuitToMainMenuPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // protected void QuitToCampaignScreen()
@@ -26,7 +26,7 @@ namespace DLCQuestipelago.Serialization
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(QuitToMainMenuPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(QuitToMainMenuPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

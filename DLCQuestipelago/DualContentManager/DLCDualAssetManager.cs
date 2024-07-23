@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteSheetRuntime;
@@ -9,7 +9,7 @@ namespace DLCQuestipelago.DualContentManager
 {
     public class DLCDualAssetManager
     {
-        private ManualLogSource _console;
+        private ILogger _logger;
         private DLCDualContentManager _contentManager;
 
         public SpriteSheet BaseCharacterSpriteSheet;
@@ -24,9 +24,9 @@ namespace DLCQuestipelago.DualContentManager
         private SpriteSheet[] _dlcSpriteSheets;
         private SpriteSheet[] _allSpriteSheets;
 
-        public DLCDualAssetManager(ManualLogSource console, DLCDualContentManager contentManager)
+        public DLCDualAssetManager(ILogger logger, DLCDualContentManager contentManager)
         {
-            _console = console;
+            _logger = logger;
             _contentManager = contentManager;
 
             LoadBaseSpriteSheets();

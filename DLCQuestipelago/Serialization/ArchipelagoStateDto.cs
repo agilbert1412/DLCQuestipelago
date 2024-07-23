@@ -1,5 +1,5 @@
-﻿using DLCQuestipelago.Archipelago;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
 
 namespace DLCQuestipelago.Serialization
 {

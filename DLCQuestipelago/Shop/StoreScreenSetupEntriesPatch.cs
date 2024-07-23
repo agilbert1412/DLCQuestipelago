@@ -1,12 +1,11 @@
 ﻿using System;
-using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.DLC;
 using DLCLib.HUD;
 using DLCLib.Screens;
 using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
 using HUD;
 using Microsoft.Xna.Framework;
@@ -15,6 +14,7 @@ using SpriteSheetRuntime;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Shop
 {
@@ -22,13 +22,13 @@ namespace DLCQuestipelago.Shop
     [HarmonyPatch("SetupEntries")]
     public static class StoreScreenSetupEntriesPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static LocationChecker _locationChecker;
         private static ItemParser _itemParser;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker, ItemParser itemParser)
+        public static void Initialize(ILogger logger, LocationChecker locationChecker, ItemParser itemParser)
         {
-            _log = log;
+            _logger = logger;
             _locationChecker = locationChecker;
             _itemParser = itemParser;
         }
@@ -62,7 +62,7 @@ namespace DLCQuestipelago.Shop
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(StoreScreenSetupEntriesPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(StoreScreenSetupEntriesPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

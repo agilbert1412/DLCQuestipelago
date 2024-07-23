@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
 using Microsoft.Xna.Framework.Content;
 
@@ -9,7 +9,7 @@ namespace DLCQuestipelago.DualContentManager
 {
     public class DLCDualContentManager
     {
-        private ManualLogSource _console;
+        private ILogger _logger;
 
         private ContentManager _baseContentManager;
         private ContentManager _dlcCampaignContentManager;
@@ -24,9 +24,9 @@ namespace DLCQuestipelago.DualContentManager
 
         public ContentManager LfodCampaignContentManager => _lfodCampaignContentManager;
 
-        public DLCDualContentManager(IServiceProvider serviceProvider, string rootDirectory, ManualLogSource console)
+        public DLCDualContentManager(IServiceProvider serviceProvider, string rootDirectory, ILogger logger)
         {
-            _console = console;
+            _logger = logger;
 
             _baseContentManager = new ContentManager(serviceProvider, rootDirectory);
             _baseAssetList = ContentUtils.LoadContentManifest(_baseContentManager, "manifest");
@@ -69,7 +69,7 @@ namespace DLCQuestipelago.DualContentManager
                 return _baseContentManager.Load<T>(assetName);
 
             var message = $"Could not load asset: {assetName}.";
-            _console.LogError(message);
+            _logger.LogError(message);
             throw new ArgumentException(message);
         }
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.Screens;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago
 {
@@ -14,13 +14,13 @@ namespace DLCQuestipelago
         private const string BASIC_CAMPAIGN = "dlcquest";
         private const string LFOD_CAMPAIGN = "lfod";
 
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static SlotData _slotData;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, SlotData slotData)
         {
-            _log = log;
-            _archipelago = archipelago;
+            _logger = logger;
+            _slotData = slotData;
         }
 
         // private void StartCampaign(string selectedCampaignName)
@@ -28,12 +28,12 @@ namespace DLCQuestipelago
         {
             try
             {
-                if (_archipelago.SlotData.Campaign == Campaign.Basic && selectedCampaignName == LFOD_CAMPAIGN)
+                if (_slotData.Campaign == Campaign.Basic && selectedCampaignName == LFOD_CAMPAIGN)
                 {
                     return false; // don't run original logic
                 }
 
-                if (_archipelago.SlotData.Campaign == Campaign.LiveFreemiumOrDie && selectedCampaignName == BASIC_CAMPAIGN)
+                if (_slotData.Campaign == Campaign.LiveFreemiumOrDie && selectedCampaignName == BASIC_CAMPAIGN)
                 {
                     return false; // don't run original logic
                 }
@@ -42,7 +42,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(CampaignSelectPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(CampaignSelectPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

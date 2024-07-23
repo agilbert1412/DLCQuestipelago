@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
 using DLCLib.Conversation;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {
@@ -13,12 +13,12 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(GrooveNPC.Activate))]
     public static class GrooveGiveMattockPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, LocationChecker locationChecker)
         {
-            _log = log;
+            _logger = logger;
             _locationChecker = locationChecker;
         }
 
@@ -43,7 +43,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(GrooveGiveMattockPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(GrooveGiveMattockPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

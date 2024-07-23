@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Input;
 using DLCLib.Screens;
 using DLCLib.World;
-using DLCQuestipelago.Archipelago;
 using GameStateManagement;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago
@@ -22,12 +22,12 @@ namespace DLCQuestipelago
         private const string SWORD_3 = "Unfathomable Sword Pack";
 
 
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
@@ -70,7 +70,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(TriggerUtilBossDoorPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(TriggerUtilBossDoorPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

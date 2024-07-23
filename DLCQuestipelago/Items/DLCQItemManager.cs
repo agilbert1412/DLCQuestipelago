@@ -1,30 +1,27 @@
-﻿using DLCQuestipelago.Archipelago;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
 using DLCLib.Save;
 using EasyStorage;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Newtonsoft.Json;
 
 namespace DLCQuestipelago.Items
 {
-    public class ItemManager
+    public class DLCQItemManager : ItemManager
     {
         private const string ITEM_PERSISTENCY_FILENAME = "ArchipelagoPersistency.json";
 
-        private ManualLogSource _log;
-        private ArchipelagoClient _archipelago;
+        private ILogger _logger;
         private ArchipelagoNotificationsHandler _notificationHandler;
         public ItemParser ItemParser { get; }
-        private HashSet<ReceivedItem> _itemsAlreadyProcessed;
         private HashSet<ReceivedItem> _itemsAlreadyProcessedThisRun;
 
-        public ItemManager(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager)
+        public DLCQItemManager(ILogger logger, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager) : base(archipelago, new ReceivedItem[0])
         {
-            _log = log;
-            _archipelago = archipelago;
+            _logger = logger;
             _notificationHandler = notificationHandler;
 
             ItemParser = new ItemParser(archipelago, trapManager);
@@ -32,22 +29,12 @@ namespace DLCQuestipelago.Items
             _itemsAlreadyProcessedThisRun = new HashSet<ReceivedItem>();
         }
 
-        public List<ReceivedItem> GetAllItemsAlreadyProcessed()
+        protected override void ProcessItem(ReceivedItem receivedItem, bool immediatelyIfPossible)
         {
-            return _itemsAlreadyProcessed.ToList();
+            throw new System.NotImplementedException();
         }
 
-        public void ReceiveAllNewItems()
-        {
-            var allReceivedItems = _archipelago.GetAllReceivedItems();
-
-            foreach (var receivedItem in allReceivedItems)
-            {
-                ReceiveNewItem(receivedItem);
-            }
-        }
-
-        private void ReceiveNewItem(ReceivedItem receivedItem)
+        protected override void ReceiveNewItem(ReceivedItem receivedItem, bool immediatelyIfPossible)
         {
             if (_itemsAlreadyProcessedThisRun.Contains(receivedItem))
             {
@@ -60,7 +47,7 @@ namespace DLCQuestipelago.Items
 
             if (isNew)
             {
-                _log.LogMessage($"Item received: {receivedItem.ItemName}");
+                _logger.LogMessage($"Item received: {receivedItem.ItemName}");
                 _notificationHandler.AddItemNotification(receivedItem.ItemName);
                 _itemsAlreadyProcessed.Add(receivedItem);
             }

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using BepInEx.Logging;
 using Core;
 using DLCLib;
 using DLCLib.Audio;
@@ -15,9 +14,10 @@ using DLCLib.DLC;
 using DLCLib.Physics;
 using DLCLib.Render;
 using DLCLib.World.Props;
-using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Timer = Core.Timer;
 
@@ -33,7 +33,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         private const string DAY_ONE_PATCH = "Day One Patch Pack";
         private const string BANKING_TEAM_KEY = "EnergyLink{0}";
 
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
         private static int _grindCount;
@@ -47,9 +47,9 @@ namespace DLCQuestipelago.DLCUnlockPatch
         private static FieldInfo _idleAnimField;
         private static FieldInfo _spinAnimField;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _locationChecker = locationChecker;
             GetFieldAndPropertyInfos();
@@ -81,7 +81,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             try
             {
                 __instance.Enable();
-                if (_locationChecker.IsLocationMissingAndExists("Sword"))
+                if (_locationChecker.IsLocationMissing("Sword"))
                 {
                     _isCompleteProperty.SetValue(__instance, false);
                 }
@@ -99,7 +99,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(GrindstoneUnlockPackPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(GrindstoneUnlockPackPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }
@@ -117,7 +117,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(GrindstoneUnlockPackPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(GrindstoneUnlockPackPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }
@@ -153,7 +153,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
                 joulesPerGrind *= 1000;
             }
 
-            _log.LogInfo($"Already finished grinding, sending {joulesPerGrind} joules into the EnergyLink");
+            _logger.LogInfo($"Already finished grinding, sending {joulesPerGrind} joules into the EnergyLink");
             session.DataStorage[Scope.Global, _energyLinkKey] += joulesPerGrind;
         }
 
@@ -213,12 +213,12 @@ namespace DLCQuestipelago.DLCUnlockPatch
 
             if (currentAmountJoules < joulesNeeded)
             {
-                _log.LogInfo($"Not enough energy stored to finish grinding (Current: {currentAmountJoules}, Needed: {joulesNeeded})");
+                _logger.LogInfo($"Not enough energy stored to finish grinding (Current: {currentAmountJoules}, Needed: {joulesNeeded})");
                 return;
             }
 
             session.DataStorage[Scope.Global, _energyLinkKey] -= joulesNeeded;
-            _log.LogInfo($"Used up {joulesNeeded} from the EnergyLink to finish the grindstone!");
+            _logger.LogInfo($"Used up {joulesNeeded} from the EnergyLink to finish the grindstone!");
             _grindCountField.SetValue(grindstone, 10000);
         }
 
@@ -232,7 +232,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
             catch (Exception ex)
             {
-                _log.LogError($"Error Reading BigInteger from DataStorage key [{_energyLinkKey}]. Value: {value ?? "unknown"}. Message: {ex.Message}");
+                _logger.LogError($"Error Reading BigInteger from DataStorage key [{_energyLinkKey}]. Value: {value ?? "unknown"}. Message: {ex.Message}");
             }
         }
     }

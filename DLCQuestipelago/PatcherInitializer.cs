@@ -1,4 +1,4 @@
-﻿using BepInEx.Logging;
+﻿using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCQuestipelago.AntiCrashes;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Archipelago.Deathlink;
@@ -12,150 +12,152 @@ using DLCQuestipelago.Items;
 using DLCQuestipelago.Items.Traps;
 using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
 using DLCQuestipelago.Shop;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
 
 namespace DLCQuestipelago
 {
     public static class PatcherInitializer
     {
-        public static void InitializeEarly(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void InitializeEarly(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            InitializeAllPersistencyPatches(log, archipelago);
+            InitializeAllPersistencyPatches(logger, archipelago);
         }
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker, ItemManager itemManager, ObjectivePersistence objectivePersistence, GiftSender giftSender)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago, LocationChecker locationChecker, DLCQItemManager itemManager, ObjectivePersistence objectivePersistence, GiftSender giftSender)
         {
-            InitializeDualContentManagerPatches(log);
-            FrameUpdatePatch.Initialize(log);
-            StatsScreenInvalidateAttemptPatch.Initialize(log);
-            DLCPackPurchasePatch.Initialize(log, locationChecker);
-            DLCIsPurchasedPatch.Initialize(log, itemManager.ItemParser);
-            InventoryMakePurchasePatch.Initialize(log, archipelago);
-            StoreScreenSelectionChangedPatch.Initialize(log, archipelago);
-            CoinPickupPatch.Initialize(log, archipelago, locationChecker);
-            InventoryCoinsGetPatch.Initialize(log, archipelago);
-            HandleCoinChangedPatch.Initialize(log, archipelago);
-            GrooveGiveMattockPatch.Initialize(log, locationChecker);
-            StoreScreenSetupEntriesPatch.Initialize(log, locationChecker, itemManager.ItemParser);
-            TriggerUtilBossDoorPatch.Initialize(log, archipelago);
-            BossSheepAttackPatch.Initialize(log, archipelago);
-            DiePatch.Initialize(log, archipelago);
-            InitializeItemShufflePatches(log, archipelago, locationChecker);
-            InitializeDLCUnlockPatches(log, archipelago, locationChecker);
-            InitializeAllObjectivePatches(log, objectivePersistence);
-            InitializeFakeEndingDisconnectPatches(log, archipelago);
-            InitializeNameChangePatches(log, archipelago);
-            InitializeKillAndDestroyPatches(log, locationChecker, giftSender);
-            InitializeAwardmentPatches(log, locationChecker);
-            InitializeAntiCrashPatches(log);
-            CoinsAppearancePatch.ReplaceBrokenCoins(log, archipelago);
+            InitializeDualContentManagerPatches(logger);
+            FrameUpdatePatch.Initialize(logger);
+            StatsScreenInvalidateAttemptPatch.Initialize(logger);
+            DLCPackPurchasePatch.Initialize(logger, locationChecker);
+            DLCIsPurchasedPatch.Initialize(logger, itemManager.ItemParser);
+            InventoryMakePurchasePatch.Initialize(logger, archipelago);
+            StoreScreenSelectionChangedPatch.Initialize(logger, archipelago);
+            CoinPickupPatch.Initialize(logger, archipelago, locationChecker);
+            InventoryCoinsGetPatch.Initialize(logger, archipelago);
+            HandleCoinChangedPatch.Initialize(logger, archipelago);
+            GrooveGiveMattockPatch.Initialize(logger, locationChecker);
+            StoreScreenSetupEntriesPatch.Initialize(logger, locationChecker, itemManager.ItemParser);
+            TriggerUtilBossDoorPatch.Initialize(logger, archipelago);
+            BossSheepAttackPatch.Initialize(logger, archipelago);
+            DiePatch.Initialize(logger, archipelago);
+            InitializeItemShufflePatches(logger, archipelago, locationChecker);
+            InitializeDLCUnlockPatches(logger, archipelago, locationChecker);
+            InitializeAllObjectivePatches(logger, objectivePersistence);
+            InitializeFakeEndingDisconnectPatches(logger, archipelago);
+            InitializeNameChangePatches(logger, archipelago);
+            InitializeKillAndDestroyPatches(logger, locationChecker, giftSender);
+            InitializeAwardmentPatches(logger, locationChecker);
+            InitializeAntiCrashPatches(logger);
+            CoinsAppearancePatch.ReplaceBrokenCoins(logger, archipelago);
         }
 
-        private static void InitializeKillAndDestroyPatches(ManualLogSource log, LocationChecker locationChecker,
+        private static void InitializeKillAndDestroyPatches(ILogger logger, LocationChecker locationChecker,
             GiftSender giftSender)
         {
-            DestroyBushPatch.Initialize(log, giftSender);
-            DestroyRockPatch.Initialize(log, giftSender);
-            DestroyVinePatch.Initialize(log, giftSender);
-            KillSheepPatch.Initialize(log, locationChecker, giftSender);
+            DestroyBushPatch.Initialize(logger, giftSender);
+            DestroyRockPatch.Initialize(logger, giftSender);
+            DestroyVinePatch.Initialize(logger, giftSender);
+            KillSheepPatch.Initialize(logger, locationChecker, giftSender);
         }
 
-        private static void InitializeDualContentManagerPatches(ManualLogSource log)
+        private static void InitializeDualContentManagerPatches(ILogger logger)
         {
-            ConstructAnimationPatch.Initialize(log);
+            ConstructAnimationPatch.Initialize(logger);
         }
 
-        private static void InitializeItemShufflePatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeItemShufflePatches(ILogger logger, DLCQArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            CompleteFetchQuestPatch.Initialize(log, archipelago, locationChecker);
-            GetPickaxePatch.Initialize(log, archipelago, locationChecker);
-            GrantGunPatch.Initialize(log, archipelago, locationChecker);
-            GrantSwordPatch.Initialize(log, archipelago, locationChecker);
-            GrantWoodenSwordPatch.Initialize(log, archipelago, locationChecker);
-            PickupBoxOfSuppliesPatch.Initialize(log, archipelago, locationChecker);
-            RockDestructionPatch.Initialize(log);
+            CompleteFetchQuestPatch.Initialize(logger, archipelago, locationChecker);
+            GetPickaxePatch.Initialize(logger, archipelago, locationChecker);
+            GrantGunPatch.Initialize(logger, archipelago, locationChecker);
+            GrantSwordPatch.Initialize(logger, archipelago, locationChecker);
+            GrantWoodenSwordPatch.Initialize(logger, archipelago, locationChecker);
+            PickupBoxOfSuppliesPatch.Initialize(logger, archipelago, locationChecker);
+            RockDestructionPatch.Initialize(logger);
             var conversationStarter = new ConversationStarter();
-            MiddleAgeNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
-            GrooveNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
-            FetchNpcActivatePatch.Initialize(log, archipelago, locationChecker, conversationStarter);
+            MiddleAgeNpcActivatePatch.Initialize(logger, archipelago, locationChecker, conversationStarter);
+            GrooveNpcActivatePatch.Initialize(logger, archipelago, locationChecker, conversationStarter);
+            FetchNpcActivatePatch.Initialize(logger, archipelago, locationChecker, conversationStarter);
         }
 
-        private static void InitializeDLCUnlockPatches(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        private static void InitializeDLCUnlockPatches(ILogger logger, ArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            GrindstoneUnlockPackPatch.Initialize(log, archipelago, locationChecker);
-            RandomEncounterUnlockPackPatch.Initialize(log);
-            TriggerUtilActivateForestPatch.Initialize(log);
-            TriggerUtilActivateNightForestPatch.Initialize(log);
-            TriggerUtilGameEndingPatch.Initialize(log);
-            ZoneOnEnterPatch.Initialize(log);
-            ExamineBanWallPatch.Initialize(log);
-            ComedianDLCPatch.Initialize(log);
+            GrindstoneUnlockPackPatch.Initialize(logger, archipelago, locationChecker);
+            RandomEncounterUnlockPackPatch.Initialize(logger);
+            TriggerUtilActivateForestPatch.Initialize(logger);
+            TriggerUtilActivateNightForestPatch.Initialize(logger);
+            TriggerUtilGameEndingPatch.Initialize(logger);
+            ZoneOnEnterPatch.Initialize(logger);
+            ExamineBanWallPatch.Initialize(logger);
+            ComedianDLCPatch.Initialize(logger);
         }
 
-        private static void InitializeAllObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        private static void InitializeAllObjectivePatches(ILogger logger, ObjectivePersistence objectivePersistence)
         {
-            InitializeDlcQuestObjectivePatches(log, objectivePersistence);
-            InitializeLfodObjectivePatches(log, objectivePersistence);
+            InitializeDlcQuestObjectivePatches(logger, objectivePersistence);
+            InitializeLfodObjectivePatches(logger, objectivePersistence);
         }
 
-        private static void InitializeDlcQuestObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        private static void InitializeDlcQuestObjectivePatches(ILogger logger, ObjectivePersistence objectivePersistence)
         {
-            Goal.DLCQuest.FakeEndingObjectivePatch.Initialize(log, objectivePersistence);
-            Goal.DLCQuest.BadEndingObjectivePatch.Initialize(log, objectivePersistence);
-            Goal.DLCQuest.GoodEndingObjectivePatch.Initialize(log, objectivePersistence);
+            Goal.DLCQuest.FakeEndingObjectivePatch.Initialize(logger, objectivePersistence);
+            Goal.DLCQuest.BadEndingObjectivePatch.Initialize(logger, objectivePersistence);
+            Goal.DLCQuest.GoodEndingObjectivePatch.Initialize(logger, objectivePersistence);
         }
 
-        private static void InitializeLfodObjectivePatches(ManualLogSource log, ObjectivePersistence objectivePersistence)
+        private static void InitializeLfodObjectivePatches(ILogger logger, ObjectivePersistence objectivePersistence)
         {
-            Goal.LFOD.FakeEndingObjectivePatch.Initialize(log, objectivePersistence);
-            Goal.LFOD.TrueEndingObjectivePatch.Initialize(log, objectivePersistence);
+            Goal.LFOD.FakeEndingObjectivePatch.Initialize(logger, objectivePersistence);
+            Goal.LFOD.TrueEndingObjectivePatch.Initialize(logger, objectivePersistence);
         }
 
-        private static void InitializeFakeEndingDisconnectPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeFakeEndingDisconnectPatches(ILogger logger, ArchipelagoClient archipelago)
         {
-            FakeEndingDisconnectPatch.Initialize(log, archipelago);
-            FailedReconnectPatch.Initialize(log, archipelago);
-            SuccessReconnectPatch.Initialize(log, archipelago);
+            FakeEndingDisconnectPatch.Initialize(logger, archipelago);
+            FailedReconnectPatch.Initialize(logger, archipelago);
+            SuccessReconnectPatch.Initialize(logger, archipelago);
         }
 
-        private static void InitializeNameChangePatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeNameChangePatches(ILogger logger, DLCQArchipelagoClient archipelago)
         {
             var nameChanger = new NameChanger(archipelago);
-            PlayerNameInDialogPatch.Initialize(log, archipelago, nameChanger);
-            PlayerNameInMessageBoxPatch.Initialize(log, archipelago, nameChanger);
-            PurchaseNameChangePatch.Initialize(log, archipelago, nameChanger);
+            PlayerNameInDialogPatch.Initialize(logger, archipelago, nameChanger);
+            PlayerNameInMessageBoxPatch.Initialize(logger, archipelago, nameChanger);
+            PurchaseNameChangePatch.Initialize(logger, archipelago, nameChanger);
         }
 
-        private static void InitializeAllPersistencyPatches(ManualLogSource log, ArchipelagoClient archipelago)
+        private static void InitializeAllPersistencyPatches(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            ClearSaveGamePatch.Initialize(log);
-            ContinueGamePatch.Initialize(log);
-            GetSaveFilenamePatch.Initialize(log, archipelago);
-            QuitToMainMenuPatch.Initialize(log);
-            SaveGameDataPatch.Initialize(log);
-            StartNewGamePatch.Initialize(log);
+            ClearSaveGamePatch.Initialize(logger);
+            ContinueGamePatch.Initialize(logger);
+            GetSaveFilenamePatch.Initialize(logger, archipelago);
+            QuitToMainMenuPatch.Initialize(logger);
+            SaveGameDataPatch.Initialize(logger);
+            StartNewGamePatch.Initialize(logger);
         }
 
-        private static void InitializeAwardmentPatches(ManualLogSource log, LocationChecker locationChecker)
+        private static void InitializeAwardmentPatches(ILogger logger, LocationChecker locationChecker)
         {
-            IGetThatReferencePatch.Initialize(log, locationChecker);
-            NiceTryPatch.Initialize(log, locationChecker);
-            NotExactlyNoblePatch.Initialize(log, locationChecker);
-            StoryIsImportantPatch.Initialize(log, locationChecker);
+            IGetThatReferencePatch.Initialize(logger, locationChecker);
+            NiceTryPatch.Initialize(logger, locationChecker);
+            NotExactlyNoblePatch.Initialize(logger, locationChecker);
+            StoryIsImportantPatch.Initialize(logger, locationChecker);
         }
 
-        private static void InitializeAntiCrashPatches(ManualLogSource log)
+        private static void InitializeAntiCrashPatches(ILogger logger)
         {
-            var nodeCleaner = new NodeCleaner(log);
-            AudioManagerPausePatch.Initialize(log);
-            AudioManagerResumePatch.Initialize(log);
-            PhysicsManagerPerformStepPatch.Initialize(log, nodeCleaner);
-            PlayerUpdateAnimationsPatch.Initialize(log);
-            DrawScenePatch.Initialize(log);
-            UpdateScenePatch.Initialize(log, nodeCleaner);
-            ScreenManagerDrawPatch.Initialize(log);
+            var nodeCleaner = new NodeCleaner(logger);
+            AudioManagerPausePatch.Initialize(logger);
+            AudioManagerResumePatch.Initialize(logger);
+            PhysicsManagerPerformStepPatch.Initialize(logger, nodeCleaner);
+            PlayerUpdateAnimationsPatch.Initialize(logger);
+            DrawScenePatch.Initialize(logger);
+            UpdateScenePatch.Initialize(logger, nodeCleaner);
+            ScreenManagerDrawPatch.Initialize(logger);
         }
     }
 }

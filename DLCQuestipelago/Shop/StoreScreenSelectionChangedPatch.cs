@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
 using Core;
 using DLCDataTypes;
 using DLCLib;
@@ -15,6 +14,7 @@ using DLCQuestipelago.Items;
 using DLCQuestipelago.Textures;
 using HarmonyLib;
 using HUD;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,17 +24,17 @@ namespace DLCQuestipelago.Shop
     [HarmonyPatch("OnSelectionChanged")]
     public static class StoreScreenSelectionChangedPatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static Texture2D _coinPileTexture;
 
         private static Dictionary<string, string> _canadianDictionary;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
-            _coinPileTexture = TexturesLoader.GetTexture(log, Path.Combine("Coins", "pile.png"));
+            _coinPileTexture = TexturesLoader.GetTexture(_logger, Path.Combine("Coins", "pile.png"));
 
             InitializeCanadianDictionary();
         }
@@ -132,6 +132,7 @@ namespace DLCQuestipelago.Shop
                 {
                     return;
                 }
+
                 var selectedDLCData = (menuEntries[currentIndex] as DLCPackMenuEntry)?.Pack?.Data;
                 var selectedDLCName = selectedDLCData?.DisplayName;
 
@@ -142,7 +143,7 @@ namespace DLCQuestipelago.Shop
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(StoreScreenSelectionChangedPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(StoreScreenSelectionChangedPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }
@@ -192,7 +193,7 @@ namespace DLCQuestipelago.Shop
 
             var numberCoins = useBossCoins
                 ? Singleton<SceneManager>.Instance.CurrentScene.Player.Inventory.BossCoins
-                : CoinsanityUtils.GetCurrentCoins(_archipelago); ;
+                : CoinsanityUtils.GetCurrentCoins(_archipelago);
             if (numberCoins >= selectedDLCData.Cost)
             {
                 priceCoinAmountText.Tint = ColorUtil.PriceCanAffordText;

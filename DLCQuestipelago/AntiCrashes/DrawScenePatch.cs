@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
 using DLCLib.Effects;
 using HarmonyLib;
@@ -14,11 +14,11 @@ namespace DLCQuestipelago.AntiCrashes
     [HarmonyPatch(nameof(Scene.Draw))]
     public static class DrawScenePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -62,14 +62,14 @@ namespace DLCQuestipelago.AntiCrashes
                 var gracefullyRecovered = TryToRepairSpriteBatchState(spriteBatch);
                 if (IsRecognizedEnumerationModifiedError(ex) && gracefullyRecovered)
                 {
-                    _log.LogWarning($"DrawEngine failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} but DLCQuestipelago was able to recover gracefully");
+                    _logger.LogWarning($"DrawEngine failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} but DLCQuestipelago was able to recover gracefully");
                 }
                 else
                 {
-                    _log.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                    _logger.LogError($"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
                     if (gracefullyRecovered)
                     {
-                        _log.LogInfo($"DLCQuestipelago was able to recover gracefully from the error");
+                        _logger.LogInfo($"DLCQuestipelago was able to recover gracefully from the error");
                     }
                 }
 
@@ -94,7 +94,7 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception innerEx)
             {
-                _log.LogError(
+                _logger.LogError(
                     $"Failed in {nameof(DrawScenePatch)}.{nameof(Prefix)} inner catch code, trying to reset the spritebatch:\n\t{innerEx}");
                 Debugger.Break();
                 return false;

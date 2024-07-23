@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Core.Audio;
 using HarmonyLib;
 
@@ -10,11 +10,11 @@ namespace DLCQuestipelago.AntiCrashes
     [HarmonyPatch(nameof(XACTAudioSystem.PauseMusic))]
     public static class AudioManagerPausePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // public void PauseMusic()
@@ -32,7 +32,7 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(AudioManagerPausePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(AudioManagerPausePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return false; // don't run original logic
             }

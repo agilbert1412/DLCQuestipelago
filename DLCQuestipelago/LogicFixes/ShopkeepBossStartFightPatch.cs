@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Character;
 using HarmonyLib;
 
@@ -12,11 +12,11 @@ namespace DLCQuestipelago.LogicFixes
     [HarmonyPatch(nameof(ShopkeepBossNPC.StartFight))]
     public static class ShopkeepBossStartFightPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // public void StartFight()
@@ -35,7 +35,7 @@ namespace DLCQuestipelago.LogicFixes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(ShopkeepBossStartFightPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(ShopkeepBossStartFightPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Extensions
 {
     public static class TaskExtensions
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         public static async void FireAndForget(this Task task)
@@ -21,7 +21,7 @@ namespace DLCQuestipelago.Extensions
             }
             catch (Exception ex)
             {
-                _log.LogError($"Exception occurred in FireAndForget task: {ex}");
+                _logger.LogError($"Exception occurred in FireAndForget task: {ex}");
             }
         }
     }

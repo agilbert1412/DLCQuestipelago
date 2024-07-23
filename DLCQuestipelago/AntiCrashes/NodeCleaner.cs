@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Core.Spatial;
 using DLCLib;
 using DLCLib.Physics;
@@ -14,11 +14,11 @@ namespace DLCQuestipelago.AntiCrashes
         public const string NODE_DOES_NOT_HAVE_PARENT_ERROR =
             "This node does not contain item - it should not receive this event!";
 
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public NodeCleaner(ManualLogSource log)
+        public NodeCleaner(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         public void CleanItemsToNodesRelationships(PhysicsManager physicsManager)
@@ -36,7 +36,7 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(NodeCleaner)}.{nameof(CleanItemsToNodesRelationships)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(NodeCleaner)}.{nameof(CleanItemsToNodesRelationships)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }
@@ -62,7 +62,7 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(NodeCleaner)}.{nameof(CleanItemToNodesRelationships)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(NodeCleaner)}.{nameof(CleanItemToNodesRelationships)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

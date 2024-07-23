@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCQuestipelago.Items;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Shop
 {
@@ -13,12 +13,12 @@ namespace DLCQuestipelago.Shop
     [HarmonyPatch("Purchase")]
     public static class DLCPackPurchasePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, LocationChecker locationChecker)
         {
-            _log = log;
+            _logger = logger;
             _locationChecker = locationChecker;
         }
 
@@ -39,7 +39,7 @@ namespace DLCQuestipelago.Shop
                     return false; // don't run original logic
                 }
 
-                _log?.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
+                _logger?.LogInfo($"Purchased a DLC! [{__instance.Data.DisplayName}]");
                 _locationChecker.AddCheckedLocation(__instance.Data.DisplayName);
 
                 if (__instance.Data.IsBossDLC)
@@ -56,7 +56,7 @@ namespace DLCQuestipelago.Shop
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(DLCPackPurchasePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(DLCPackPurchasePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

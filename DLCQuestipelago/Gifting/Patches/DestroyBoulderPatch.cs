@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.World.Props;
 using DLCQuestipelago.Extensions;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Gifting.Patches
 {
@@ -11,12 +11,12 @@ namespace DLCQuestipelago.Gifting.Patches
     [HarmonyPatch("OnDestruction")]
     public static class DestroyRockPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static GiftSender _giftSender;
 
-        public static void Initialize(ManualLogSource log, GiftSender giftSender)
+        public static void Initialize(ILogger logger, GiftSender giftSender)
         {
-            _log = log;
+            _logger = logger;
             _giftSender = giftSender;
         }
 
@@ -31,7 +31,7 @@ namespace DLCQuestipelago.Gifting.Patches
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(DestroyBushPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(DestroyBushPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

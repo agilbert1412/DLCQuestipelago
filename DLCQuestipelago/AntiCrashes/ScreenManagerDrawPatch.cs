@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using GameStateManagement;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -14,11 +14,11 @@ namespace DLCQuestipelago.AntiCrashes
     [HarmonyPatch(nameof(ScreenManager.Draw))]
     public static class ScreenManagerDrawPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // public override void Draw(GameTime gameTime)
@@ -37,7 +37,7 @@ namespace DLCQuestipelago.AntiCrashes
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(ScreenManagerDrawPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(ScreenManagerDrawPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return false; // don't run original logic
             }

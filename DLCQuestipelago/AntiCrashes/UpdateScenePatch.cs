@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using BepInEx.Logging;
 using Core;
 using Core.Spatial;
 using DLCLib;
@@ -12,6 +11,7 @@ using DLCLib.Physics;
 using DLCLib.World;
 using HarmonyLib;
 using HUD;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,12 +21,12 @@ namespace DLCQuestipelago.AntiCrashes
     [HarmonyPatch(nameof(Scene.Update))]
     public static class UpdateScenePatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static NodeCleaner _nodeCleaner;
 
-        public static void Initialize(ManualLogSource log, NodeCleaner nodeCleaner)
+        public static void Initialize(ILogger logger, NodeCleaner nodeCleaner)
         {
-            _log = log;
+            _logger = logger;
             _nodeCleaner = nodeCleaner;
         }
 
@@ -104,14 +104,14 @@ namespace DLCQuestipelago.AntiCrashes
                 var gracefullyRecovered = TryToRepairItemsNodesState(__instance, ex);
                 if (DrawScenePatch.IsRecognizedEnumerationModifiedError(ex) && gracefullyRecovered)
                 {
-                    _log.LogWarning($"PhysicsEngine failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)} but DLCQuestipelago was able to recover gracefully");
+                    _logger.LogWarning($"PhysicsEngine failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)} but DLCQuestipelago was able to recover gracefully");
                 }
                 else
                 {
-                    _log.LogError($"Failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                    _logger.LogError($"Failed in {nameof(UpdateScenePatch)}.{nameof(Prefix)}:\n\t{ex}");
                     if (gracefullyRecovered)
                     {
-                        _log.LogInfo($"DLCQuestipelago was able to recover gracefully from the error");
+                        _logger.LogInfo($"DLCQuestipelago was able to recover gracefully from the error");
                     }
                 }
 

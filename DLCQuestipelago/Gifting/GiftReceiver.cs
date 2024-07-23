@@ -5,24 +5,24 @@ using System.Threading.Tasks;
 using Archipelago.Gifting.Net.Gifts.Versions.Current;
 using Archipelago.Gifting.Net.Service;
 using Archipelago.Gifting.Net.Traits;
-using BepInEx.Logging;
 using DLCLib;
 using DLCQuestipelago.Items;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Gifting
 {
     public class GiftReceiver
     {
-        private readonly ManualLogSource _log;
+        private readonly ILogger _logger;
         private IGiftingService _giftService;
         private readonly ArchipelagoNotificationsHandler _notificationHandler;
         private readonly TrapManager _trapManager;
         private readonly SpeedChanger _speedChanger;
         private HashSet<string> _processedGifts;
 
-        public GiftReceiver(ManualLogSource log, IGiftingService giftService, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
+        public GiftReceiver(ILogger logger, IGiftingService giftService, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
         {
-            _log = log;
+            _logger = logger;
             _giftService = giftService;
             _notificationHandler = notificationHandler;
             _trapManager = trapManager;
@@ -89,7 +89,7 @@ namespace DLCQuestipelago.Gifting
                 return false;
             }
 
-            _log.LogInfo($"Processing a new Zombie Sheep Gift [ID: {gift.ID}]");
+            _logger.LogInfo($"Processing a new Zombie Sheep Gift [ID: {gift.ID}]");
             ProcessZombieSheep(gift.Amount);
             _notificationHandler.AddGiftNotification(gift.ItemName, true);
             return true;
@@ -103,7 +103,7 @@ namespace DLCQuestipelago.Gifting
                 return false;
             }
 
-            _log.LogInfo($"Processing a new Random Trap Gift [ID: {gift.ID}]");
+            _logger.LogInfo($"Processing a new Random Trap Gift [ID: {gift.ID}]");
             ProcessRandomTrap(gift.Amount);
             _notificationHandler.AddGiftNotification(gift.ItemName, true);
             return true;
@@ -148,7 +148,7 @@ namespace DLCQuestipelago.Gifting
                 return false;
             }
 
-            _log.LogInfo($"Processing a new Speed Boost Gift [ID: {gift.ID}]");
+            _logger.LogInfo($"Processing a new Speed Boost Gift [ID: {gift.ID}]");
             var amount = speedTraits.Sum(speedTrait => (float)(gift.Amount * speedTrait.Quality));
             ProcessSpeedBoost(amount);
             _notificationHandler.AddGiftNotification(gift.ItemName, false);

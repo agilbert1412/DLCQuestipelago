@@ -19,7 +19,7 @@ namespace DLCQuestipelago.Items
         public const string BASIC_CAMPAIGN_COIN_PIECE_NAME = $"{BASIC_CAMPAIGN}: {AP_COIN_PIECE}";
         public const string LFOD_CAMPAIGN_COIN_PIECE_NAME = $"{LFOD_CAMPAIGN}: {AP_COIN_PIECE}";
 
-        private static string GetRelevantCoinName(ArchipelagoClient archipelago)
+        private static string GetRelevantCoinName(DLCQArchipelagoClient archipelago)
         {
             var isWholeCoins = archipelago.SlotData.Coinsanity == Coinsanity.None || archipelago.SlotData.CoinBundleSize > 0;
             return CampaignManager.Instance.Campaign is DLCQuestCampaign
@@ -27,7 +27,7 @@ namespace DLCQuestipelago.Items
                 : (isWholeCoins ? LFOD_CAMPAIGN_COIN_NAME : LFOD_CAMPAIGN_COIN_PIECE_NAME);
         }
 
-        public static double GetCurrentCoins(ArchipelagoClient archipelago)
+        public static double GetCurrentCoins(DLCQArchipelagoClient archipelago)
         {
             if (archipelago.SlotData.Coinsanity == Coinsanity.None)
             {

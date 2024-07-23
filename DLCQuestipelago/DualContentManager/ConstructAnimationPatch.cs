@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCDataTypes;
 using DLCLib.Render;
 using HarmonyLib;
@@ -14,11 +14,11 @@ namespace DLCQuestipelago.DualContentManager
     [HarmonyPatch(nameof(AnimationUtil.ConstructAnimation))]
     public static class ConstructAnimationPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         //public static void ConstructAnimation(AnimationData animData, out Animation anim)
@@ -40,7 +40,7 @@ namespace DLCQuestipelago.DualContentManager
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(ConstructAnimationPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(ConstructAnimationPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 anim = null;
                 return true; // run original logic

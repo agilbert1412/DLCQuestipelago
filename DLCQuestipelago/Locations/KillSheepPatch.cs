@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Character;
 using DLCQuestipelago.Extensions;
 using DLCQuestipelago.Gifting;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.Locations
@@ -15,15 +16,15 @@ namespace DLCQuestipelago.Locations
     [HarmonyPatch("RecordMobDeath")]
     public static class KillSheepPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static LocationChecker _locationChecker;
         private static GiftSender _giftSender;
         private static Dictionary<Vector2, int> _sheepIds;
         private static Dictionary<int, string> _sheepNames;
 
-        public static void Initialize(ManualLogSource log, LocationChecker locationChecker, GiftSender giftSender)
+        public static void Initialize(ILogger logger, LocationChecker locationChecker, GiftSender giftSender)
         {
-            _log = log;
+            _logger = logger;
             _locationChecker = locationChecker;
             _giftSender = giftSender;
             _sheepIds = new Dictionary<Vector2, int>
@@ -73,7 +74,7 @@ namespace DLCQuestipelago.Locations
                 var spawnPosition = mob.GetSpawnPosition();
                 var id = _sheepIds[spawnPosition];
                 var sheepLocationName = _sheepNames[id];
-                _log.LogInfo($"SheepKilled Sheep #{id} at {spawnPosition} ({sheepLocationName})");
+                _logger.LogInfo($"SheepKilled Sheep #{id} at {spawnPosition} ({sheepLocationName})");
                 _locationChecker.AddCheckedLocation(sheepLocationName);
 
                 _giftSender.SendZombieSheepGift((int)spawnPosition.X, (int)spawnPosition.Y).FireAndForget();
@@ -82,7 +83,7 @@ namespace DLCQuestipelago.Locations
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(KillSheepPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(KillSheepPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

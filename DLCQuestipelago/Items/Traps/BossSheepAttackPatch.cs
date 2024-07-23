@@ -1,10 +1,10 @@
 ﻿
 using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.Character;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Items.Traps
 {
@@ -12,13 +12,13 @@ namespace DLCQuestipelago.Items.Traps
     [HarmonyPatch("PerformAttack")]
     internal class BossSheepAttackPatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static Random _random;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _random = new Random(int.Parse(archipelago.SlotData.Seed));
         }
@@ -42,7 +42,7 @@ namespace DLCQuestipelago.Items.Traps
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(BossSheepAttackPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(BossSheepAttackPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

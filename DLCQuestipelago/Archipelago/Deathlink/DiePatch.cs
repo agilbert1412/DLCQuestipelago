@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Archipelago.Deathlink
 {
@@ -10,20 +10,20 @@ namespace DLCQuestipelago.Archipelago.Deathlink
     [HarmonyPatch(nameof(Player.Die))]
     public static class DiePatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static bool _isCurrentlyReceivingDeathlink;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _isCurrentlyReceivingDeathlink = false;
         }
 
         public static void ReceiveDeathLink()
         {
-            if (_archipelago?.SlotData == null || !_archipelago.SlotData.DeathLink)
+            if (_archipelago?.SlotData == null || _archipelago.SlotData.DeathLink == false)
             {
                 return;
             }
@@ -38,7 +38,7 @@ namespace DLCQuestipelago.Archipelago.Deathlink
         {
             try
             {
-                if (!_archipelago.SlotData.DeathLink)
+                if (_archipelago.SlotData.DeathLink == false)
                 {
                     return true;
                 }
@@ -56,13 +56,13 @@ namespace DLCQuestipelago.Archipelago.Deathlink
                 var killerString = killer.ToString();
                 var killerType = killer.GetType().Name;
 
-                _archipelago.SendDeathLinkAsync(_archipelago.SlotData.SlotName, killerType);
+                _archipelago.SendDeathLinkAsync(killerType);
 
                 return true; // run original logic
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(DiePatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(DiePatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

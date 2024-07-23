@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using BepInEx.Logging;
 using DLCLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago
 {
@@ -9,13 +9,13 @@ namespace DLCQuestipelago
         private const float DEFAULT_GROUND_SPEED = 45f;
         private const float DEFAULT_AIR_SPEED = 30f;
 
-        private readonly ManualLogSource _log;
+        private readonly ILogger _logger;
         private readonly FieldInfo _inputGroundField;
         private readonly FieldInfo _inputAirField;
 
-        public SpeedChanger(ManualLogSource log)
+        public SpeedChanger(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
             // private static float PLAYER_INPUT_SCALE_GROUND = 45f;
             // private static float PLAYER_INPUT_SCALE_AIR = 30f;
             _inputGroundField = typeof(Player).GetField("PLAYER_INPUT_SCALE_GROUND", BindingFlags.NonPublic | BindingFlags.Static);
@@ -33,13 +33,13 @@ namespace DLCQuestipelago
             var inputGroundValue = GetCurrentGroundSpeed();
             var inputAirValue = GetCurrentAirSpeed();
 
-            _log.LogInfo($"Current Speed: {inputGroundValue}");
-            _log.LogInfo($"Boost to process: {multiplier}");
+            _logger.LogInfo($"Current Speed: {inputGroundValue}");
+            _logger.LogInfo($"Boost to process: {multiplier}");
 
             SetGroundSpeed(inputGroundValue * multiplier);
             SetAirSpeed(inputAirValue * multiplier);
 
-            _log.LogInfo($"New Speed: {(float)_inputGroundField.GetValue(null)}");
+            _logger.LogInfo($"New Speed: {(float)_inputGroundField.GetValue(null)}");
         }
 
         private float GetCurrentGroundSpeed()

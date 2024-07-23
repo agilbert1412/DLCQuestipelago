@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Character;
 using HarmonyLib;
 using System.Reflection;
@@ -11,11 +11,11 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(ComedianNPC.Activate))]
     public static class ComedianDLCPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // public override bool Activate()
@@ -32,7 +32,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(ComedianDLCPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(ComedianDLCPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

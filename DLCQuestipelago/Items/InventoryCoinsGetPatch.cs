@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Items
 {
@@ -11,12 +11,12 @@ namespace DLCQuestipelago.Items
     [HarmonyPatch(nameof(Inventory.Coins), MethodType.Getter)]
     public static class InventoryCoinsGetPatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
         }
 
@@ -42,7 +42,7 @@ namespace DLCQuestipelago.Items
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(InventoryCoinsGetPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(InventoryCoinsGetPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

@@ -3,10 +3,10 @@ using Archipelago.Gifting.Net.Gifts.Versions.Current;
 using Archipelago.Gifting.Net.Service;
 using Archipelago.Gifting.Net.Traits;
 using Archipelago.MultiClient.Net;
-using BepInEx.Logging;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Extensions;
 using DLCQuestipelago.Items;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Gifting
 {
@@ -17,7 +17,7 @@ namespace DLCQuestipelago.Gifting
             "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster, GiftFlag.Trap, GiftFlag.Speed
         };
 
-        private readonly ManualLogSource _log;
+        private readonly ILogger _logger;
         private readonly ArchipelagoSession _session;
         private readonly GiftingService _giftService;
         private readonly GiftSender _giftSender;
@@ -25,13 +25,13 @@ namespace DLCQuestipelago.Gifting
 
         public GiftSender Sender => _giftSender;
 
-        public GiftHandler(ManualLogSource log, ArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
+        public GiftHandler(ILogger logger, DLCQArchipelagoClient archipelago, ArchipelagoNotificationsHandler notificationHandler, TrapManager trapManager, SpeedChanger speedChanger)
         {
-            _log = log;
+            _logger = logger;
             _session = archipelago.GetSession();
             _giftService = new GiftingService(_session);
-            _giftSender = new GiftSender(_log, archipelago, _giftService);
-            _giftReceiver = new GiftReceiver(_log, _giftService, notificationHandler, trapManager, speedChanger);
+            _giftSender = new GiftSender(_logger, archipelago, _giftService);
+            _giftReceiver = new GiftReceiver(_logger, _giftService, notificationHandler, trapManager, speedChanger);
             archipelago.SetGiftHandler(this);
         }
 

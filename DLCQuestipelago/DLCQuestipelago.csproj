@@ -12,9 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archipelago.Gifting.Net" Version="0.2.5" />
-    <PackageReference Include="Archipelago.MultiClient.Net" Version="5.0.6" />
+    <PackageReference Include="Archipelago.Gifting.Net" Version="0.3.3" />
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.2.0" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.0.18" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   
@@ -24,13 +25,13 @@
   
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\BepInEx\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>..\..\BepInEx\BepInEx Framework\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Core">
-      <HintPath>..\..\BepInEx\BepInEx\core\BepInEx.Core.dll</HintPath>
+      <HintPath>..\..\BepInEx\BepInEx Framework\BepInEx\core\BepInEx.Core.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.NetLauncher.Common">
-      <HintPath>..\..\BepInEx\BepInEx.NET.Common.dll</HintPath>
+      <HintPath>..\..\BepInEx\BepInEx Framework\BepInEx.NET.Common.dll</HintPath>
     </Reference>
     <Reference Include="Core">
       <HintPath>..\..\DLC Quest\Core.dll</HintPath>

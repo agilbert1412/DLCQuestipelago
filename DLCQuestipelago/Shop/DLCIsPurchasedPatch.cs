@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.DLC;
 using DLCQuestipelago.Items;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Shop
 {
@@ -11,12 +11,12 @@ namespace DLCQuestipelago.Shop
     [HarmonyPatch(nameof(DLCManager.IsPurchased))]
     public static class DLCIsPurchasedPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ItemParser _itemParser;
 
-        public static void Initialize(ManualLogSource log, ItemParser itemParser)
+        public static void Initialize(ILogger logger, ItemParser itemParser)
         {
-            _log = log;
+            _logger = logger;
             _itemParser = itemParser;
         }
 
@@ -40,7 +40,7 @@ namespace DLCQuestipelago.Shop
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(DLCIsPurchasedPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(DLCIsPurchasedPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

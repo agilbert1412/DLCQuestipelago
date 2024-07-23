@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.DLC;
 using DLCLib.Scripts;
 using HarmonyLib;
@@ -11,11 +11,11 @@ namespace DLCQuestipelago.DLCUnlockPatch
     [HarmonyPatch(nameof(RandomEncounter.StartRandomEncounterConversation))]
     public static class RandomEncounterUnlockPackPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
 
-        public static void Initialize(ManualLogSource log)
+        public static void Initialize(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
         // public static void StartRandomEncounterConversation()
@@ -27,7 +27,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(RandomEncounterUnlockPackPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(RandomEncounterUnlockPackPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }

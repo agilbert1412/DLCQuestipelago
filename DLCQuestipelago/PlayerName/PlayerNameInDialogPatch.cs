@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using BepInEx.Logging;
 using DLCLib.HUD;
 using DLCLib.Render;
-using DLCQuestipelago.Archipelago;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.PlayerName
 {
@@ -12,13 +12,13 @@ namespace DLCQuestipelago.PlayerName
     [HarmonyPatch(nameof(DialogDisplay.AddDialog))]
     public static class PlayerNameInDialogPatch
     {
-        private static ManualLogSource _log;
+        private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static NameChanger _nameChanger;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, NameChanger nameChanger)
+        public static void Initialize(ILogger logger, ArchipelagoClient archipelago, NameChanger nameChanger)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _nameChanger = nameChanger;
         }
@@ -34,7 +34,7 @@ namespace DLCQuestipelago.PlayerName
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(PlayerNameInDialogPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(PlayerNameInDialogPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }

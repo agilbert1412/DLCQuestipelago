@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Campaigns;
 using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago
 {
@@ -18,15 +18,15 @@ namespace DLCQuestipelago
         private const string LFOD_CAMPAIGN_NAME = "Live Freemium or Die:";
         private const string COIN_LOCATION_NAME = "Coin";
 
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
         private static bool _wasCollected = false;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _locationChecker = locationChecker;
         }
@@ -40,7 +40,7 @@ namespace DLCQuestipelago
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(CoinPickupPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(CoinPickupPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }
@@ -60,7 +60,7 @@ namespace DLCQuestipelago
 
             var checkedCoinLocations = GetAllCheckedCoinLocations(currentCoins, bundleSize, maxCoins, campaignLocation);
 
-            _locationChecker.AddCheckedLocation(checkedCoinLocations);
+            _locationChecker.AddCheckedLocations(checkedCoinLocations);
         }
 
         public static string[] GetAllCheckedCoinLocations(int totalCoinsPickedUp, double bundleSize, int maxCoins, string campaignName)

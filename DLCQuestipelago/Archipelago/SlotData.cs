@@ -1,15 +1,20 @@
-﻿using BepInEx.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.Archipelago
 {
-    public class SlotData
+    public class SlotData : ISlotData
     {
         private const string COINSANITY_KEY = "coinsanity";
-        private static readonly string[] COINSANITY_BUNDLE_KEYS = new[] { "coinbundlerange", "coin_bundle_range",
-                                                                          "coinbundlequantity", "coin_bundle_quantity",
-                                                                          "coinsanityrange", "coinsanity_range", "coin_sanity_range" };
+
+        private static readonly string[] COINSANITY_BUNDLE_KEYS = new[]
+        {
+            "coinbundlerange", "coin_bundle_range",
+            "coinbundlequantity", "coin_bundle_quantity",
+            "coinsanityrange", "coinsanity_range", "coin_sanity_range"
+        };
+
         private const string PERMANENT_COINS_KEY = "permanent_coins";
         private const string ENDING_KEY = "ending_choice";
         private const string CAMPAIGN_KEY = "campaign";
@@ -19,7 +24,7 @@ namespace DLCQuestipelago.Archipelago
         private const string MULTIWORLD_VERSION_KEY = "client_version";
 
         private Dictionary<string, object> _slotDataFields;
-        private ManualLogSource _console;
+        private ILogger _logger;
 
         public string SlotName { get; private set; }
         public Coinsanity Coinsanity { get; private set; }
@@ -34,19 +39,20 @@ namespace DLCQuestipelago.Archipelago
 
             return CoinBundleSize <= 0 ? 0.1 : CoinBundleSize;
         }
+
         public bool PermanentCoins { get; private set; }
         public Ending Ending { get; private set; }
         public Campaign Campaign { get; private set; }
         public ItemShuffle ItemShuffle { get; private set; }
-        public bool DeathLink { get; private set; }
+        public bool? DeathLink { get; private set; }
         public string Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
 
-        public SlotData(string slotName, Dictionary<string, object> slotDataFields, ManualLogSource console)
+        public SlotData(string slotName, Dictionary<string, object> slotDataFields, ILogger logger)
         {
             SlotName = slotName;
             _slotDataFields = slotDataFields;
-            _console = console;
+            _logger = logger;
 
             Coinsanity = GetSlotSetting(COINSANITY_KEY, Coinsanity.None);
             CoinBundleSize = GetSlotSetting(COINSANITY_BUNDLE_KEYS, 20);
@@ -113,7 +119,7 @@ namespace DLCQuestipelago.Archipelago
 
         private T GetSlotDefaultValue<T>(string key, T defaultValue)
         {
-            _console.LogWarning($"SlotData did not contain expected key: \"{key}\"");
+            _logger.LogWarning($"SlotData did not contain expected key: \"{key}\"");
             return defaultValue;
         }
     }

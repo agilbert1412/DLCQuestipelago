@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using BepInEx.Logging;
 using DLCLib;
 using DLCLib.Audio;
 using DLCLib.World.Props;
 using DLCQuestipelago.Archipelago;
-using DLCQuestipelago.Locations;
+using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago.ItemShufflePatches
 {
@@ -15,13 +15,13 @@ namespace DLCQuestipelago.ItemShufflePatches
     [HarmonyPatch(nameof(FetchQuestPickup.OnPickup))]
     public static class PickupBoxOfSuppliesPatch
     {
-        private static ManualLogSource _log;
-        private static ArchipelagoClient _archipelago;
+        private static ILogger _logger;
+        private static DLCQArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
 
-        public static void Initialize(ManualLogSource log, ArchipelagoClient archipelago, LocationChecker locationChecker)
+        public static void Initialize(ILogger logger, DLCQArchipelagoClient archipelago, LocationChecker locationChecker)
         {
-            _log = log;
+            _logger = logger;
             _archipelago = archipelago;
             _locationChecker = locationChecker;
         }
@@ -47,7 +47,7 @@ namespace DLCQuestipelago.ItemShufflePatches
             }
             catch (Exception ex)
             {
-                _log.LogError($"Failed in {nameof(PickupBoxOfSuppliesPatch)}.{nameof(Prefix)}:\n\t{ex}");
+                _logger.LogError($"Failed in {nameof(PickupBoxOfSuppliesPatch)}.{nameof(Prefix)}:\n\t{ex}");
                 Debugger.Break();
                 return true; // run original logic
             }
