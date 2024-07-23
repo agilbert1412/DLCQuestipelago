@@ -89,18 +89,17 @@ namespace DLCQuestipelago
         private void ConnectToArchipelago()
         {
             ReadPersistentArchipelagoData();
-            // _chatForwarder = new ChatForwarder(Monitor, _harmony, _giftHandler, _appearanceRandomizer);
 
+            var errorMessage = "";
             if (APConnectionInfo != null && !_archipelago.IsConnected)
             {
-                _archipelago.Connect(APConnectionInfo, out var errorMessage);
+                _archipelago.Connect(APConnectionInfo, out errorMessage);
             }
 
             if (!_archipelago.IsConnected)
             {
                 APConnectionInfo = null;
-                var userMessage =
-                    $"Could not connect to archipelago. Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.";
+                var userMessage = $"Could not connect to archipelago.{Environment.NewLine}Message: {errorMessage}{Environment.NewLine}Please verify the connection file ({Persistency.CONNECTION_FILE}) and that the server is available.{Environment.NewLine}";
                 _logger.LogError(userMessage);
                 Console.ReadKey();
                 Environment.Exit(0);

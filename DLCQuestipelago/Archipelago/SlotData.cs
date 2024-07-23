@@ -62,7 +62,7 @@ namespace DLCQuestipelago.Archipelago
             ItemShuffle = GetSlotSetting(ITEM_SHUFFLE_KEY, ItemShuffle.Shuffled);
             DeathLink = GetSlotSetting(DEATH_LINK_KEY, false);
             Seed = GetSlotSetting(SEED_KEY, "0");
-            MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, "");
+            MultiworldVersion = GetSlotSetting(MULTIWORLD_VERSION_KEY, PluginInfo.PLUGIN_VERSION);
         }
 
         private int GetSlotSetting(IEnumerable<string> keys, int defaultValue)
