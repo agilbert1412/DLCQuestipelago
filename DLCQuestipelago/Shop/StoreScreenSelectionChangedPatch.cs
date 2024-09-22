@@ -194,6 +194,8 @@ namespace DLCQuestipelago.Shop
             var numberCoins = useBossCoins
                 ? Singleton<SceneManager>.Instance.CurrentScene.Player.Inventory.BossCoins
                 : CoinsanityUtils.GetCurrentCoins(_archipelago);
+            numberCoins = Math.Round(numberCoins, 2);
+
             if (numberCoins >= selectedDLCData.Cost)
             {
                 priceCoinAmountText.Tint = ColorUtil.PriceCanAffordText;

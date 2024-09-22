@@ -41,6 +41,8 @@ namespace DLCQuestipelago.Items
 
                 var currentCoins = CoinsanityUtils.GetCurrentCoins(_archipelago);
 
+                currentCoins = Math.Round(currentCoins, 2);
+
                 // protected HUDText coinCount;
                 var coinCountField = typeof(CoinDisplay).GetField("coinCount", BindingFlags.Instance | BindingFlags.NonPublic);
                 var coinCount = (HUDText)coinCountField.GetValue(__instance);
