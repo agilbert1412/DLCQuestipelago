@@ -17,6 +17,7 @@ using DLCLib.World.Props;
 using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.ArchipelagoUtilities.Net.Extensions;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Timer = Core.Timer;
@@ -55,6 +56,8 @@ namespace DLCQuestipelago.DLCUnlockPatch
             GetFieldAndPropertyInfos();
             _grindCount = 0;
             _energyLinkKey = string.Format(BANKING_TEAM_KEY, _archipelago.GetTeam());
+            var session = _archipelago.GetSession();
+            session.DataStorage[Scope.Global, _energyLinkKey].InitializeToZero();
         }
 
         private static void GetFieldAndPropertyInfos()
@@ -125,8 +128,8 @@ namespace DLCQuestipelago.DLCUnlockPatch
 
         private static void GrindOnceEvenIfCompleted(ArchipelagoSession session, Grindstone grindstone)
         {
-            var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY, out _);
-            var hasDayOnePatch = _archipelago.HasReceivedItem(DAY_ONE_PATCH, out _);
+            var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY);
+            var hasDayOnePatch = _archipelago.HasReceivedItem(DAY_ONE_PATCH);
             if (hasDayOnePatch)
             {
                 ThreadPool.QueueUserWorkItem((o) => SendOneGrindToEnergyLink(session, hasTimeIsMoney));
@@ -195,7 +198,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
                 return;
             }
 
-            var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY, out _);
+            var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY);
             if (!hasTimeIsMoney)
             {
                 joulesNeeded *= 1000;
