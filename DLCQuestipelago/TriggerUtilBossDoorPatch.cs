@@ -78,7 +78,7 @@ namespace DLCQuestipelago
 
         private static bool HasItemOrWillHaveItInSpecificLocations(string item, IEnumerable<string> validLocations)
         {
-            var hasItem = _archipelago.HasReceivedItem(item, out _);
+            var hasItem = _archipelago.HasReceivedItem(item);
             if (hasItem)
             {
                 return true;

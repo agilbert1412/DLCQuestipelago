@@ -44,7 +44,7 @@ namespace DLCQuestipelago.Archipelago
         public Ending Ending { get; private set; }
         public Campaign Campaign { get; private set; }
         public ItemShuffle ItemShuffle { get; private set; }
-        public bool? DeathLink { get; private set; }
+        public bool DeathLink { get; private set; }
         public string Seed { get; private set; }
         public string MultiworldVersion { get; private set; }
 

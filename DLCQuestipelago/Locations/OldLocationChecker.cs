@@ -88,7 +88,7 @@
 
 //            allCheckedLocations = allCheckedLocations.Distinct().Where(x => x > -1).ToList();
 
-//            if (_archipelago.HasReceivedItem("Day One Patch Pack", out _))
+//            if (_archipelago.HasReceivedItem("Day One Patch Pack"))
 //            {
 //                _archipelago.ReportCheckedLocationsAsync(allCheckedLocations.ToArray());
 //            }

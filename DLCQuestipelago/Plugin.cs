@@ -93,7 +93,7 @@ namespace DLCQuestipelago
             var errorMessage = "";
             if (APConnectionInfo != null && !_archipelago.IsConnected)
             {
-                _archipelago.Connect(APConnectionInfo, out errorMessage);
+                _archipelago.ConnectToMultiworld(APConnectionInfo, out errorMessage);
             }
 
             if (!_archipelago.IsConnected)

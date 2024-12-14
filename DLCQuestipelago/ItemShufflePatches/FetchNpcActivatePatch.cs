@@ -37,7 +37,7 @@ namespace DLCQuestipelago.ItemShufflePatches
                     return true;
                 }
 
-                var hasSupplies = _archipelago.HasReceivedItem("Box of Various Supplies", out _);
+                var hasSupplies = _archipelago.HasReceivedItem("Box of Various Supplies");
                 if (SceneManager.Instance.CurrentScene.EventList.Contains(ConversationManager.FETCH_QUEST_ACTIVATED_STR) && !__instance.FetchQuestStarted)
                 {
                     __result = _conversationStarter.StartConversation(__instance, "fetchqueststart");

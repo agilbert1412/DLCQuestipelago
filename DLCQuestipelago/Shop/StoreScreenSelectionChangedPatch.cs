@@ -162,7 +162,7 @@ namespace DLCQuestipelago.Shop
             var scoutedDLC = scoutedDLCs[selectedDLCName];
             var itemName = scoutedDLC.ItemName;
             var ownerName = scoutedDLC.PlayerName;
-            var hasCanadianPack = _archipelago.HasReceivedItem("Canadian Dialog Pack", out _);
+            var hasCanadianPack = _archipelago.HasReceivedItem("Canadian Dialog Pack");
             var canadianSuffix = hasCanadianPack ? ", sorry" : "";
             var refundsSuffix = $"There are no refunds for this item{canadianSuffix}.";
             var description = $"{ownerName}'s {itemName}\n{refundsSuffix}";

@@ -107,7 +107,7 @@ namespace DLCQuestipelago.Items
             CurrentScene.IsPauseAllowed = false;
             CurrentScene.HUDManager.LoadingDisplay.Visible = true;
             CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(0.0f);
-            var length = _archipelago.HasReceivedItem("Day One Patch Pack", out _) ? 2f : 5f;
+            var length = _archipelago.HasReceivedItem("Day One Patch Pack") ? 2f : 5f;
             CurrentScene.Interpolators.Create(0.0f, 1f, length, step => CurrentScene.HUDManager.LoadingDisplay.HandleProgressChanged(step.Value), FinishLoadingScreen);
         }
 
