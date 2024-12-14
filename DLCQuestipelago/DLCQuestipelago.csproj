@@ -120,7 +120,6 @@
 		<Copy SourceFiles="$(OutputPath)Archipelago.Gifting.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)KaitoKid.ArchipelagoUtilities.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<!--<Copy SourceFiles="$(OutputPath)websocket-sharp.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
-		<Copy SourceFiles="$(OutputPath)SpriteSheetRuntime.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_item_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_location_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)Textures\Coins\cracked.png" DestinationFolder="$(PluginsPath)Textures\Coins\" ContinueOnError="false" />
