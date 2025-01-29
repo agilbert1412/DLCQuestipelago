@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Archipelago.Gifting.Net.Gifts;
 using Archipelago.Gifting.Net.Service;
+using Archipelago.Gifting.Net.Service.Result;
 using Archipelago.Gifting.Net.Traits;
+using Archipelago.Gifting.Net.Versioning.Gifts;
+using Archipelago.Gifting.Net.Versioning.Gifts.Current;
 using Archipelago.MultiClient.Net.Helpers;
 using DLCLib;
 using DLCQuestipelago.Archipelago;
@@ -15,10 +17,10 @@ namespace DLCQuestipelago.Gifting
 {
     public class GiftSender
     {
-        private static readonly HashSet<string> _treeTraits = new() { "Tree", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Wood, "Lumber" };
-        private static readonly HashSet<string> _rockTraits = new() { "Rock", "Boulder", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Stone, GiftFlag.Ore };
-        private static readonly HashSet<string> _vineTraits = new() { "Vine", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Grass, "Fiber" };
-        private static readonly HashSet<string> _zombieSheepTraits = new() { "Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster, GiftFlag.Trap };
+        private static readonly HashSet<string> _treeTraits = ["Tree", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Wood];
+        private static readonly HashSet<string> _rockTraits = [GiftFlag.Material, GiftFlag.Resource, GiftFlag.Stone, GiftFlag.Ore];
+        private static readonly HashSet<string> _vineTraits = ["Vine", GiftFlag.Material, GiftFlag.Resource, GiftFlag.Grass];
+        private static readonly HashSet<string> _zombieSheepTraits = ["Zombie", "Sheep", GiftFlag.Animal, GiftFlag.Monster, GiftFlag.Trap];
 
         private readonly ILogger _logger;
         private DLCQArchipelagoClient _archipelago;
@@ -111,7 +113,7 @@ namespace DLCQuestipelago.Gifting
             var session = _archipelago.GetSession();
             if (session == null)
             {
-                return new List<PlayerInfo>();
+                return [];
             }
 
             var myTeam = session.ConnectionInfo.Team;
@@ -142,7 +144,7 @@ namespace DLCQuestipelago.Gifting
                 return friendlyTargets;
             }
 
-            return new List<PlayerInfo>();
+            return [];
         }
 
         private async Task<List<PlayerInfo>> GetPlayersThatCanReceiveGift(HashSet<string> traits, int myTeam, IEnumerable<int> playersOtherTeams)
@@ -166,7 +168,7 @@ namespace DLCQuestipelago.Gifting
                 }
             }
 
-            return new List<PlayerInfo>();
+            return [];
         }
 
         private async Task<List<PlayerInfo>> GetEnemyGiftTargets(HashSet<string> traits, IEnumerable<int> playersOtherTeams)
@@ -183,7 +185,7 @@ namespace DLCQuestipelago.Gifting
                 foreach (var player in session.Players.Players[team])
                 {
                     var canGift = await _giftService.CanGiftToPlayerAsync(player.Slot, team, traits);
-                    if (canGift)
+                    if (canGift.CanGift)
                     {
                         validTargets.Add(player);
                     }
@@ -205,8 +207,8 @@ namespace DLCQuestipelago.Gifting
             foreach (var player in session.Players.Players[myTeam])
             {
                 var canGift = player.Slot != session.ConnectionInfo.Slot;
-                canGift = canGift && await _giftService.CanGiftToPlayerAsync(player.Slot, myTeam, traits);
-                if (canGift)
+                var validTarget = await _giftService.CanGiftToPlayerAsync(player.Slot, myTeam, traits);
+                if (canGift && validTarget.CanGift)
                 {
                     friendlyTargets.Add(player);
                 }
@@ -218,13 +220,13 @@ namespace DLCQuestipelago.Gifting
         public async Task SendGiftAsync(GiftItem giftItem, GiftTrait[] traits, PlayerInfo target)
         {
             var result = await _giftService.SendGiftAsync(giftItem, traits, target.Name, target.Team);
-            if (result)
+            if (result.Success)
             {
                 _logger.LogInfo($"Successfully send a gift to {target.Name}");
             }
             else
             {
-                _logger.LogWarning($"Failed at sending a trap gift to {target.Name}");
+                _logger.LogWarning($"Failed at sending a trap gift to {target.Name}. Message: {(result as FailedGifting)?.ErrorMessage}");
             }
         }
 

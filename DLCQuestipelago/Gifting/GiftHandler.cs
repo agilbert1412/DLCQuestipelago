@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Archipelago.Gifting.Net.Gifts.Versions.Current;
 using Archipelago.Gifting.Net.Service;
 using Archipelago.Gifting.Net.Traits;
+using Archipelago.Gifting.Net.Versioning.Gifts.Current;
 using Archipelago.MultiClient.Net;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Extensions;

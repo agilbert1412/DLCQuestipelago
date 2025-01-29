@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Archipelago.Gifting.Net.Gifts.Versions.Current;
 using Archipelago.Gifting.Net.Service;
 using Archipelago.Gifting.Net.Traits;
+using Archipelago.Gifting.Net.Versioning.Gifts.Current;
 using DLCLib;
 using DLCQuestipelago.Items;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
