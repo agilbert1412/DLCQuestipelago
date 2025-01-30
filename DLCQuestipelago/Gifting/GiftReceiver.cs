@@ -45,21 +45,31 @@ namespace DLCQuestipelago.Gifting
 
             foreach (var giftEntry in gifts)
             {
-                var id = giftEntry.Key;
-                if (_processedGifts.Contains(id))
-                {
-                    continue;
-                }
-
-                _processedGifts.Add(id);
-                var gift = giftEntry.Value; 
-                if (!TryProcessGift(gift))
-                {
-                    _giftService.RefundGift(gift);
-                }
+                ProcessNewGift(giftEntry.Value);
             }
 
             _giftService.RemoveGiftsFromGiftBox(gifts.Keys);
+        }
+
+        public void ReceiveNewGift(Gift gift)
+        {
+            ProcessNewGift(gift);
+            _giftService.RemoveGiftFromGiftBox(gift.ID);
+        }
+
+        private void ProcessNewGift(Gift gift)
+        {
+            var id = gift.ID;
+            if (_processedGifts.Contains(id))
+            {
+                return;
+            }
+
+            _processedGifts.Add(id);
+            if (!TryProcessGift(gift))
+            {
+                _giftService.RefundGift(gift);
+            }
         }
 
         private bool TryProcessGift(Gift gift)
@@ -93,7 +103,6 @@ namespace DLCQuestipelago.Gifting
             ProcessZombieSheep(gift.Amount);
             _notificationHandler.AddGiftNotification(gift.ItemName, true);
             return true;
-
         }
 
         private bool TryProcessRandomTrap(Gift gift)
@@ -107,7 +116,6 @@ namespace DLCQuestipelago.Gifting
             ProcessRandomTrap(gift.Amount);
             _notificationHandler.AddGiftNotification(gift.ItemName, true);
             return true;
-
         }
 
         private static bool GiftIsZombieSheep(Gift gift)

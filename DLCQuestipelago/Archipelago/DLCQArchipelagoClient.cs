@@ -54,25 +54,5 @@ namespace DLCQuestipelago.Archipelago
         {
             _giftHandler = giftHandler;
         }
-
-        private const int SECONDS_BETWEEN_CHECK_GIFTS = 10;
-        private const int FRAMES_BEFORE_CHECK_GIFTS = SECONDS_BETWEEN_CHECK_GIFTS * 60;
-        private int _frame = 0;
-
-        private void UpdateReceiveGifts()
-        {
-            if (_giftHandler == null)
-            {
-                return;
-            }
-
-            _frame = (_frame + 1) % 600;
-            if (_frame != 0)
-            {
-                return;
-            }
-
-            _giftHandler.NewGiftNotification();
-        }
     }
 }

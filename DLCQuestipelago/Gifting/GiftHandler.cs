@@ -38,22 +38,19 @@ namespace DLCQuestipelago.Gifting
         public void OpenGiftBox()
         {
             _giftService.OpenGiftBox(false, parsableTraits);
-            // _giftService.SubscribeToNewGifts(NewGiftNotification);
+            _giftService.OnNewGift += NewGiftNotification;
+            _giftReceiver.ReceiveNewGifts().FireAndForget();
         }
 
         public void CloseGiftBox()
         {
+            _giftService.OnNewGift -= NewGiftNotification;
             _giftService.CloseGiftBox();
         }
 
-        public void NewGiftNotification(Dictionary<string, Gift> gifts)
+        public void NewGiftNotification(Gift newGift)
         {
-            _giftReceiver.ReceiveNewGifts(gifts);
-        }
-
-        public void NewGiftNotification()
-        {
-            _giftReceiver.ReceiveNewGifts().FireAndForget();
+            _giftReceiver.ReceiveNewGift(newGift);
         }
     }
 }
