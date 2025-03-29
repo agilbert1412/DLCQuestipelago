@@ -14,6 +14,7 @@ using BepInEx.NET.Common;
 using DLCQuestipelago.DualContentManager;
 using DLCQuestipelago.Extensions;
 using DLCQuestipelago.Gifting;
+using DLCQuestipelago.MoveLink;
 using DLCQuestipelago.Utilities;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
@@ -40,6 +41,7 @@ namespace DLCQuestipelago
         private GiftHandler _giftHandler;
 
         public bool IsInGame { get; private set; }
+        public string UniqueIdentifier = Guid.NewGuid().ToString();
 
         public override void Load()
         {
@@ -152,6 +154,8 @@ namespace DLCQuestipelago
             
             _archipelago.APUpdate();
             // DLCLib.Save.DLCSaveManager.Instance.SaveGameData();
+
+            MoveLinkManager.UpdateMove(gameTime);
         }
 
         public void EnterGame()

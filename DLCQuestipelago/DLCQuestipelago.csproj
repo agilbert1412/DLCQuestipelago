@@ -4,7 +4,7 @@
     <TargetFramework>net452</TargetFramework>
     <AssemblyName>DLCQuestipelago</AssemblyName>
     <Description>Archipelago Randomizer for DLC Quest</Description>
-    <Version>3.2.0</Version>
+    <Version>3.3.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <BaseOutputPath>bin\</BaseOutputPath>
@@ -15,7 +15,7 @@
     <PackageReference Include="Archipelago.Gifting.Net" Version="0.4.3" />
     <PackageReference Include="Archipelago.MultiClient.Net" Version="6.6.0" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
-    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.2.3" />
+    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.2.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   

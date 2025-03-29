@@ -12,6 +12,7 @@ using DLCQuestipelago.Items;
 using DLCQuestipelago.Items.Traps;
 using DLCQuestipelago.ItemShufflePatches;
 using DLCQuestipelago.Locations;
+using DLCQuestipelago.MoveLink;
 using KaitoKid.ArchipelagoUtilities.Net;
 using DLCQuestipelago.PlayerName;
 using DLCQuestipelago.Serialization;
@@ -53,6 +54,7 @@ namespace DLCQuestipelago
             InitializeAwardmentPatches(logger, locationChecker);
             InitializeAntiCrashPatches(logger);
             CoinsAppearancePatch.ReplaceBrokenCoins(logger, archipelago);
+            MoveLinkManager.Initialize(logger, archipelago);
         }
 
         private static void InitializeKillAndDestroyPatches(ILogger logger, LocationChecker locationChecker,

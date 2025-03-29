@@ -4,10 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Archipelago.MultiClient.Net;
 using DLCQuestipelago.Archipelago.Deathlink;
 using DLCQuestipelago.Gifting;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using Archipelago.MultiClient.Net.Packets;
+using DLCQuestipelago.MoveLink;
 
 namespace DLCQuestipelago.Archipelago
 {
@@ -53,6 +56,18 @@ namespace DLCQuestipelago.Archipelago
         internal void SetGiftHandler(GiftHandler giftHandler)
         {
             _giftHandler = giftHandler;
+        }
+
+        protected override void OnPacketReceived(ArchipelagoPacketBase packet)
+        {
+            switch (packet)
+            {
+                case BouncePacket bouncePacket:
+                    MoveLinkManager.HandleBouncePacket(bouncePacket);
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }
