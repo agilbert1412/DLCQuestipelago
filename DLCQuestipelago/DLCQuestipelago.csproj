@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archipelago.Gifting.Net" Version="0.4.2" />
-    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.5.0" />
+    <PackageReference Include="Archipelago.Gifting.Net" Version="0.4.3" />
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.6.0" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
-    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.1.17" />
+    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="1.2.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   
