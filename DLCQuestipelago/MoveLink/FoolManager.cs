@@ -19,7 +19,7 @@ namespace DLCQuestipelago.MoveLink
 
         internal static bool ShouldPrank()
         {
-            return true;
+            // return true;
             return IsPrankDay() ? _shouldPrankOnFishDay : _shouldPrankOnOtherDays;
         }
 
