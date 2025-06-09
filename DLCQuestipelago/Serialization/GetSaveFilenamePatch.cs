@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using DLCLib.Save;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
@@ -34,7 +35,8 @@ namespace DLCQuestipelago.Serialization
                 var parts = __result.Split('.');
                 var fileName = parts[0];
                 var extension = parts.Length > 1 ? parts[1] : ".xml";
-                __result = $"{fileName}_{connectionInfo.Port}_{connectionInfo.SlotName}_{_archipelago.SlotData.Seed}.{extension}";
+                var cleanSlotName = CleanForFileName(connectionInfo.SlotName);
+                __result = $"{fileName}_{connectionInfo.Port}_{cleanSlotName}_{_archipelago.SlotData.Seed}.{extension}";
             }
             catch (Exception ex)
             {
@@ -42,6 +44,17 @@ namespace DLCQuestipelago.Serialization
                 Debugger.Break();
                 return;
             }
+        }
+
+        private static string CleanForFileName(string textToClean)
+        {
+            var cleanText = textToClean;
+            foreach (var invalidChar in Path.GetInvalidFileNameChars())
+            {
+                cleanText = cleanText.Replace(invalidChar, '-');
+            }
+
+            return cleanText;
         }
     }
 }
