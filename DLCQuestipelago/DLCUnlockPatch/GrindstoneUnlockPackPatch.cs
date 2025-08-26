@@ -37,6 +37,7 @@ namespace DLCQuestipelago.DLCUnlockPatch
         private static ILogger _logger;
         private static ArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
+        private static bool _energyLinkEnabled;
         private static int _grindCount;
         private static string _energyLinkKey;
 
@@ -55,9 +56,13 @@ namespace DLCQuestipelago.DLCUnlockPatch
             _locationChecker = locationChecker;
             GetFieldAndPropertyInfos();
             _grindCount = 0;
-            _energyLinkKey = string.Format(BANKING_TEAM_KEY, _archipelago.GetTeam());
-            var session = _archipelago.GetSession();
-            session.DataStorage[Scope.Global, _energyLinkKey].InitializeToZero();
+            _energyLinkEnabled = Plugin.Instance.APConnectionInfo.EnableEnergyLink;
+            if (_energyLinkEnabled)
+            {
+                _energyLinkKey = string.Format(BANKING_TEAM_KEY, _archipelago.GetTeam());
+                var session = _archipelago.GetSession();
+                session.DataStorage[Scope.Global, _energyLinkKey].InitializeToZero();
+            }
         }
 
         private static void GetFieldAndPropertyInfos()
@@ -129,6 +134,17 @@ namespace DLCQuestipelago.DLCUnlockPatch
         private static void GrindOnceEvenIfCompleted(ArchipelagoSession session, Grindstone grindstone)
         {
             var hasTimeIsMoney = _archipelago.HasReceivedItem(TIME_IS_MONEY);
+            GrindOnceEnergyLink(session, hasTimeIsMoney);
+            PlayGrindAnimation(grindstone, hasTimeIsMoney);
+        }
+
+        private static void GrindOnceEnergyLink(ArchipelagoSession session, bool hasTimeIsMoney)
+        {
+            if (!_energyLinkEnabled)
+            {
+                return;
+            }
+
             var hasDayOnePatch = _archipelago.HasReceivedItem(DAY_ONE_PATCH);
             if (hasDayOnePatch)
             {
@@ -138,13 +154,11 @@ namespace DLCQuestipelago.DLCUnlockPatch
             {
                 SendOneGrindToEnergyLink(session, hasTimeIsMoney);
             }
-
-            PlayGrindAnimation(grindstone, hasTimeIsMoney);
         }
 
         private static void SendOneGrindToEnergyLink(ArchipelagoSession session, bool hasTimeIsMoney)
         {
-            if (session == null)
+            if (!_energyLinkEnabled || session == null)
             {
                 return;
             }
@@ -190,6 +204,11 @@ namespace DLCQuestipelago.DLCUnlockPatch
 
         private static void TryToFinishGrindingUsingEnergyLink(ArchipelagoSession session, Grindstone grindstone)
         {
+            if (!_energyLinkEnabled)
+            {
+                return;
+            }
+
             var grindsRemaining = MAX_GRINDS - (int)_grindCountField.GetValue(grindstone);
             var joulesNeeded = grindsRemaining * JOULES_PER_GRIND * 100;
 
@@ -209,6 +228,11 @@ namespace DLCQuestipelago.DLCUnlockPatch
 
         private static void FinishGrindingWithEnergyLink(ArchipelagoSession session, Grindstone grindstone, BigInteger? currentAmountJoules, long joulesNeeded)
         {
+            if (!_energyLinkEnabled)
+            {
+                return;
+            }
+
             if (currentAmountJoules == null)
             {
                 currentAmountJoules = 0;
