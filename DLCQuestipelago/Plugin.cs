@@ -16,6 +16,7 @@ using DLCQuestipelago.Extensions;
 using DLCQuestipelago.Gifting;
 using DLCQuestipelago.MoveLink;
 using DLCQuestipelago.Utilities;
+using KaitoKid.ArchipelagoUtilities.Net.Client.ConnectionResults;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago
@@ -95,7 +96,8 @@ namespace DLCQuestipelago
             var errorMessage = "";
             if (APConnectionInfo != null && !_archipelago.IsConnected)
             {
-                _archipelago.ConnectToMultiworld(APConnectionInfo, out errorMessage);
+                var connectionResult = _archipelago.ConnectToMultiworld(APConnectionInfo);
+                errorMessage = connectionResult.Message;
             }
 
             if (!_archipelago.IsConnected)
