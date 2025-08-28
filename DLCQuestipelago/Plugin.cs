@@ -1,23 +1,24 @@
 ﻿using BepInEx;
+using BepInEx.NET.Common;
 using DLCLib;
 using DLCQuestipelago.Archipelago;
+using DLCQuestipelago.DualContentManager;
+using DLCQuestipelago.Extensions;
+using DLCQuestipelago.Gifting;
 using DLCQuestipelago.Items;
-using KaitoKid.ArchipelagoUtilities.Net;
+using DLCQuestipelago.MoveLink;
+using DLCQuestipelago.QualityOfLife;
 using DLCQuestipelago.Serialization;
+using DLCQuestipelago.Utilities;
 using HarmonyLib;
+using KaitoKid.ArchipelagoUtilities.Net;
+using KaitoKid.ArchipelagoUtilities.Net.Client.ConnectionResults;
+using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using BepInEx.NET.Common;
-using DLCQuestipelago.DualContentManager;
-using DLCQuestipelago.Extensions;
-using DLCQuestipelago.Gifting;
-using DLCQuestipelago.MoveLink;
-using DLCQuestipelago.Utilities;
-using KaitoKid.ArchipelagoUtilities.Net.Client.ConnectionResults;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 
 namespace DLCQuestipelago
 {
@@ -135,7 +136,7 @@ namespace DLCQuestipelago
             // Options added in 3.4.0
             if (string.IsNullOrWhiteSpace(connectionInfo.TeleportToSpawnKey))
             {
-                connectionInfo.TeleportToSpawnKey = "S";
+                connectionInfo.TeleportToSpawnKey = InputPatch.DEFAULT_TELEPORT_SPAWN_KEY;
                 connectionInfo.EnableEnergyLink = true;
             }
 

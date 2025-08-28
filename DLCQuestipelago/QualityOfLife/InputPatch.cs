@@ -25,6 +25,8 @@ namespace DLCQuestipelago.QualityOfLife
     [HarmonyPatch(nameof(DLCGameplayScreen.HandleInput))]
     public static class InputPatch
     {
+        public const string DEFAULT_TELEPORT_SPAWN_KEY = "Q";
+
         private static ILogger _logger;
         private static DLCQArchipelagoClient _archipelago;
         private static LocationChecker _locationChecker;
