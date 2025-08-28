@@ -15,6 +15,7 @@ using DLCQuestipelago.Locations;
 using DLCQuestipelago.MoveLink;
 using KaitoKid.ArchipelagoUtilities.Net;
 using DLCQuestipelago.PlayerName;
+using DLCQuestipelago.QualityOfLife;
 using DLCQuestipelago.Serialization;
 using DLCQuestipelago.Shop;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
@@ -53,6 +54,7 @@ namespace DLCQuestipelago
             InitializeKillAndDestroyPatches(logger, locationChecker, giftSender);
             InitializeAwardmentPatches(logger, locationChecker);
             InitializeAntiCrashPatches(logger);
+            InitializeQualityOfLifePatches(logger, archipelago);
             CoinsAppearancePatch.ReplaceBrokenCoins(logger, archipelago);
             MoveLinkManager.Initialize(logger, archipelago);
         }
@@ -160,6 +162,11 @@ namespace DLCQuestipelago
             DrawScenePatch.Initialize(logger);
             UpdateScenePatch.Initialize(logger, nodeCleaner);
             ScreenManagerDrawPatch.Initialize(logger);
+        }
+
+        private static void InitializeQualityOfLifePatches(ILogger logger, DLCQArchipelagoClient archipelago)
+        {
+            InputPatch.Initialize(logger, archipelago);
         }
     }
 }

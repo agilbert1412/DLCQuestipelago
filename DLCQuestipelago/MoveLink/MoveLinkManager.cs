@@ -170,6 +170,7 @@ namespace DLCQuestipelago.MoveLink
 
             MovePlayer(scene, player, x * TILE_FACTOR, y * TILE_FACTOR);
         }
+
         private static void MovePlayer(Scene scene, Player player, float x, float y)
         {
             var playerPhysicsObject = player.GetPhysicsObject();

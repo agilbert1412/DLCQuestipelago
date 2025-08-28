@@ -130,6 +130,13 @@ namespace DLCQuestipelago
                 return;
             }
 
+            // Options added in 3.4.0
+            if (string.IsNullOrWhiteSpace(connectionInfo.TeleportToSpawnKey))
+            {
+                connectionInfo.TeleportToSpawnKey = "A";
+                connectionInfo.EnableEnergyLink = true;
+            }
+
             APConnectionInfo = connectionInfo;
         }
 
