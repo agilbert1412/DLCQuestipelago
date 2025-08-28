@@ -135,7 +135,7 @@ namespace DLCQuestipelago
             // Options added in 3.4.0
             if (string.IsNullOrWhiteSpace(connectionInfo.TeleportToSpawnKey))
             {
-                connectionInfo.TeleportToSpawnKey = "A";
+                connectionInfo.TeleportToSpawnKey = "S";
                 connectionInfo.EnableEnergyLink = true;
             }
 
