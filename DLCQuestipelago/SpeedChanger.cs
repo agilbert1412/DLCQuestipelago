@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using DLCLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago
 {

@@ -6,6 +6,7 @@ using DLCLib.DLC;
 using DLCLib.Scripts.LFOD;
 using DLCLib.World;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {

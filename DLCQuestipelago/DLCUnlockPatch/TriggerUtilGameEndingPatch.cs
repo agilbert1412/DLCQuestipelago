@@ -4,6 +4,7 @@ using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.DLC;
 using DLCLib.World;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {

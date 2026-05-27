@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago

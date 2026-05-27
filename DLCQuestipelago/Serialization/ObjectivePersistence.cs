@@ -4,6 +4,7 @@ using DLCLib.Save;
 using DLCQuestipelago.Archipelago;
 using EasyStorage;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Serialization
 {

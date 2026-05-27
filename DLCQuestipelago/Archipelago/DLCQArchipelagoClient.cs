@@ -11,12 +11,13 @@ using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Archipelago.MultiClient.Net.Packets;
 using DLCQuestipelago.MoveLink;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Archipelago
 {
     public class DLCQArchipelagoClient : ArchipelagoClient
     {
-        public override string GameName => "DLCQuest";
+        public override string GameName => "Silksong";
         public override string ModName => "DLCQuestipelago";
         public override string ModVersion => PluginInfo.PLUGIN_VERSION;
 

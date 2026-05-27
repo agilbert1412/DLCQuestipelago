@@ -19,6 +19,7 @@ using DLCQuestipelago.QualityOfLife;
 using DLCQuestipelago.Serialization;
 using DLCQuestipelago.Shop;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago
 {

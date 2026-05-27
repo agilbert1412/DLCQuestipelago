@@ -8,6 +8,7 @@ using Archipelago.Gifting.Net.Versioning.Gifts.Current;
 using DLCLib;
 using DLCQuestipelago.Items;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Gifting
 {

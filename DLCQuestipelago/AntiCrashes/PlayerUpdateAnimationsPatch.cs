@@ -11,6 +11,7 @@ using DLCLib.DLC;
 using DLCLib.Physics;
 using DLCLib.Render;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

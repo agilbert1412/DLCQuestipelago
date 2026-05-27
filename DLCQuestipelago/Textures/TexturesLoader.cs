@@ -2,6 +2,7 @@
 using System.IO;
 using GameStateManagement;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DLCQuestipelago.Textures

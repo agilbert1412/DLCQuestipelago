@@ -3,6 +3,7 @@ using System.Diagnostics;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Core.Audio;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.AntiCrashes
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteSheetRuntime;

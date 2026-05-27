@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyName>DLCQuestipelago</AssemblyName>
     <Description>Archipelago Randomizer for DLC Quest</Description>
     <Version>3.4.0</Version>
@@ -13,9 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="Archipelago.Gifting.Net" Version="0.4.3" />
-    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.6.1" />
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.7.0" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
-    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="2.1.2" />
+    <PackageReference Include="KaitoKid.ArchipelagoUtilities.Net" Version="3.1.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   
@@ -68,6 +68,7 @@
   <ItemGroup>
     <Folder Include="DebugPatches\" />
     <Folder Include="IdTables\" />
+    <Folder Include="NewFolder\" />
     <Folder Include="Textures\Coins\" />	    
     <Folder Include="Properties\" />
   </ItemGroup>
@@ -119,6 +120,7 @@
 		<Copy SourceFiles="$(OutputPath)Archipelago.MultiClient.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)Archipelago.Gifting.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)KaitoKid.ArchipelagoUtilities.Net.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
+		<Copy SourceFiles="$(OutputPath)KaitoKid.Utilities.Interfaces.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />
 		<!--<Copy SourceFiles="$(OutputPath)websocket-sharp.dll" DestinationFolder="$(PluginsPath)" ContinueOnError="false" />-->
 		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_item_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />
 		<Copy SourceFiles="$(OutputPath)IdTables\dlc_quest_location_table.json" DestinationFolder="$(PluginsPath)IdTables\" ContinueOnError="false" />

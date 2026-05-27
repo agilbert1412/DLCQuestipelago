@@ -6,6 +6,7 @@ using EasyStorage;
 using KaitoKid.ArchipelagoUtilities.Net;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Newtonsoft.Json;
 
 namespace DLCQuestipelago.Items

@@ -12,13 +12,12 @@ using DLCQuestipelago.Serialization;
 using DLCQuestipelago.Utilities;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net;
-using KaitoKid.ArchipelagoUtilities.Net.Client.ConnectionResults;
-using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago
 {
@@ -93,6 +92,11 @@ namespace DLCQuestipelago
         private void ConnectToArchipelago()
         {
             ReadPersistentArchipelagoData();
+
+            var defaultSettings = JsonConvert.DefaultSettings?.Invoke();
+            var serializer = JsonSerializer.CreateDefault(defaultSettings);
+            var serializedSettings = JsonConvert.SerializeObject(serializer, Formatting.Indented);
+            File.WriteAllText("JsonDefaultSettings.json", serializedSettings);
 
             var errorMessage = "";
             if (APConnectionInfo != null && !_archipelago.IsConnected)

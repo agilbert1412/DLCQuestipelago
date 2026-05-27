@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework.Content;
 
 namespace DLCQuestipelago.DualContentManager

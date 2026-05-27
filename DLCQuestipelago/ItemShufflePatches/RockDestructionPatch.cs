@@ -6,6 +6,7 @@ using DLCLib.World;
 using DLCLib.World.Props;
 using HarmonyLib;
 using System.Reflection;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.ItemShufflePatches
 {

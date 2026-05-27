@@ -4,6 +4,7 @@ using DLCLib.World.Props;
 using DLCQuestipelago.Extensions;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Gifting.Patches
 {

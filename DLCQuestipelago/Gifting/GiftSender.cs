@@ -12,6 +12,7 @@ using Archipelago.MultiClient.Net.Helpers;
 using DLCLib;
 using DLCQuestipelago.Archipelago;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Gifting
 {

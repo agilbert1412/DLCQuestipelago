@@ -5,6 +5,7 @@ using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
 using DLCLib.Effects;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

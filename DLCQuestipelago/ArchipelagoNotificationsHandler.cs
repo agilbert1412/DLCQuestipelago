@@ -8,10 +8,12 @@ using DLCLib;
 using DLCLib.DLC;
 using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.DualContentManager;
+using DLCQuestipelago.Extensions;
 using DLCQuestipelago.Items;
 using DLCQuestipelago.Textures;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Notifications;
@@ -154,8 +156,10 @@ namespace DLCQuestipelago
 
         private static Notification GetExistingNotificationForCoins(string campaign, int coinBundleSize)
         {
-            var notificationsField = typeof(NotificationManager).GetField("notifications", BindingFlags.NonPublic | BindingFlags.Instance);
-            var notifications = (Queue<Notification>)notificationsField.GetValue(NotificationManager.Instance);
+            var notifications = NotificationManager.Instance.GetPrivateFieldValue<NotificationManager, Queue<Notification>>("notifications");
+
+            //var notificationsField = typeof(NotificationManager).GetField("notifications", BindingFlags.NonPublic | BindingFlags.Instance);
+            //var notifications = (Queue<Notification>)notificationsField.GetValue(NotificationManager.Instance);
 
             if (notifications.Count < 2)
             {

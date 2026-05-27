@@ -5,6 +5,7 @@ using System.Reflection;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Character;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.LogicFixes
 {

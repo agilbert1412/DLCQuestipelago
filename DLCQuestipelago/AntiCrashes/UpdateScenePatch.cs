@@ -12,6 +12,7 @@ using DLCLib.World;
 using HarmonyLib;
 using HUD;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

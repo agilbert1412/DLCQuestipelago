@@ -4,6 +4,7 @@ using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Character;
 using DLCLib.DLC;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.DLCUnlockPatch

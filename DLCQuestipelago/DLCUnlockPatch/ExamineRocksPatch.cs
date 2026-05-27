@@ -5,6 +5,7 @@ using DLCLib;
 using DLCLib.World;
 using HarmonyLib;
 using System.Reflection;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {

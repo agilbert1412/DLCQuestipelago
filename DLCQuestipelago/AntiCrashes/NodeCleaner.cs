@@ -6,6 +6,7 @@ using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using Core.Spatial;
 using DLCLib;
 using DLCLib.Physics;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.AntiCrashes
 {

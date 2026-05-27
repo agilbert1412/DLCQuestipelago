@@ -6,6 +6,7 @@ using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCDataTypes;
 using DLCLib.Render;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.DualContentManager

@@ -10,6 +10,7 @@ using GameStateManagement;
 using KaitoKid.ArchipelagoUtilities.Net.BouncePackets;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 

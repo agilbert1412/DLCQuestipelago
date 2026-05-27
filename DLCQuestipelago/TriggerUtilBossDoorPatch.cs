@@ -9,6 +9,7 @@ using GameStateManagement;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework.Input;
 
 namespace DLCQuestipelago

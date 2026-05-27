@@ -5,6 +5,7 @@ using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib;
 using DLCLib.NIS;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Archipelago.Deathlink
 {

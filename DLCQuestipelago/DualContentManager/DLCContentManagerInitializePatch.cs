@@ -3,6 +3,7 @@ using System.Diagnostics;
 using DLCLib;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.DualContentManager
 {

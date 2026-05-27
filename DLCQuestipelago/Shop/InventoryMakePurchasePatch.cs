@@ -5,6 +5,7 @@ using DLCQuestipelago.Archipelago;
 using DLCQuestipelago.Items;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Shop
 {

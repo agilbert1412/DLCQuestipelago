@@ -5,6 +5,7 @@ using DLCLib.Character;
 using DLCQuestipelago.Archipelago;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Items.Traps
 {

@@ -4,6 +4,7 @@ using DLCLib.Scripts.LFOD;
 using DLCQuestipelago.Serialization;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Goal.LFOD
 {

@@ -6,6 +6,7 @@ using DLCLib.Campaigns;
 using DLCLib.Screens;
 using GameStateManagement;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Serialization
 {

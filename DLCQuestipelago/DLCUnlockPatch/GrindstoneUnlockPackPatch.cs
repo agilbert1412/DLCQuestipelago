@@ -19,8 +19,9 @@ using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Client;
 using KaitoKid.ArchipelagoUtilities.Net.Extensions;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
-using Microsoft.Xna.Framework;
+using KaitoKid.Utilities.Interfaces;
 using Timer = Core.Timer;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace DLCQuestipelago.DLCUnlockPatch
 {

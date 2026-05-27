@@ -3,6 +3,7 @@ using System.Diagnostics;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Save;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.Serialization
 {

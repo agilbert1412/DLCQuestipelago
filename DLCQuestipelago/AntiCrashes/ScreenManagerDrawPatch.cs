@@ -6,6 +6,7 @@ using System.Reflection;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using GameStateManagement;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DLCQuestipelago.AntiCrashes

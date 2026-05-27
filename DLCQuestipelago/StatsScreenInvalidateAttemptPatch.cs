@@ -3,6 +3,7 @@ using System.Diagnostics;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using DLCLib.Screens;
 using HarmonyLib;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago
 {

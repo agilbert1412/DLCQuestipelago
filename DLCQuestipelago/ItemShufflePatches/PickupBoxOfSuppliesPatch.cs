@@ -8,6 +8,7 @@ using DLCQuestipelago.Archipelago;
 using KaitoKid.ArchipelagoUtilities.Net;
 using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
+using KaitoKid.Utilities.Interfaces;
 
 namespace DLCQuestipelago.ItemShufflePatches
 {
