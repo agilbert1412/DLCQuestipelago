@@ -27,6 +27,11 @@ namespace DLCQuestipelago.Locations
         {
             try
             {
+                if (_logger == null || _locationChecker == null)
+                {
+                    return;
+                }
+
                 _logger.LogInfo(ACHIEVEMENT_NAME);
                 _locationChecker.AddCheckedLocation(ACHIEVEMENT_NAME);
             }
