@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KaitoKid.Utilities.Interfaces;
 
@@ -70,7 +71,7 @@ namespace DLCQuestipelago.Archipelago
         {
             foreach (var key in keys)
             {
-                var value = GetSlotSetting(key, defaultValue);
+                var value = GetSlotSetting(key, defaultValue, false);
                 if (value != defaultValue)
                 {
                     return value;
@@ -90,9 +91,9 @@ namespace DLCQuestipelago.Archipelago
             return _slotDataFields.ContainsKey(key) ? _slotDataFields[key].ToString() : GetSlotDefaultValue(key, defaultValue);
         }
 
-        private int GetSlotSetting(string key, int defaultValue)
+        private int GetSlotSetting(string key, int defaultValue, bool warning = true)
         {
-            return _slotDataFields.ContainsKey(key) ? (int)(long)_slotDataFields[key] : GetSlotDefaultValue(key, defaultValue);
+            return _slotDataFields.ContainsKey(key) ? (int)(long)_slotDataFields[key] : GetSlotDefaultValue(key, defaultValue, warning);
         }
 
         private bool GetSlotSetting(string key, bool defaultValue)
@@ -118,9 +119,12 @@ namespace DLCQuestipelago.Archipelago
             return GetSlotDefaultValue(key, defaultValue);
         }
 
-        private T GetSlotDefaultValue<T>(string key, T defaultValue)
+        private T GetSlotDefaultValue<T>(string key, T defaultValue, bool warning = true)
         {
-            _logger.LogWarning($"SlotData did not contain expected key: \"{key}\"");
+            if (warning)
+            {
+                _logger.LogWarning($"SlotData did not contain expected key: \"{key}\"");
+            }
             return defaultValue;
         }
     }

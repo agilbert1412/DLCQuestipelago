@@ -17,7 +17,7 @@ namespace DLCQuestipelago.Archipelago
 {
     public class DLCQArchipelagoClient : ArchipelagoClient
     {
-        public override string GameName => "Silksong";
+        public override string GameName => "DLCQuest";
         public override string ModName => "DLCQuestipelago";
         public override string ModVersion => PluginInfo.PLUGIN_VERSION;
 
