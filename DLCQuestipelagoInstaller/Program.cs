@@ -23,7 +23,7 @@ namespace DLCQuestipelagoInstaller
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"The installer has encountered a critical error.\nMessage: '{ex.Message}'\nStack Trace: {ex.StackTrace}");
+                Console.WriteLine($"The installer has encountered a critical error.\nMessage: '{ex.Message}'{Environment.NewLine}{Environment.NewLine}Stack Trace: {ex.StackTrace}");
             }
             finally
             {
@@ -111,6 +111,13 @@ namespace DLCQuestipelagoInstaller
         {
             Console.WriteLine("Copying DLC Quest Game...");
             var dlcQuestFolder = FindDLCQuest();
+
+            if (moddedFolder.Contains(dlcQuestFolder))
+            {
+                throw new Exception(
+                    $"You cannot install DLCQuestipelago inside the vanilla DLC Quest folder, or one of its subfolders. You need to install the modded game in a distinct location");
+            }
+
             CopyFolderContent(dlcQuestFolder, moddedFolder);
         }
 
@@ -239,7 +246,7 @@ namespace DLCQuestipelagoInstaller
                 }
             }
 
-            var allFiles = Directory.EnumerateFiles(originFolder, "*", SearchOption.AllDirectories);
+            var allFiles = Directory.EnumerateFiles(originFolder, "*", SearchOption.AllDirectories).ToArray();
             foreach (var file in allFiles)
             {
                 var destinationFile = file.Replace(originFolder, destinationFolder);
