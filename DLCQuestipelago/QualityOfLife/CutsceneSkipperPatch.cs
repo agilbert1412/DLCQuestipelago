@@ -24,6 +24,7 @@ namespace DLCQuestipelago.QualityOfLife
         private static KeyboardState _previousKeyboardState;
         private static bool _announcedConfiguration;
         private static NISScript _lastSeenNIS;
+        private static bool _loggedDeadPlayerForCurrentNIS;
 
         public static void Initialize(ILogger logger)
         {
@@ -65,6 +66,7 @@ namespace DLCQuestipelago.QualityOfLife
             if (currentNIS != null && !ReferenceEquals(currentNIS, _lastSeenNIS))
             {
                 _lastSeenNIS = currentNIS;
+                _loggedDeadPlayerForCurrentNIS = false;
                 LogInfo($"[CutsceneSkipper] NIS detected: {GetScriptName(currentNIS)}");
             }
 
@@ -84,14 +86,17 @@ namespace DLCQuestipelago.QualityOfLife
 
             if (currentNIS == null)
             {
-                LogInfo("[CutsceneSkipper] Skip key pressed but no NIS is active");
                 return;
             }
 
             var player = SceneManager.Instance?.CurrentScene?.Player;
             if (player == null || !player.IsAlive)
             {
-                LogInfo("[CutsceneSkipper] Skip key pressed but player is dead; letting death play out");
+                if (!_loggedDeadPlayerForCurrentNIS)
+                {
+                    _loggedDeadPlayerForCurrentNIS = true;
+                    LogInfo("[CutsceneSkipper] Skip key pressed but player is dead; letting death play out");
+                }
                 return;
             }
 
@@ -140,8 +145,20 @@ namespace DLCQuestipelago.QualityOfLife
         {
             var dataField = typeof(NISScript).GetField("data", BindingFlags.NonPublic | BindingFlags.Instance);
             var data = dataField?.GetValue(nisScript);
-            var nameProperty = data?.GetType().GetProperty("Name");
-            return nameProperty?.GetValue(data) as string ?? "<unknown>";
+            if (data == null)
+            {
+                return "<unknown>";
+            }
+
+            var dataType = data.GetType();
+            var nameProperty = dataType.GetProperty("Name");
+            if (nameProperty != null)
+            {
+                return nameProperty.GetValue(data) as string ?? "<unknown>";
+            }
+
+            var nameField = dataType.GetField("Name");
+            return nameField?.GetValue(data) as string ?? "<unknown>";
         }
 
         private static void CloseCurrentConversation()
