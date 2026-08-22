@@ -103,6 +103,7 @@ namespace DLCQuestipelago.QualityOfLife
             LogInfo($"[CutsceneSkipper] Skipping NIS {GetScriptName(currentNIS)}");
             CloseCurrentConversation();
             EndCurrentNIS(currentNIS);
+            CloseCurrentConversation();
         }
 
         private static void LogInfo(string message)
@@ -171,7 +172,21 @@ namespace DLCQuestipelago.QualityOfLife
 
             var dialogPopupField = typeof(ConversationManager).GetField("dialogPopup", BindingFlags.NonPublic | BindingFlags.Instance);
             var dialogPopup = dialogPopupField?.GetValue(conversationManager) as DialogPopup;
-            dialogPopup?.EndConversation();
+            if (dialogPopup == null)
+            {
+                return;
+            }
+
+            dialogPopup.EndConversation();
+            ResetNISConversationFlags();
+        }
+
+        private static void ResetNISConversationFlags()
+        {
+            var startedField = typeof(NISScript).GetField("ConversationStarted", BindingFlags.NonPublic | BindingFlags.Static);
+            startedField?.SetValue(null, false);
+            var completeField = typeof(NISScript).GetField("ConversationComplete", BindingFlags.NonPublic | BindingFlags.Static);
+            completeField?.SetValue(null, false);
         }
 
         private static void EndCurrentNIS(NISScript currentNIS)
