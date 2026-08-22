@@ -22,6 +22,8 @@ namespace DLCQuestipelago.QualityOfLife
 
         private static ILogger _logger;
         private static KeyboardState _previousKeyboardState;
+        private static bool _announcedConfiguration;
+        private static NISScript _lastSeenNIS;
 
         public static void Initialize(ILogger logger)
         {
@@ -53,6 +55,19 @@ namespace DLCQuestipelago.QualityOfLife
 
             var currentKeyboardState = inputState.CurrentKeyboardState;
             var skipKeys = GetConfiguredSkipKeys();
+            if (!_announcedConfiguration)
+            {
+                _announcedConfiguration = true;
+                _logger.LogInfo($"[CutsceneSkipper] Patch is running. Configured skip keys: [{string.Join(", ", skipKeys)}]");
+            }
+
+            var currentNIS = GetCurrentNIS(nisManager);
+            if (currentNIS != null && !ReferenceEquals(currentNIS, _lastSeenNIS))
+            {
+                _lastSeenNIS = currentNIS;
+                _logger.LogInfo($"[CutsceneSkipper] NIS detected: {GetScriptName(currentNIS)}");
+            }
+
             var skipKeyWasDownLastFrame = false;
             var skipKeyIsDownThisFrame = false;
             foreach (var skipKey in skipKeys)
@@ -67,18 +82,20 @@ namespace DLCQuestipelago.QualityOfLife
                 return;
             }
 
-            var currentNIS = GetCurrentNIS(nisManager);
             if (currentNIS == null)
             {
+                _logger.LogInfo("[CutsceneSkipper] Skip key pressed but no NIS is active");
                 return;
             }
 
             var player = SceneManager.Instance?.CurrentScene?.Player;
             if (player == null || !player.IsAlive)
             {
+                _logger.LogInfo("[CutsceneSkipper] Skip key pressed but player is dead; letting death play out");
                 return;
             }
 
+            _logger.LogInfo($"[CutsceneSkipper] Skipping NIS {GetScriptName(currentNIS)}");
             CloseCurrentConversation();
             EndCurrentNIS(currentNIS);
         }
@@ -112,6 +129,14 @@ namespace DLCQuestipelago.QualityOfLife
         {
             var currentNISField = typeof(NISManager).GetField("currentNIS", BindingFlags.NonPublic | BindingFlags.Instance);
             return currentNISField?.GetValue(nisManager) as NISScript;
+        }
+
+        private static string GetScriptName(NISScript nisScript)
+        {
+            var dataField = typeof(NISScript).GetField("data", BindingFlags.NonPublic | BindingFlags.Instance);
+            var data = dataField?.GetValue(nisScript);
+            var nameProperty = data?.GetType().GetProperty("Name");
+            return nameProperty?.GetValue(data) as string ?? "<unknown>";
         }
 
         private static void CloseCurrentConversation()
