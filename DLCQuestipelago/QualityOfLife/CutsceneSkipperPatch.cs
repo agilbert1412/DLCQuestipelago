@@ -73,6 +73,12 @@ namespace DLCQuestipelago.QualityOfLife
                 return;
             }
 
+            var player = SceneManager.Instance?.CurrentScene?.Player;
+            if (player == null || !player.IsAlive)
+            {
+                return;
+            }
+
             CloseCurrentConversation();
             EndCurrentNIS(currentNIS);
         }
