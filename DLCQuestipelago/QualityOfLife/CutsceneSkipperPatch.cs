@@ -39,7 +39,7 @@ namespace DLCQuestipelago.QualityOfLife
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed in {nameof(CutsceneSkipperPatch)}.{nameof(Postfix)}:\n\t{ex}");
+                _logger?.LogError($"Failed in {nameof(CutsceneSkipperPatch)}.{nameof(Postfix)}:\n\t{ex}");
                 Debugger.Break();
                 return;
             }
@@ -58,14 +58,14 @@ namespace DLCQuestipelago.QualityOfLife
             if (!_announcedConfiguration)
             {
                 _announcedConfiguration = true;
-                _logger.LogInfo($"[CutsceneSkipper] Patch is running. Configured skip keys: [{string.Join(", ", skipKeys)}]");
+                LogInfo($"[CutsceneSkipper] Patch is running. Configured skip keys: [{string.Join(", ", skipKeys)}]");
             }
 
             var currentNIS = GetCurrentNIS(nisManager);
             if (currentNIS != null && !ReferenceEquals(currentNIS, _lastSeenNIS))
             {
                 _lastSeenNIS = currentNIS;
-                _logger.LogInfo($"[CutsceneSkipper] NIS detected: {GetScriptName(currentNIS)}");
+                LogInfo($"[CutsceneSkipper] NIS detected: {GetScriptName(currentNIS)}");
             }
 
             var skipKeyWasDownLastFrame = false;
@@ -84,20 +84,25 @@ namespace DLCQuestipelago.QualityOfLife
 
             if (currentNIS == null)
             {
-                _logger.LogInfo("[CutsceneSkipper] Skip key pressed but no NIS is active");
+                LogInfo("[CutsceneSkipper] Skip key pressed but no NIS is active");
                 return;
             }
 
             var player = SceneManager.Instance?.CurrentScene?.Player;
             if (player == null || !player.IsAlive)
             {
-                _logger.LogInfo("[CutsceneSkipper] Skip key pressed but player is dead; letting death play out");
+                LogInfo("[CutsceneSkipper] Skip key pressed but player is dead; letting death play out");
                 return;
             }
 
-            _logger.LogInfo($"[CutsceneSkipper] Skipping NIS {GetScriptName(currentNIS)}");
+            LogInfo($"[CutsceneSkipper] Skipping NIS {GetScriptName(currentNIS)}");
             CloseCurrentConversation();
             EndCurrentNIS(currentNIS);
+        }
+
+        private static void LogInfo(string message)
+        {
+            _logger?.LogInfo(message);
         }
 
         private static List<Keys> GetConfiguredSkipKeys()
