@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+using DLCDataTypes;
 using DLCLib;
 using DLCLib.Conversation;
 using DLCLib.Input;
@@ -11,6 +8,11 @@ using HarmonyLib;
 using KaitoKid.ArchipelagoUtilities.Net.Interfaces;
 using KaitoKid.Utilities.Interfaces;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace DLCQuestipelago.QualityOfLife
 {
@@ -59,13 +61,7 @@ namespace DLCQuestipelago.QualityOfLife
             {
                 _announcedConfiguration = true;
                 LogInfo($"[CutsceneSkipper] Patch is running. Configured skip keys: [{string.Join(", ", skipKeys)}]");
-            }
-
-            var currentNIS = GetCurrentNIS(nisManager);
-            if (currentNIS != null && !ReferenceEquals(currentNIS, _lastSeenNIS))
-            {
-                _lastSeenNIS = currentNIS;
-                LogInfo($"[CutsceneSkipper] NIS detected: {GetScriptName(currentNIS)}");
+                LogInfo($"[CutsceneSkipper] Skipping Cutscenes is an experimental feature. Odd things may happen.");
             }
 
             var skipKeyWasDownLastFrame = false;
@@ -82,9 +78,16 @@ namespace DLCQuestipelago.QualityOfLife
                 return;
             }
 
+            var currentNIS = GetCurrentNIS(nisManager);
             if (currentNIS == null)
             {
                 return;
+            }
+
+            if (currentNIS != null && !ReferenceEquals(currentNIS, _lastSeenNIS))
+            {
+                _lastSeenNIS = currentNIS;
+                LogInfo($"[CutsceneSkipper] NIS detected: {GetScriptName(currentNIS)}");
             }
 
             LogInfo($"[CutsceneSkipper] Skipping NIS {GetScriptName(currentNIS)}");
@@ -178,6 +181,26 @@ namespace DLCQuestipelago.QualityOfLife
 
         private static void EndCurrentNIS(NISScript currentNIS)
         {
+            ////protected NISScriptData data;
+            ////protected List<NISScript.NISDelegate> actions;
+            //// protected int currentLine;
+            //var dataField = typeof(NISScript).GetField("data", BindingFlags.NonPublic | BindingFlags.Instance);
+            //var actionsField = typeof(NISScript).GetField("actions", BindingFlags.NonPublic | BindingFlags.Instance);
+            //var currentLineField = typeof(NISScript).GetField("currentLine", BindingFlags.NonPublic | BindingFlags.Instance);
+            //var data = (NISScriptData)dataField.GetValue(currentNIS);
+            //var actions = (IList)actionsField.GetValue(currentNIS);
+            //var currentLine = (int)currentLineField.GetValue(currentNIS);
+
+            //// internal void Update(float dt)
+            //var UpdateMethod = typeof(NISScript).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            //while (currentLine < data.Script.Count)
+            //{
+            //    UpdateMethod.Invoke(currentNIS, [5f]);
+            //    currentLineField.SetValue(currentNIS, currentLine + 1);
+            //    currentLine = (int)currentLineField.GetValue(currentNIS);
+            //}
+
             var endScriptMethod = typeof(NISScript).GetMethod("EndScript", BindingFlags.NonPublic | BindingFlags.Instance);
             endScriptMethod?.Invoke(currentNIS, null);
         }
