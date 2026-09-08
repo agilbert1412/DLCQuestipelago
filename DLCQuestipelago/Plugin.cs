@@ -144,6 +144,12 @@ namespace DLCQuestipelago
                 connectionInfo.EnableEnergyLink = true;
             }
 
+            // Options added in 3.5.0
+            if (string.IsNullOrWhiteSpace(connectionInfo.CutsceneSkipKey))
+            {
+                connectionInfo.CutsceneSkipKey = CutsceneSkipperPatch.DEFAULT_CUTSCENE_SKIP_KEY;
+            }
+
             APConnectionInfo = connectionInfo;
         }
 

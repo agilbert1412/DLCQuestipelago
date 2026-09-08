@@ -27,6 +27,7 @@ namespace DLCQuestipelago
     {
         public static void InitializeEarly(ILogger logger, DLCQArchipelagoClient archipelago)
         {
+            CutsceneSkipperPatch.Initialize(logger);
             InitializeAllPersistencyPatches(logger, archipelago);
         }
 
